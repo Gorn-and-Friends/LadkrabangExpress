@@ -1,0 +1,140 @@
+@import '../../../utils/light'
+
+@mixin centered-flex
+    display: flex
+    justify-content: center
+    align-items: center
+
+*
+    box-sizing: border-box
+    margin: 0
+    padding: 0
+    -webkit-user-select: none
+    -moz-user-select: none
+    -ms-user-select: none
+    user-select: none
+    text-decoration: none
+    color: $main-font-color
+
+.navbar
+    display: flex
+    justify-content: space-between
+    align-items: center
+    position: fixed
+    width: 100vw
+    padding: 0 1.2rem
+    background-color: $main-bg-color
+    font: 600 1.2rem 'Inter', sans-serif
+    transition: all .18 ease-in-out
+
+    &__container
+        @include centered-flex
+        flex: 1
+        &:first-child a
+            margin-right: auto
+        &:last-child div
+            margin-left: auto
+
+    &__logo
+        @include centered-flex
+        height: 3.8rem
+        img
+            width: 4.5rem
+            pointer-events: none
+            float: left
+
+    &__list
+        @include centered-flex
+        li
+            display: inline-block
+            text-align: center
+            position: relative
+            width: 10rem
+            list-style: none
+            a
+                line-height: 3.8rem
+                display: block
+                text-decoration: none
+            &:hover
+                background-color: $bg-color-2
+                > ul
+                    display: block
+
+    &__sublist
+        display: none
+        background-color: $main-bg-color
+        position: absolute
+        font-weight: 400
+        font-size: .8em
+        li, li a
+            line-height: 3rem
+            &:hover
+                background-color: $bg-color-3
+
+    &__dropdown
+        line-height: 3.8rem
+        width: 10rem
+        cursor: pointer
+        &:hover  ~ .navbar__sublist
+            display: block
+
+    &__right
+        @include centered-flex
+        gap: 2em
+
+    &__auth
+        li
+            display: inline-block
+            text-align: center
+            position: relative
+            width: 8rem
+            list-style: none
+            a
+                line-height: 3.8rem
+                display: block
+                &:hover
+                    background-color: $bg-color-2
+        &:hover > ul
+            display: block
+        &__item:hover
+            text-decoration: underline
+        &__list
+            display: none
+            background-color: $main-bg-color
+            position: absolute
+            width: 8rem
+            font-weight: 400
+            font-size: .8em
+            li, li a
+                line-height: 3rem
+                &:hover
+                    background-color: $bg-color-3
+        &__dropdown
+            @include centered-flex
+            height: 3.8rem
+            width: 8rem
+            font: 900 .85em 'Playfair Display', serif
+            cursor: pointer
+            &:hover
+                background-color: $bg-color-2
+                ~ .navbar__auth__list
+                    display: block
+
+#logout
+    cursor: pointer
+
+.theme-toggler
+    justify-self: center
+    width: 1.5em
+    height: 1.5em
+    border-radius: .75em
+    background-color: $main-color
+    transition: all .12s
+    &:hover
+        width: 2em
+        height: 2em
+        border-radius: 1em
+    &:active
+        background-color: $bg-color-3
+    &__container
+        @include centered-flex

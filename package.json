@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Gorn-and-Friends/LadkrabangExpress/issues"
   },
-  "homepage": "https://github.com/Gorn-and-Friends/LadkrabangExpress#readme"
+  "homepage": "https://github.com/Gorn-and-Friends/LadkrabangExpress#readme",
+  "dependencies": {
+    "node-sass": "^7.0.1"
+  }
 }
