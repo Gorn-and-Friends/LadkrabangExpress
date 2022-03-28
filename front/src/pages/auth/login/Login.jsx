@@ -40,11 +40,8 @@ const Login = () => {
     <div className="login">
       <fieldset className="login__container">
         <legend align="center">
-          <a href="/">
-            <img src={darkMode ? iconDark : icon} />
-          </a>
         </legend>
-        <form className="login__form" onSubmit={handleOnSubmit}>
+        <form className="login__form">
           <h1 className="login__form__header">Log in to continue</h1>
           <div className="login__form__container">
             <div className="login__form__item">
@@ -52,8 +49,6 @@ const Login = () => {
                 type="text"
                 id="uname"
                 name="uname"
-                value={login["uname"]}
-                onChange={handleInputOnChange}
                 autoComplete="off"
                 placeholder=" "
                 required
@@ -68,8 +63,6 @@ const Login = () => {
                   type="password"
                   id="pword"
                   name="pword"
-                  value={login["pword"]}
-                  onChange={handleInputOnChange}
                   autoComplete="off"
                   placeholder=" "
                   required
