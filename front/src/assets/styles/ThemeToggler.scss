@@ -1,0 +1,35 @@
+@use "./theme" as *;
+
+.theme-toggler {
+  justify-content: center;
+
+  input {
+    display: none;
+  }
+
+  div {
+    position: relative;
+    justify-self: center;
+    width: 1.7em;
+    height: 1.7em;
+    transition: all calc($transition-time / 2) ease-in-out;
+  }
+
+  &__icon {
+    cursor: pointer;
+    position: absolute;
+    width: 100%;
+    transition: opacity $transition-time cubic-bezier(0.2, 0.8, 0.2, 1) 0s,
+      transform calc($transition-time * 2.5)
+        cubic-bezier(0.175, 0.885, 0.32, 1.2) 0s;
+
+    &.show {
+      opacity: 1;
+      transform: rotate(360deg);
+    }
+
+    &.hide {
+      opacity: 0;
+    }
+  }
+}

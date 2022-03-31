@@ -1,0 +1,41 @@
+{
+  "middle": {
+    "booking": {
+      "title": "Booking"
+    },
+    "information": {
+      "title": "Information",
+      "items": {
+        "trains": {
+          "title": "Trains"
+        },
+        "attractions": {
+          "title": "Attractions"
+        },
+        "routes": {
+          "title": "Routes"
+        }
+      }
+    },
+    "about": {
+      "title": "About",
+      "items": {
+        "aboutUs": {
+          "title": "About Us"
+        },
+        "contactUs": {
+          "title": "Contact Us"
+        }
+      }
+    }
+  },
+  "right": {
+    "logged": {
+      "profile": "View Profile",
+      "logOut": "Log Out"
+    },
+    "notLogged": {
+      "logIn": "Log In"
+    }
+  }
+}
