@@ -8,7 +8,7 @@ const logIn = async (info) => {
     username: info.uname,
     password: info.password,
   });
-
+  
   console.log(token);
   localStorage.setItem("token", token.access);
 };
