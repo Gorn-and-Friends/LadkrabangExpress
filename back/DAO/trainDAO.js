@@ -5,7 +5,11 @@ class Train{
     static async add(req,res){
         try{
             // console.log(req.body)
-            const service_date = new Date(req.body.service_date)
+            const service_date = Object
+            if(req.body.service_date != null){
+                service_date = new Date(req.body.service_date)
+            }
+            
             const trainAdded = new trainModel({
                 train_number : req.body.train_number,
                 train_name : req.body.train_name,
@@ -41,16 +45,27 @@ class Train{
         }
         
     }
-    //query
+
     static async customerFindTrain(req,res){
+        //ใช้กับหน้า find your best train
+        //input => origin, destination, departure_time, date, time, number_of_passenger, return_date, return_time
         try{
-            console.log(req.body.origin_station)
-            const foundStation = await trainModel.find({"station.station_name" : req.body.origin_station})
-            if(foundStation.length > 0){
-                res.send(foundStation)
-            }else{
-                res.send("not found")
+            const { origin, destination, departure_time, date, time, number_of_passenger, return_date, return_time } = req.body
+
+            // const foundStation = await trainModel.find({"station.station_name" : req.body.origin_station})
+
+            const foundTrain = await trainModel.aggregate([
+                {
+                    $match: {"station.station_name": origin},
+                },{
+                    $project: { train_number: 1,"station.station_name":1}
+                }
+            ])
+            // console.log(foundTrain[0].station[0].station_name)
+            for(let i of foundTrain){
+                console.log(i)
             }
+            res.status(200).send("sucess")
             
         }catch(err){
             console.log(err)

@@ -4,7 +4,7 @@ const trainSchema = new mongoose.Schema({
     train_number : String,
     train_name : {type:String, default:null},
     stand_ticket_available: {type:Boolean, default:true},
-    service_date: Object,
+    service_date: {type:Object, default:null},
     service_day: [], //0=sunday -> 6=saturday
     class_in_train: {
         class_1: {

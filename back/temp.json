@@ -31,4 +31,20 @@
             {"station_name": "สวนนงนุช","departure_hour": 11, "departure_minute": 4 },
             {"station_name": "ชุมทางเขาชีจรรย์","departure_hour": 11, "departure_minute": 13 },
             {"station_name": "บ้านพลูตาหลวง","departure_hour": 11, "departure_minute": 20 }
+},
+
+"register data"{
+    "bdate": "2001-09-04",
+    "email": "Rakchat@gmail.com",
+    "fname": "Somchai",
+    "fnameTH": "สมชาย",
+    "lname": "Rakchat",
+    "lnameTH": "รักชาติ",
+    "pword": "123",
+    "uname": "Ratchatzaza"
+}
+
+"login data":{
+    "pword": "123",
+    "uname": "Rakchat@gmail.com"
 }
