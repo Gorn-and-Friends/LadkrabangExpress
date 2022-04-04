@@ -54,18 +54,22 @@ class Train{
 
             // const foundStation = await trainModel.find({"station.station_name" : req.body.origin_station})
 
-            const foundTrain = await trainModel.aggregate([
-                {
-                    $match: {"station.station_name": origin},
-                },{
-                    $project: { train_number: 1,"station.station_name":1}
-                }
-            ])
-            // console.log(foundTrain[0].station[0].station_name)
+            // const foundTrain = await trainModel.aggregate([
+            //     {
+            //         // $project: { train_number: 1,"station.station_name":1},
+            //         $project: { train_number: 1}
+            //     },{
+            //         // $match: {["station.station_name": origin],["station.station_name": destination]}
+            //         $match:{station: origin}
+            //     }
+            // ])
+            const foundTrain = await trainModel.find({$and:[{"station.station_name": origin},{"station.station_name": destination}]})
+            console.log("--------------------------------------------------------------------------------------------------")
+            // console.log(foundTrain)
             for(let i of foundTrain){
-                console.log(i)
+                console.log(i.train_number)
             }
-            res.status(200).send("sucess")
+            res.status(200).json(foundTrain)
             
         }catch(err){
             console.log(err)
