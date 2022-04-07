@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import register from "../../../services/utils/register";
+import { useSelector } from "react-redux";
 import "../../../assets/styles/Register.scss";
+import register from "../../../services/utils/register";
+import Loading from "../../../components/loading";
 
 const Register = () => {
   useEffect(() => {
@@ -9,9 +11,12 @@ const Register = () => {
   }, []);
 
   const navigate = useNavigate();
+  const lang = useSelector((state) => state.lang);
+  const content =
+    lang === "th"
+      ? require("../../../assets/jsons/register/th.json")
+      : require("../../../assets/jsons/register/en.json");
   const [reg, setReg] = useState({
-    fnameTH: "",
-    lnameTH: "",
     fname: "",
     lname: "",
     email: "",
@@ -41,44 +46,14 @@ const Register = () => {
     console.log(temp);
   };
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <form className="register" onSubmit={handleOnSubmit}>
       <fieldset className="register__container">
-        <legend align="center">สร้างบัญชีใหม่ของคุณ</legend>
+        <legend align="center">{content.header}</legend>
         <div className="register__form">
           <div className="register__form__first-row">
-            <div className="register__form__name">
-              <input
-                type="text"
-                id="fnameTH"
-                name="fnameTH"
-                value={reg.fnameTH}
-                onChange={handleInputOnChange}
-                placeholder=" "
-                autoComplete="off"
-                required
-              />
-              <label htmlFor="fnameTH">
-                ชื่อ <span>*</span>
-              </label>
-            </div>
-            <div className="register__form__name">
-              <input
-                type="text"
-                id="lnameTH"
-                name="lnameTH"
-                value={reg.lnameTH}
-                onChange={handleInputOnChange}
-                placeholder=" "
-                autoComplete="off"
-                required
-              />
-              <label htmlFor="lnameTH">
-                นามสกุล <span>*</span>
-              </label>
-            </div>
-          </div>
-          <div className="register__form__second-row">
             <div className="register__form__name">
               <input
                 type="text"
@@ -91,7 +66,7 @@ const Register = () => {
                 required
               />
               <label htmlFor="fname">
-                ชื่อ (ภาษาอังกฤษ) <span>*</span>
+                {content.fields.fname} <span>*</span>
               </label>
             </div>
             <div className="register__form__name">
@@ -106,7 +81,7 @@ const Register = () => {
                 required
               />
               <label htmlFor="lname">
-                นามสกุล (ภาษาอังกฤษ) <span>*</span>
+                {content.fields.lname} <span>*</span>
               </label>
             </div>
           </div>
@@ -122,7 +97,7 @@ const Register = () => {
               required
             />
             <label htmlFor="email">
-              อีเมล <span>*</span>
+              {content.fields.email} <span>*</span>
             </label>
           </div>
           <div className="register__form__others">
@@ -137,7 +112,7 @@ const Register = () => {
               required
             />
             <label htmlFor="uname">
-              ชื่อผู้ใช้งาน <span>*</span>
+              {content.fields.uname} <span>*</span>
             </label>
           </div>
           <div className="register__form__others">
@@ -147,30 +122,19 @@ const Register = () => {
               name="pword"
               value={reg.pword}
               onChange={handleInputOnChange}
+              pattern="^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}"
+              title="Password requires at least 8 charactors, a capital letter and a special charactor (!@#$%^&*)"
               placeholder=" "
               autoComplete="off"
               required
             />
             <label htmlFor="pword">
-              รหัสผ่าน <span>*</span>
-            </label>
-          </div>
-          <div className="register__form__others">
-            <input
-              type="password"
-              id="repwd"
-              name="repwd"
-              placeholder=" "
-              autoComplete="off"
-              required
-            />
-            <label htmlFor="repwd">
-              ยืนยันรหัสผ่าน <span>*</span>
+              {content.fields.pword} <span>*</span>
             </label>
           </div>
           <div className="register__form__last-row">
             <a href="/login" className="register__form__last-row__back">
-              กลับ
+              {content.buttons.back}
             </a>
             <div className="register__form__date">
               <input
@@ -186,13 +150,13 @@ const Register = () => {
                 required
               />
               <label htmlFor="bdate">
-                วัน/เดือน/ปีเกิด <span>*</span>
+                {content.fields.bdate} <span>*</span>
               </label>
             </div>
             <input
               type="submit"
               className="register__form__last-row__submit"
-              value="ยืนยัน"
+              value={content.buttons.submit}
             />
           </div>
         </div>

@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import "../../../assets/styles/Login.scss";
 import icon from "../../../assets/icons/icon.png";
 import iconDark from "../../../assets/icons/icon-dark.png";
-import { useNavigate } from "react-router-dom";
 import log from "../../../services/utils/log";
-import { ThemeContext } from "../../../services/utils/themeService";
+import Loading from "../../../components/loading";
 
 const Login = () => {
   useEffect(() => {
@@ -12,7 +13,12 @@ const Login = () => {
   }, []);
 
   const navigate = useNavigate();
-  const { theme } = useContext(ThemeContext);
+  const theme = useSelector((state) => state.theme);
+  const lang = useSelector((state) => state.lang);
+  const content =
+    lang === "th"
+      ? require("../../../assets/jsons/login/th.json")
+      : require("../../../assets/jsons/login/en.json");
   const [login, setLogin] = useState({
     uname: "",
     pword: "",
@@ -39,7 +45,9 @@ const Login = () => {
     console.log(temp);
   };
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <form className="login" onSubmit={handleOnSubmit}>
       <fieldset className="login__container">
         <legend align="center">
@@ -56,7 +64,7 @@ const Login = () => {
           )}
         </legend>
         <div className="login__form">
-          <h1 className="login__form__header">เข้าสู่ระบบเพื่อใช้งาน</h1>
+          <h1 className="login__form__header">{content.header}</h1>
           <div className="login__form__container">
             <div className="login__form__item">
               <input
@@ -70,7 +78,7 @@ const Login = () => {
                 required
               />
               <label htmlFor="uname">
-                ชื่อผู้ใช้งาน หรือ อีเมล <span>*</span>
+                {content.fields.username} <span>*</span>
               </label>
             </div>
             <div className="login__form__group">
@@ -86,17 +94,19 @@ const Login = () => {
                   required
                 />
                 <label htmlFor="pword">
-                  รหัสผ่าน <span>*</span>
+                  {content.fields.password} <span>*</span>
                 </label>
               </div>
               <div className="login__form__group__link">
-                <a href="forgot">ลืมรหัสผ่าน ?</a>
-                <a href="register">สร้างบัญชีใหม่ {">"}</a>
+                <a href="forgot">{content.forgot} ?</a>
+                <a href="register">
+                  {content.register} {">"}
+                </a>
               </div>
             </div>
           </div>
         </div>
-        <input type="submit" className="login__btn" value="เข้าสู่ระบบ" />
+        <input type="submit" className="login__btn" value={content.button} />
       </fieldset>
     </form>
   );

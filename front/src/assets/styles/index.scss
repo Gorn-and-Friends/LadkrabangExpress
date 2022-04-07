@@ -1,4 +1,4 @@
-@use "./theme" as *;
+@use "./utils" as *;
 
 * {
   box-sizing: border-box;
@@ -23,6 +23,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -ms-overflow-style: none;
   scrollbar-width: none;
+
+  &.preload * {
+    $null-transition: none !important;
+
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -ms-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+  }
 
   &::-webkit-scrollbar {
     display: none;

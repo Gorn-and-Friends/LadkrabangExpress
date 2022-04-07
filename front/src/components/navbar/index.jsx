@@ -1,21 +1,22 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import "../../assets/styles/NavBar.scss";
 import icon from "../../assets/icons/icon.png";
 import iconDark from "../../assets/icons/icon-dark.png";
 import log from "../../services/utils/log";
 import ThemeToggler from "../themeToggler";
-import { ThemeContext } from "../../services/utils/themeService";
-
-const user = log.isLogged() ? log.isLogged() : "Chanon";
-const language = "th";
-const contentTH = require("../../assets/jsons/navbar/th.json");
-const contentEN = require("../../assets/jsons/navbar/en.json");
-const content = language === "th" ? contentTH : contentEN;
+import LanguageToggler from "../langToggler";
 
 const NavBar = () => {
+  const user = log.isLogged() ? log.isLogged() : "Chanon";
+  const lang = useSelector((state) => state.lang);
+  const content =
+    lang === "th"
+      ? require("../../assets/jsons/navbar/th.json")
+      : require("../../assets/jsons/navbar/en.json");
   const navigate = useNavigate();
-  const { theme } = useContext(ThemeContext);
+  const theme = useSelector((state) => state.theme);
   const [loading, setLoading] = useState(false);
 
   const handleOnLogout = (e) => {
@@ -44,9 +45,7 @@ const NavBar = () => {
       <div className="navbar__container">
         <ul className="navbar__list">
           <li>
-            <a href="/booking">
-              <span>{content.middle.booking.title}</span>
-            </a>
+            <a href="/booking">{content.middle.booking.title}</a>
           </li>
           <li>
             <a href="/" className="navbar__list__dropdown">
@@ -57,7 +56,9 @@ const NavBar = () => {
                 <a href="/">{content.middle.information.items.trains.title}</a>
               </li>
               <li>
-                <a href="/">{content.middle.information.items.attractions.title}</a>
+                <a href="/">
+                  {content.middle.information.items.attractions.title}
+                </a>
               </li>
               <li>
                 <a href="/">{content.middle.information.items.routes.title}</a>
@@ -73,7 +74,9 @@ const NavBar = () => {
                 <a href="/about">{content.middle.about.items.aboutUs.title}</a>
               </li>
               <li>
-                <a href="/contact">{content.middle.about.items.contactUs.title}</a>
+                <a href="/contact">
+                  {content.middle.about.items.contactUs.title}
+                </a>
               </li>
             </ul>
           </li>
@@ -101,6 +104,7 @@ const NavBar = () => {
             </div>
           )}
           <ThemeToggler />
+          <LanguageToggler />
         </div>
       </div>
     </div>
