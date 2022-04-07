@@ -1,4 +1,5 @@
-@use "./theme" as *;
+@use "./utils" as *;
+@use "./fontEN";
 
 @mixin centered-flex {
   display: flex;
@@ -20,9 +21,10 @@
     height: 100%;
     border-radius: 0.4em;
     outline: none;
-    font-family: "Inter", sans-serif;
     font-size: 1.2em;
     transition: border-color $transition-time ease-in;
+    font-family: fontEN.$subtitle-font;
+
     @include themify() {
       background-color: t(main-bg-color);
       color: t(main-font-color);
@@ -31,14 +33,16 @@
 
     &:focus,
     &:not(:placeholder-shown) {
-      border-color: $main-color;
+      @include themify() {
+        border-color: t(main-color);
+      }
     }
   }
 
   label {
     position: absolute;
     left: 0.5em;
-    top: 0.65em;
+    top: 0.83em;
     padding: 0 0.5em;
     cursor: text;
     transition: all calc($transition-time / 2) ease-in;
@@ -55,12 +59,13 @@
 
   input:focus ~ label,
   input:not(:placeholder-shown) ~ label {
-    top: -0.8em;
+    top: -0.63em;
     left: 0.8em;
-    font-weight: bold;
     font-size: 0.8em;
     cursor: default;
-    color: $main-color;
+    @include themify() {
+      color: t(main-color);
+    }
 
     span {
       display: none;
@@ -71,22 +76,28 @@
 .register {
   @include centered-flex;
   height: 100vh;
-  font: 400 1rem "IBM Plex Sans Thai Looped", sans-serif;
+  @include languify() {
+    font: 400 1rem l(subtitle-font);
+  }
   @include themify() {
     background-color: t(main-bg-color);
     color: t(main-font-color);
   }
 
   &__container {
-    padding: 3em 5em 5em 5em;
+    padding: 4em 5em 5em 5em;
     border-radius: 1rem;
     font-size: 0.9em;
-    border: 0.2rem solid $main-color;
+    @include themify() {
+      border: 0.2rem solid t(main-color);
+    }
   }
 
   legend {
     padding: 0 0.3em;
-    font: 1000 4.5em "IBM Plex Sans Thai", sans-serif;
+    @include languify() {
+      font: 1000 4.5em l(navigation-font);
+    }
   }
 
   &__form {
@@ -133,15 +144,24 @@
         width: 5.5em;
         height: 2.7rem;
         border-radius: 0.4rem;
-        font: 600 1.2em "IBM Plex Sans Thai", sans-serif;
         cursor: pointer;
-        border: 0.08rem solid $main-color;
+        transition: all $transition-time ease-in-out;
+        @include languify() {
+          font: 600 1.2em l(subtitle-font);
+        }
         @include themify() {
+          border: 0.08rem solid t(main-color);
           background-color: t(main-bg-color);
         }
 
         &:hover {
-          background-color: $color-2;
+          transform: scale(1.05);
+        }
+
+        &:active {
+          @include themify() {
+            background-color: t(color-3);
+          }
         }
       }
     }

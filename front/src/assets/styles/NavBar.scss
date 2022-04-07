@@ -1,4 +1,4 @@
-@use "./theme" as *;
+@use "./utils" as *;
 
 @mixin centered-flex {
   display: flex;
@@ -13,7 +13,9 @@
   position: fixed;
   width: 100vw;
   padding: 0 1.2rem;
-  font: 500 1.2rem "IBM Plex Sans Thai", sans-serif;
+  @include languify() {
+    font: 500 1.2rem l("navigation-font");
+  }
   transition: all $transition-time ease-in-out;
   @include themify() {
     background-color: t("main-bg-color");
@@ -58,7 +60,7 @@
       display: inline-block;
       text-align: center;
       position: relative;
-      width: 10.5rem;
+      width: 10rem;
       list-style: none;
       transition: all $transition-time ease-in-out;
 
@@ -66,11 +68,6 @@
         line-height: 3.8rem;
         display: block;
         text-decoration: none;
-      }
-
-      span {
-        font-weight: bold;
-        font-size: 1.05em;
       }
 
       &:hover {
@@ -86,7 +83,7 @@
 
     &__dropdown {
       line-height: 3.8rem;
-      width: 10.5rem;
+      width: 10rem;
       cursor: pointer;
     }
 
@@ -94,7 +91,9 @@
       display: none;
       position: absolute;
       transition: all calc($transition-time / 5) ease-in;
-      font: 200 0.8em "Pridi", serif;
+      @include languify() {
+        font: 300 0.8em l("subtitle-font");
+      }
       @include themify() {
         background-color: t("main-bg-color");
       }
@@ -113,7 +112,7 @@
 
   &__right {
     @include centered-flex;
-    gap: 2em;
+    gap: 1em;
   }
 
   &__auth {
@@ -140,15 +139,21 @@
       display: block;
     }
 
-    > a:hover {
-      text-decoration: underline;
+    > a {
+      margin: 0 3rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
 
     &__list {
       display: none;
       position: absolute;
       width: 8rem;
-      font: 200 0.8em "Pridi", serif;
+      @include languify() {
+        font: 300 0.8em l("subtitle-font");
+      }
       @include themify() {
         background-color: t("main-bg-color");
       }
@@ -170,7 +175,9 @@
       @include centered-flex;
       height: 3.8rem;
       width: 8rem;
-      font: 900 0.8em "Playfair Display", serif;
+      @include languify() {
+        font: 900 0.8em l("body-font");
+      }
       cursor: pointer;
 
       &:hover {

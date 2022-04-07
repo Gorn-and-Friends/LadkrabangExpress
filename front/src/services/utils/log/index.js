@@ -2,10 +2,10 @@ import isLogged from "./isLogged";
 import logIn from "./logIn";
 import logOut from "./logOut";
 
-const log = {
+const logService = {
   logIn,
   logOut,
   isLogged,
 };
 
-export default log;
+export default logService;

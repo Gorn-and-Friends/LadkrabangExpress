@@ -1,14 +1,16 @@
 import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
 import Router from "../routes";
-import ThemeProvider from "../services/utils/themeService";
+import store from "../services/store";
+
 
 const App = () => {
   return (
-    <ThemeProvider>
+    <Provider store={store}>
       <BrowserRouter>
         <Router />
       </BrowserRouter>
-    </ThemeProvider>
+    </Provider>
   );
 };
 
