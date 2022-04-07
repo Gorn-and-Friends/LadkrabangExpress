@@ -10,9 +10,9 @@ class User{
 
             console.log(req.body)
 
-            const {fname,lname,fnameTH,lnameTH,email,uname,pword,bdate} =req.body
+            const {firstname,lastname,email,username,password,birthdate} =req.body
 
-            if(!(fname && lname && fnameTH && lnameTH && email && uname &&pword && bdate)){
+            if(!(firstname && lastname && email && username && password && birthdate)){
                 res.status(400).send("All input required")
             }
 
@@ -20,23 +20,14 @@ class User{
             if(oldUser){
                 return res.status(409).send("This user already exist. Please login")
             }
-            const encrytedPassword = await bcrypt.hash(pword, 10)
-
-            // const user = await userModel.create({
-            //     first_name,
-            //     last_name,
-            //     email,
-            //     pword: encrytedPassword
-            // })
+            const encrytedPassword = await bcrypt.hash(password, 10)
             
-            const brithDate = new Date(bdate)
+            const brithDate = new Date(birthdate)
             const user = new userModel({
-                first_name: fname,
-                last_name: lname,
-                thai_first_name: fnameTH,
-                thai_last_name: lnameTH,
+                firstname: firstName,
+                lastName: lastName,
                 email: email,
-                username: uname,
+                userName: username,
                 password: encrytedPassword,
                 birthdate: brithDate,
             })
@@ -57,22 +48,23 @@ class User{
 
     static async login(req,res){
         try{
-            const { uname , pword} = req.body
+            console.log(req.body)
+            const { username , password} = req.body
 
-            if(!(uname && pword)){
+            if(!(username && password)){
                 res.status(400).send("All input required")
             }
 
 
             //check is user input username or email
             let user = Object
-            if(uname.includes("@")){
-                user = await userModel.findOne({ email: uname })
+            if(username.includes("@")){
+                user = await userModel.findOne({ email: username })
             }else{
-                user = await userModel.findOne({ username: uname })
+                user = await userModel.findOne({ username: username })
             }
             const email = user.email
-            if(user && (await bcrypt.compare(pword,user.password))){
+            if(user && (await bcrypt.compare(password,user.password))){
                 const token = jsonwebtoken.sign(
                     {user_id: user._id, email},
                     process.env.TOKEN_KEY,
@@ -82,6 +74,7 @@ class User{
                 )
                 user.token = token
                 res.status(200).json(user)
+                // res.status(200).send(token)
             }else{
                 res.status(400).send("Invalid login")
             }

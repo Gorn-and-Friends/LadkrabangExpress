@@ -1,5 +1,7 @@
 const trainModel = require('../model/train.js')
 const mongoose = require('mongoose')
+const fs = require('fs')
+const csv = require('csv-parser')
 
 class Train{
     static async add(req,res){
@@ -53,7 +55,6 @@ class Train{
             const { origin, destination, departure_time, date, time, number_of_passenger, return_date, return_time } = req.body
 
             // const foundStation = await trainModel.find({"station.station_name" : req.body.origin_station})
-
             // const foundTrain = await trainModel.aggregate([
             //     {
             //         // $project: { train_number: 1,"station.station_name":1},
@@ -68,7 +69,25 @@ class Train{
             // console.log(foundTrain)
             for(let i of foundTrain){
                 console.log(i.train_number)
+                let results = []
+                if(i.class_in_train.class_3.class_available){
+                    // const jsonTemp = require('../price_test.json')
+                    let rawdata = fs.readFileSync('price_test.json');
+                    let jsonTemp = JSON.parse(rawdata);
+                    console.log(jsonTemp)
+                    for(let j in jsonTemp){       
+                        if(j == origin || j == destination){
+                            for(let k in jsonTemp[j]){
+                                if(k == origin || k == destination){
+                                    console.log("-->" + jsonTemp[j][k])
+                                }
+                            }
+                        }
+                    }
+                }
             }
+            //Check class of train
+
             res.status(200).json(foundTrain)
             
         }catch(err){

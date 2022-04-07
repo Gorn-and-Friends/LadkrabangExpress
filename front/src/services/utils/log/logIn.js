@@ -2,15 +2,15 @@ import axios from "axios";
 
 const logIn = async (info) => {
   const port = 5000;
-  const url = `http://localhost:${port}/api/log`;
+  const url = `http://localhost:${port}/api/login`;
 
-  const { data: token } = await axios.post(url, {
+  const res = await axios.post(url, {
     username: info.uname,
-    password: info.password,
+    password: info.pword,
   });
   
-  console.log(token);
-  localStorage.setItem("token", token.access);
+  console.log(res);
+  localStorage.setItem("token", res.data.token);
 };
 
 export default logIn;
