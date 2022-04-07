@@ -25,9 +25,9 @@ class User{
             const brithDate = new Date(birthdate)
             const user = new userModel({
                 firstname: firstName,
-                lastName: lastName,
+                lastname: lastName,
                 email: email,
-                userName: username,
+                username: username,
                 password: encrytedPassword,
                 birthdate: brithDate,
             })
@@ -78,9 +78,6 @@ class User{
             }else{
                 res.status(400).send("Invalid login")
             }
-            
-        
-
         }catch(err){
             console.log(err)
             res.send("error in backend")
