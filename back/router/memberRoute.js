@@ -14,6 +14,7 @@ router.route('/addTrain').post(trainDAO.add)
 router.route('/findTrain').post(trainDAO.customerFindTrain)
 router.route('/register').post(userDAO.register)
 router.route('/login').post(userDAO.login)
+router.route('/test').get(trainDAO.test)
 
 // export default router
 module.exports = router

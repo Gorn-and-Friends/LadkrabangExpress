@@ -50,23 +50,13 @@ class Train{
 
     static async customerFindTrain(req,res){
         //ใช้กับหน้า find your best train
-        //input => origin, destination, departure_time, date, time, number_of_passenger, return_date, return_time
+        //input => origin, destination, time, date, passenger,dateReturn, timeReturn
         try{
-            const { origin, destination, departure_time, date, time, number_of_passenger, return_date, return_time } = req.body
+            const { origin, destination, date, time, passenger, dateReturn, timeReturn } = req.body
 
-            // const foundStation = await trainModel.find({"station.station_name" : req.body.origin_station})
-            // const foundTrain = await trainModel.aggregate([
-            //     {
-            //         // $project: { train_number: 1,"station.station_name":1},
-            //         $project: { train_number: 1}
-            //     },{
-            //         // $match: {["station.station_name": origin],["station.station_name": destination]}
-            //         $match:{station: origin}
-            //     }
-            // ])
             const foundTrain = await trainModel.find({$and:[{"station.station_name": origin},{"station.station_name": destination}]})
             console.log("--------------------------------------------------------------------------------------------------")
-            // console.log(foundTrain)
+
             for(let i of foundTrain){
                 console.log(i.train_number)
                 let results = []
@@ -79,16 +69,32 @@ class Train{
                         if(j == origin || j == destination){
                             for(let k in jsonTemp[j]){
                                 if(k == origin || k == destination){
-                                    console.log("-->" + jsonTemp[j][k])
+                                    // console.log("-->" + jsonTemp[j][k])
                                 }
                             }
                         }
                     }
                 }
             }
-            //Check class of train
+            //Check class of train foundTrain[i].
+            const filterTrainData = []
+            for(let i in foundTrain){
+                const { deTime, arTime,duration} = await Train.findDepartureArrivalTime(foundTrain[i].station,origin,destination)
 
-            res.status(200).json(foundTrain)
+                filterTrainData.push({
+                    // "trainNumber":,
+                    "origin": origin, 
+                    "destination": destination, 
+                    "departureTime": deTime, 
+                    "arrivalTime": arTime, 
+                    "duration": duration,
+                    "date": date, 
+                    // "number_of_passenger":, 
+                    
+                })
+            }
+
+            res.status(200).json(filterTrainData)
             
         }catch(err){
             console.log(err)
@@ -97,16 +103,61 @@ class Train{
 
     }
 
+    static findDepartureArrivalTime(station,origin,destination) {
+        
+        let temp = station.find( ({station_name}) => station_name === origin)
+        const deTimeH = temp.departure_hour
+        const deTimeM = temp.departure_minute
+        temp = station.find( ({station_name}) => station_name === destination)
+        const arTimeH = temp.departure_hour
+        const arTimeM = temp.departure_minute
+
+        const deTime = deTimeH + ":" + deTimeM
+        const arTime = arTimeH + ":" + arTimeM
+
+        const duration = this.calculateTravelDuration(Number(deTimeH),Number(deTimeM),Number(arTimeH),Number(arTimeM))
+
+        return { deTime, arTime,duration}
+    }
+
+    static calculateTravelDuration(deTimeH,deTimeM,arTimeH,arTimeM){
+        let deltaH = 0
+        let deltaM = 0
+        if(arTimeM-deTimeM > 0){
+            deltaH = arTimeH - deTimeH
+            deltaM = arTimeM - deTimeM
+        }else{
+            arTimeH -= 1
+            arTimeM += 60
+            deltaH = arTimeH - deTimeH
+            deltaM = arTimeM - deTimeM
+        }
+        return String(deltaH) + ":" + String(deltaM)
+    }
+
     static async test(req,res){
         try{
-            console.log(req.body)
+            this.calculatePrice(req.body.origin,req.body.destination)
             res.send("Good")
         }catch(err){
             console.log(err)
-            res.send("error")
+            res.send("error someting")
         }
 
     }
+
+    static calculatePrice(oring , destination){
+        let results = []
+        fs.createReadStream('./price_class_3.csv')
+        .pipe(csv({
+            headers: false
+        }))
+        .on('data', (data) => results.push(data))
+        .on('end', () => {
+            console.log(results);
+        });
+            }
+
 }
 
 module.exports = Train
