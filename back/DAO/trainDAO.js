@@ -54,35 +54,29 @@ class Train{
         try{
             const { origin, destination, date, time, passenger, dateReturn, timeReturn } = req.body
 
-            const foundTrain = await trainModel.find({$and:[{"station.station_name": origin},{"station.station_name": destination}]})
-            console.log("--------------------------------------------------------------------------------------------------")
+            const foundTrainTemp = await trainModel.find({$and:[{"station.station_name": origin},{"station.station_name": destination}]})
+            
+            
+            //เลือกแค่อันที่สถานีเป็นต้นทางกับปลายทางตามลำดับ
+            const foundTrain = Train.findTrainOrderStation(foundTrainTemp,origin, destination)
 
-            for(let i of foundTrain){
-                console.log(i.train_number)
-                let results = []
-                if(i.class_in_train.class_3.class_available){
-                    // const jsonTemp = require('../price_test.json')
-                    let rawdata = fs.readFileSync('price_test.json');
-                    let jsonTemp = JSON.parse(rawdata);
-                    console.log(jsonTemp)
-                    for(let j in jsonTemp){       
-                        if(j == origin || j == destination){
-                            for(let k in jsonTemp[j]){
-                                if(k == origin || k == destination){
-                                    // console.log("-->" + jsonTemp[j][k])
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            //Check class of train foundTrain[i].
+            console.log("--------------------------------------------------------------------------------------------------")
+            
+            //คำนวนราคาตั๋ว
+            
+
+            //Check class of train
+            
+            //Make JSON to front
             const filterTrainData = []
             for(let i in foundTrain){
-                const { deTime, arTime,duration} = await Train.findDepartureArrivalTime(foundTrain[i].station,origin,destination)
 
+                //คำนวนราคาตั๋ว
+                const price = Train.calculatePrice(foundTrain[i],origin,destination)
+                const { deTime, arTime,duration} = await Train.findDepartureArrivalTime(foundTrain[i].station,origin,destination)
                 filterTrainData.push({
                     // "trainNumber":,
+                    "trainNumber": foundTrain[i].train_number,
                     "origin": origin, 
                     "destination": destination, 
                     "departureTime": deTime, 
@@ -90,6 +84,7 @@ class Train{
                     "duration": duration,
                     "date": date, 
                     // "number_of_passenger":, 
+                    "ticketPrice": price
                     
                 })
             }
@@ -101,6 +96,17 @@ class Train{
             res.send("error")
         }
 
+    }
+    
+
+    static findTrainOrderStation(foundTrainTemp,origin, destination){
+        let foundTrain = []
+        for(let i in foundTrainTemp){
+            if((foundTrainTemp[i].station.findIndex( ({station_name}) => station_name === origin)) < (foundTrainTemp[i].station.findIndex( ({station_name}) => station_name === destination))) {
+                foundTrain.push(foundTrainTemp[i])
+            }
+        }
+        return foundTrain
     }
 
     static findDepartureArrivalTime(station,origin,destination) {
@@ -146,17 +152,44 @@ class Train{
 
     }
 
-    static calculatePrice(oring , destination){
-        let results = []
-        fs.createReadStream('./price_class_3.csv')
-        .pipe(csv({
-            headers: false
-        }))
-        .on('data', (data) => results.push(data))
-        .on('end', () => {
-            console.log(results);
-        });
+    static calculatePrice(foundTrain , origin , destination){
+        // for(let i of foundTrain){
+                
+            console.log(foundTrain.train_number)
+            let results = []
+            if(Boolean(foundTrain.class_in_train.class_3.class_available)){
+                let rawdata = fs.readFileSync('fare.json');
+                let jsonTemp = JSON.parse(rawdata);
+                // console.log(jsonTemp)
+                for(let j in jsonTemp){       
+                    if(j == origin || j == destination){
+                        for(let k in jsonTemp[j]){
+                            if(k == origin || k == destination){
+                                // console.log("-->" + jsonTemp[j][k])
+                                return jsonTemp[j][k]
+                            }
+                        }
+                    }
+                }
             }
+            else if(Boolean(foundTrain.class_in_train.class_2.class_available)){
+                let rawdata = fs.readFileSync('fare2.json');
+                let jsonTemp = JSON.parse(rawdata);
+                // console.log(jsonTemp)
+                for(let j in jsonTemp){       
+                    if(j == origin || j == destination){
+                        for(let k in jsonTemp[j]){
+                            if(k == origin || k == destination){
+                                // console.log("-->" + jsonTemp[j][k])
+                                return jsonTemp[j][k]
+                            }
+                        }
+                    }
+                }
+            }
+        // }
+            
+    }
 
 }
 
