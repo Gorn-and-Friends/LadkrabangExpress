@@ -58,11 +58,10 @@ class Train{
             
             
             //เลือกแค่อันที่สถานีเป็นต้นทางกับปลายทางตามลำดับ
-            const foundTrain = Train.findTrainOrderStation(foundTrainTemp,origin, destination)
-
+            let foundTrain = await Train.findTrainOrderStation(foundTrainTemp,origin, destination)
+            foundTrain = await Train.filterDay(foundTrain,date)
             console.log("--------------------------------------------------------------------------------------------------")
             
-            //คำนวนราคาตั๋ว
             
 
             //Check class of train
@@ -72,10 +71,10 @@ class Train{
             for(let i in foundTrain){
 
                 //คำนวนราคาตั๋ว
-                const price = Train.calculatePrice(foundTrain[i],origin,destination)
+                let price = await Train.calculatePrice(foundTrain[i],origin,destination)
+                const totalPrice = Number(price) * Number(passenger)
                 const { deTime, arTime,duration} = await Train.findDepartureArrivalTime(foundTrain[i].station,origin,destination)
                 filterTrainData.push({
-                    // "trainNumber":,
                     "trainNumber": foundTrain[i].train_number,
                     "origin": origin, 
                     "destination": destination, 
@@ -83,8 +82,8 @@ class Train{
                     "arrivalTime": arTime, 
                     "duration": duration,
                     "date": date, 
-                    // "number_of_passenger":, 
-                    "ticketPrice": price
+                    "passenger": passenger, 
+                    "ticketPrice": totalPrice
                     
                 })
             }
@@ -189,6 +188,10 @@ class Train{
             }
         // }
             
+    }
+
+    static filterDay(foundTrain,date){
+        
     }
 
 }

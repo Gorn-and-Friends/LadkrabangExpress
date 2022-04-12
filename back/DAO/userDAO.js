@@ -10,13 +10,14 @@ class User{
 
             console.log(req.body)
 
-            const {firstname,lastname,email,username,password,birthdate} =req.body
+            const {firstname,lastname,email,username,password,birthdate} = req.body
 
             if(!(firstname && lastname && email && username && password && birthdate)){
                 res.status(400).send("All input required")
             }
 
             const oldUser = await userModel.findOne({ email })
+
             if(oldUser){
                 return res.status(409).send("This user already exist. Please login")
             }
@@ -39,6 +40,7 @@ class User{
 
             user.token = token
             user.save()
+
             res.status(201).json(user)
 
         }catch(err){
@@ -54,7 +56,6 @@ class User{
             if(!(username && password)){
                 res.status(400).send("All input required")
             }
-
 
             //check is user input username or email
             let user = Object
