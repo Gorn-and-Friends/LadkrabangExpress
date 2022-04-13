@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import "../../../assets/styles/Login.scss";
+import { useDispatch, useSelector } from "react-redux";
+import "./style.scss";
 import icon from "../../../assets/icons/icon.png";
 import iconDark from "../../../assets/icons/icon-dark.png";
 import log from "../../../services/utils/log";
-import Loading from "../../../components/loading";
+import actions from "../../../services/actions";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const theme = useSelector((state) => state.theme);
+  const lang = useSelector((state) => state.lang);
+
   useEffect(() => {
     document.title = "Log in - LKBX";
   }, []);
 
-  const navigate = useNavigate();
-  const theme = useSelector((state) => state.theme);
-  const lang = useSelector((state) => state.lang);
   const content =
     lang === "th"
       ? require("../../../assets/jsons/login/th.json")
@@ -23,17 +25,15 @@ const Login = () => {
     uname: "",
     pword: "",
   });
-  const [loading, setLoading] = useState(false);
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      dispatch(actions.setLoading(true));
       await log.logIn(login);
-      setLoading(false);
-      navigate("/");
+      navigate(-1);
     } catch (err) {
-      setLoading(false);
+      dispatch(actions.setLoading(false));
       console.log(err);
     }
   };
@@ -42,12 +42,9 @@ const Login = () => {
     const temp = { ...login };
     temp[input.id] = input.value;
     setLogin(temp);
-    console.log(temp);
   };
 
-  return loading ? (
-    <Loading />
-  ) : (
+  return (
     <form className="login" onSubmit={handleOnSubmit}>
       <fieldset className="login__container">
         <legend align="center">

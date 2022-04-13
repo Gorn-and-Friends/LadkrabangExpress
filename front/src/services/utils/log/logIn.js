@@ -8,9 +8,8 @@ const logIn = async (info) => {
     username: info.uname,
     password: info.pword,
   });
-  
-  console.log(res);
-  localStorage.setItem("token", res.data.token);
+
+  localStorage.setItem("data", JSON.stringify(res.data));
 };
 
 export default logIn;

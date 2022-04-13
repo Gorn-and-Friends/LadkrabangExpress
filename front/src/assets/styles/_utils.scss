@@ -5,6 +5,7 @@
 @use "./fontEN";
 
 $transition-time: 0.2s;
+$navbar-height: 3.8rem;
 
 $langs: (
   th: (
@@ -35,6 +36,7 @@ $themes: (
     font-color-2: light.$font-color-2,
     font-color-3: light.$font-color-3,
     font-color-4: light.$font-color-4,
+    faded: light.$faded,
   ),
   dark: (
     main-color: palette.$main-color,
@@ -49,6 +51,7 @@ $themes: (
     font-color-2: dark.$font-color-2,
     font-color-3: dark.$font-color-3,
     font-color-4: dark.$font-color-4,
+    faded: dark.$faded,
   ),
 );
 

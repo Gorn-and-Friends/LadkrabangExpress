@@ -1,11 +1,7 @@
 import ActionTypes from "../constants/actionTypes";
+import InitialStates from "../constants/initialStates";
 
-const preferDark =
-  window.matchMedia &&
-  window.matchMedia("(prefers-color-scheme: dark)").matches;
-const initialTheme = preferDark ? "dark" : "light";
-
-const themeReducer = (state = initialTheme, { type, payload }) => {
+const themeReducer = (state = InitialStates.THEME, { type, payload }) => {
   switch (type) {
     case ActionTypes.SET_THEME:
       return (state = payload);

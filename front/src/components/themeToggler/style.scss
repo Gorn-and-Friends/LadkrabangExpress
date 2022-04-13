@@ -1,4 +1,4 @@
-@use "./utils" as *;
+@use "../../assets/styles/utils" as *;
 
 .theme-toggler {
   margin: 0;
@@ -23,6 +23,8 @@
 
     &.show {
       opacity: 1;
+      -webkit-transform: rotate(360deg);
+      -ms-transform: rotate(360deg);
       transform: rotate(360deg);
     }
 

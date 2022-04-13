@@ -1,4 +1,5 @@
-@use "./utils" as *;
+@use "../../assets/styles/utils" as *;
+@use "../../assets/styles/fontTH";
 
 @mixin centered-flex {
   display: flex;
@@ -10,15 +11,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: fixed;
-  width: 100vw;
+  width: 100%;
+  height: $navbar-height;
   padding: 0 1.2rem;
   @include languify() {
-    font: 500 1.2rem l("navigation-font");
+    font: 500 1.2rem l(navigation-font);
   }
   transition: all $transition-time ease-in-out;
   @include themify() {
-    background-color: t("main-bg-color");
+    background-color: t(main-bg-color);
+  }
+
+  &.scrollable {
+    position: sticky;
+    top: 0;
   }
 
   &__container {
@@ -38,7 +44,7 @@
     @include centered-flex;
     position: relative;
     width: 4.5rem;
-    height: 3.8rem;
+    height: $navbar-height;
     transition: opacity $transition-time ease-in-out;
 
     &__icon {
@@ -65,14 +71,14 @@
       transition: all $transition-time ease-in-out;
 
       a {
-        line-height: 3.8rem;
+        line-height: $navbar-height;
         display: block;
         text-decoration: none;
       }
 
       &:hover {
         @include themify() {
-          background-color: t("bg-color-2");
+          background-color: t(bg-color-2);
         }
 
         > ul {
@@ -82,7 +88,7 @@
     }
 
     &__dropdown {
-      line-height: 3.8rem;
+      line-height: $navbar-height;
       width: 10rem;
       cursor: pointer;
     }
@@ -90,20 +96,25 @@
     &__sublist {
       display: none;
       position: absolute;
-      transition: all calc($transition-time / 5) ease-in;
-      @include languify() {
-        font: 300 0.8em l("subtitle-font");
-      }
+      box-sizing: content-box;
       @include themify() {
-        background-color: t("main-bg-color");
+        border-bottom: 1px solid t(font-color-2);
+      }
+      @include languify() {
+        font: 300 0.8em l(subtitle-font);
       }
 
       li,
       li a {
-        line-height: 3rem;
+        line-height: calc($navbar-height * 0.8);
+        transition: all calc($transition-time / 3) ease-in;
+        z-index: 99;
+        @include themify() {
+          background-color: t(main-bg-color);
+        }
         &:hover {
           @include themify() {
-            background-color: t("bg-color-3");
+            background-color: t(bg-color-3);
           }
         }
       }
@@ -124,12 +135,12 @@
       list-style: none;
 
       a {
-        line-height: 3.8rem;
+        line-height: $navbar-height;
         display: block;
 
         &:hover {
           @include themify() {
-            background-color: t("bg-color-2");
+            background-color: t(bg-color-2);
           }
         }
       }
@@ -152,10 +163,11 @@
       position: absolute;
       width: 8rem;
       @include languify() {
-        font: 300 0.8em l("subtitle-font");
+        font: 300 0.8em l(subtitle-font);
       }
       @include themify() {
-        background-color: t("main-bg-color");
+        background-color: t(main-bg-color);
+        border-bottom: 1px solid t(font-color-2);
       }
 
       li,
@@ -165,7 +177,7 @@
 
         &:hover {
           @include themify() {
-            background-color: t("bg-color-3");
+            background-color: t(bg-color-3);
           }
         }
       }
@@ -173,16 +185,14 @@
 
     &__dropdown {
       @include centered-flex;
-      height: 3.8rem;
+      height: $navbar-height;
       width: 8rem;
-      @include languify() {
-        font: 900 0.8em l("body-font");
-      }
+      font: 900 1em fontTH.$body-font;
       cursor: pointer;
 
       &:hover {
         @include themify() {
-          background-color: t("bg-color-2");
+          background-color: t(bg-color-2);
         }
       }
     }

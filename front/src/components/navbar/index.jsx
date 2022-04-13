@@ -1,30 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import "../../assets/styles/NavBar.scss";
+import { useDispatch, useSelector } from "react-redux";
+import "./style.scss";
 import icon from "../../assets/icons/icon.png";
 import iconDark from "../../assets/icons/icon-dark.png";
 import log from "../../services/utils/log";
 import ThemeToggler from "../themeToggler";
 import LanguageToggler from "../langToggler";
+import actions from "../../services/actions";
+import classService from "../../services/utils/class";
 
 const NavBar = () => {
-  const user = log.isLogged() ? log.isLogged() : "Chanon";
+  const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
+  const theme = useSelector((state) => state.theme);
+  const displayName = log.isLogged() ? log.isLogged().firstname : null;
   const content =
     lang === "th"
       ? require("../../assets/jsons/navbar/th.json")
       : require("../../assets/jsons/navbar/en.json");
   const navigate = useNavigate();
-  const theme = useSelector((state) => state.theme);
-  const [loading, setLoading] = useState(false);
 
   const handleOnLogout = (e) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch(actions.setLoading(true));
     log.logOut();
-    setLoading(false);
-    navigate("/");
+    dispatch(actions.setLoading(false));
+    navigate(0);
   };
 
   return (
@@ -86,7 +88,7 @@ const NavBar = () => {
         <div className="navbar__right">
           {log.isLogged() ? (
             <div className="navbar__auth">
-              <div className="navbar__auth__dropdown">{user}</div>
+              <div className="navbar__auth__dropdown">{displayName}</div>
               <ul className="navbar__auth__list">
                 <li>
                   <a href="/profile">{content.right.logged.profile}</a>

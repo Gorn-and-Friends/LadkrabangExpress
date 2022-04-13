@@ -1,0 +1,25 @@
+{
+  "form": {
+    "header": "Find the best train for your trip",
+    "fields": {
+      "origin": "Origin",
+      "destination": "Destination",
+      "date": "Date",
+      "time": "Time",
+      "passengers": "Passengers",
+      "returnDate": "Return date",
+      "returnTime": "Return time"
+    },
+    "buttons": {
+      "round": "Round",
+      "continue": "Continue"
+    },
+    "errors": {
+      "earlyReturn":"The date of return must be in the future of the outward journey."
+    }
+  },
+  "train": {},
+  "class": {},
+  "seat": {},
+  "checkout": {}
+}

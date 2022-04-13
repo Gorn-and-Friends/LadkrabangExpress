@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "../../assets/styles/LangToggler.scss";
+import "./style.scss";
 import actions from "../../services/actions";
 import classService from "../../services/utils/class";
 

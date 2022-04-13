@@ -1,0 +1,22 @@
+{
+  "form": {
+    "header": "ค้นหาขบวนรถไฟที่ดีที่สุดสำหรับคุณ",
+    "fields": {
+      "origin": "ต้นทาง",
+      "destination": "ปลายทาง",
+      "date": "วันที่",
+      "time": "เวลา",
+      "passengers": "จำนวนผู้โดยสาร",
+      "returnDate": "วันที่ขากลับ",
+      "returnTime": "เวลาขากลับ"
+    },
+    "buttons": {
+      "round": "ไป-กลับ",
+      "continue": "ต่อไป"
+    }
+  },
+  "train": {},
+  "class": {},
+  "seat": {},
+  "checkout": {}
+}

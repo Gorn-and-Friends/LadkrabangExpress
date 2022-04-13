@@ -16,13 +16,12 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  @include themify() {
+    background-color: t("main-bg-color");
+  }
 
   &.preload * {
     $null-transition: none !important;
@@ -37,9 +36,4 @@ body {
   &::-webkit-scrollbar {
     display: none;
   }
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
 }

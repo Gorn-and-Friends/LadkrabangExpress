@@ -6,10 +6,15 @@
     "email": "E-mail",
     "uname": "Username",
     "pword": "Password",
+    "repwd": "Confirm Password",
     "bdate": "Birthdate"
   },
   "buttons": {
     "back": "Back",
     "submit": "Submit"
+  },
+  "errors": {
+    "missingInput": "",
+    "invalidPword": ""
   }
 }
