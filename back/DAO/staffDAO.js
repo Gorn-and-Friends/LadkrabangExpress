@@ -1,13 +1,44 @@
 const ticketModel = require('../model/ticket.js')
 const userModel = require('../model/user.js')
 const mongoose = require('mongoose')
+const Ticket = require("./ticketDAO.js")
 
 
 class Staff{
     
-    static showReservTicket(req,res){
-        //ใช้กับหน้า staff เพื่อแสดงตั๋วที่ทำการจองที่นั่งทั้งหมดในขบวนนั้น
-        const { trainNumber , date , trainClass} =req.body
+    static async showReservTicket(req,res){
+        try {
+            //ใช้กับหน้า staff เพื่อแสดงตั๋วที่ทำการจองที่นั่งทั้งหมดในขบวนนั้น
+            const { trainNumber , date , trainClass} =req.body
+
+            const d = new Date(date)
+            const foundTicket = await ticketModel.find({$and:[{"train_number" : String(trainNumber)}, {"date" : d}]})
+
+            let result = []
+
+            for (let i = 0 ; i<foundTicket.length ; i++) {
+                const userID = foundTicket[i].user_id
+                // const objID = mongoose.Types.ObjectId(strID)
+                const foundUser = await userModel.findById(userID)
+                
+                let temp = foundTicket[i].toObject()
+                temp.firstname = foundUser.firstname
+                temp.lastname = foundUser.lastname
+
+                result.push(temp)
+            }
+
+            // const trainTemp = await ticketModel.findOne({"train_number" : String(trainNumber)})
+            // console.log(trainID)
+            // const d = new Date(date)
+            // const foundTicket = await Ticket.findReservedSeat(trainTemp.train_id, d)
+            // console.log(foundTicket)
+
+            res.send(result)
+        }catch (err){
+            console.log(err)
+            res.send("Error on backend")
+        }
     }
 
     static async showTicket(req,res){
