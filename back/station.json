@@ -1,0 +1,281 @@
+{
+    "Bangkok" : {
+        "en":"Bangkok",
+        "th":"กรุงเทพฯ"
+    },
+
+    "ํYommaraj" : {
+        "en":"ํYommaraj",
+        "th":"ยมราช"
+    },
+
+    "Uruphong" : {
+        "en":"Uruphong",
+        "th":"อุรุพงษ์"
+    },
+
+    "Phyathai" : {
+        "en":"Phyathai",
+        "th":"พญาไท"
+    },
+
+    "Makkasan" : {
+        "en":"Makkasan",
+        "th":"มักกะสัน"
+    },
+
+    "Asok" : {
+        "en":"Asok",
+        "th":"อโศก"
+    },
+
+    "Klongtan" : {
+        "en":"Klong tan",
+        "th":"คลองตัน"
+    },
+
+    "Sukhumvit71" : {
+        "en":"Sukhumvit 71",
+        "th":"สุขุมวิท71"
+    },
+
+    "Huamak" : {
+        "en":"Huamak",
+        "th":"พญาไท"
+    },
+
+    "BanTapChang" : {
+        "en":"Ban Tap Chang",
+        "th":"บ้านทับช้าง"
+    },
+
+    "SoiWatLanboon" : {
+        "en":"Soi Wat Lan Boon",
+        "th":"ซอยวัดลานบุญ"
+    },
+
+    "Ladkrabang" : {
+        "en":"Ladkrabang",
+        "th":"ลาดกระบัง"
+    },
+
+    "Prajomklao" : {
+        "en":"Prajomklao",
+        "th":"พระจอมเกล้า"
+    },
+
+    "Huatake" : {
+        "en":"Huatake",
+        "th":"หัวตะเข้"
+    },
+
+    "KhlongLuangPhaeng" : {
+        "en":"Khlong Luang Phaeng",
+        "th":"คลองหลวงแพ่ง"
+    },
+
+    "KhlongUdomChonlajorn" : {
+        "en":"Khlong Udom Chonlajorn",
+        "th":"คลองอุดมชลจร"
+    },
+    
+    "Preng" : {
+        "en":"Preng",
+        "th":"เปรง"
+    },
+
+    "KhlongKwaengKlan" : {
+        "en":"Khlong Kwaeng Klan",
+        "th":"คลองแขวงกลั่น"
+    },
+
+    "KhlongBangPhra" : {
+        "en":"Khlong Bang Phra",
+        "th":"คลองบางพระ"
+    },
+
+    "BangToei" : {
+        "en":"Bang Toei",
+        "th":"บางเตย"
+    },
+
+    "ChachoengsaoJunction" : {
+        "en":"Chachoengsao Junction",
+        "th":"ชุมทางฉะเชิงเทรา"
+    },
+
+    "PaetRiu" : {
+        "en":"PaetRiu",
+        "th":"แปดริ้ว"
+    },
+
+    "BangNamPriao" : {
+        "en":"Bang Nam Priao",
+        "th":"บางน้ำเปรี้ยว"
+    },
+
+    "KhlongSipKaoJunction" : {
+        "en":"KhlongSipKao Junction",
+        "th":"ชุมทางคลองสิบเก้า"
+    },
+
+    "Yothaka" : {
+        "en":"Yothaka",
+        "th":"โยทะกา"
+    },
+
+    "BanSang" : {
+        "en":"Ban Sang",
+        "th":"บ้านสร้าง"
+    },
+
+    "BanPakPhli" : {
+        "en":"Ban Pak Phli",
+        "th":"บ้านปากพลี"
+    },
+
+    "Prachinburi" : {
+        "en":"Prachin buri",
+        "th":"ปราจีนบุรี"
+    },
+
+    "KhokMakok" : {
+        "en":"Khok Makok",
+        "th":"โคกมะกอก"
+    },
+
+    "Prachantakham" : {
+        "en":"Prachantakham",
+        "th":"ประจันตคาม"
+    },
+
+    "BanDongBang" : {
+        "en":"Ban Dong Bang",
+        "th":"บ้านดงบัง"
+    },
+
+    "BanPhromSaeng" : {
+        "en":"Ban Phrom Saeng",
+        "th":"บ้านพรมแสง"
+    },
+
+    "KabinBuri" : {
+        "en":"Kabin Buri",
+        "th":"กบินทร์บุรี"
+    },
+
+    "NongSang" : {
+        "en":"Nong Sang",
+        "th":"หนองสัง"
+    },
+
+    "PhraProng" : {
+        "en":"Phra Prong",
+        "th":"พระปรง"
+    },
+
+    "BanKaeng" : {
+        "en":"Ban Kaeng",
+        "th":"บ้านแก้ง"
+    },
+
+    "SalaLamduan" : {
+        "en":"Sala Lamduan",
+        "th":"ศาลาลำดวน"
+    },
+
+    "SaKaeo" : {
+        "en":"Sa Kaeo",
+        "th":"สระแก้ว"
+    },
+
+    "ThaKasem" : {
+        "en":"Tha Kasem",
+        "th":"ท่าเกษม"
+    },
+
+    "HuaiChot" : {
+        "en":"HuaiChot",
+        "th":"ห้วยโจด"
+    },
+
+    "WatthanaNakhon" : {
+        "en":"WatthanaNakhon",
+        "th":"วัฒนานคร"
+    },
+
+    "HuaiDua" : {
+        "en":"HuaiDua",
+        "th":"ห้วยเดื่อ"
+    },
+
+    "Aranyaprathet" : {
+        "en":"Aranyaprathet",
+        "th":"อรัญประเทศ"
+    },
+
+    "DonSiNon" : {
+        "en":"DonSiNon",
+        "th":"ดอนสีนนท์"
+    },
+
+    "PhanThong" : {
+        "en":"PhanThong",
+        "th":"พานทอง"
+    },
+
+    "Chonburi" : {
+        "en":"Chonburi",
+        "th":"ชลบุรี"
+    },
+
+    "BangPhra" : {
+        "en":"Bang Phra",
+        "th":"บางพระ"
+    },
+
+    "KhaoPhrabat" : {
+        "en":"Khao Phrabat",
+        "th":"เขาพระบาท"
+    },
+
+    "SiRachaJunction" : {
+        "en":"SiRacha Junction",
+        "th":"ชุมทางศรีราชา"
+    },
+
+    "BangLamung" : {
+        "en":"Bang Lamung",
+        "th":"บางละมุง"
+    },
+
+    "Pattaya" : {
+        "en":"Pattaya",
+        "th":"พัทยา"
+    },
+
+    "PattayaTai" : {
+        "en":"Pattaya Tai",
+        "th":"พัทยาใต้"
+    },
+
+    "BanHuaiKhwang" : {
+        "en":"Ban Huai Khwang",
+        "th":"บ้านห้วยขวาง"
+    },
+
+    "Yanasangwararam" : {
+        "en":"Yanasangwararam",
+        "th":"ญาณสังวราราม"
+    },
+
+    "SuanNongNuch" : {
+        "en":"Suan Nong Nuch",
+        "th":"สวนนงนุช"
+    },
+
+    "BanPhluTaLuang" : {
+        "en":"Ban Phlu Ta Luang",
+        "th":"บ้านพลูตาหลวง"
+    }
+}
