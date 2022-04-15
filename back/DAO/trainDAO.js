@@ -1,4 +1,5 @@
 const trainModel = require('../model/train.js')
+const ticketModel = require('../model/ticket')
 const mongoose = require('mongoose')
 const fs = require('fs')
 const csv = require('csv-parser')
@@ -72,18 +73,35 @@ class Train{
 
                 //คำนวนราคาตั๋ว
                 let price = await Train.calculatePrice(foundTrain[i],origin,destination)
+                
+                //คำนวนราคาตั๋วรวม
                 const totalPrice = Number(price) * Number(passenger)
+                
+                //คำนวนเวลาออกเดินทาง เวลาถึง และเวลาที่ใช้ในการเดินทาง
                 const { deTime, arTime,duration} = await Train.findDepartureArrivalTime(foundTrain[i].station,origin,destination)
+                
+                //คำนวนที่นั่งที่ยังเหลือ
+                //return object
+                const classRemain = await Train.calculateSeatRemain(foundTrain[i],date)
+                console.log(foundTrain[i]._id)
                 filterTrainData.push({
+                    "train_id": foundTrain[i]._id,
                     "trainNumber": foundTrain[i].train_number,
                     "origin": origin, 
                     "destination": destination, 
                     "departureTime": deTime, 
                     "arrivalTime": arTime, 
                     "duration": duration,
-                    "date": date, 
-                    "passenger": passenger, 
-                    "ticketPrice": totalPrice
+                    "date": date,
+                    "day": foundTrain[i].service_day,
+                    "passenger": passenger,
+                    "seatRemain":{
+                        "class1": classRemain.class1,
+                        "class2": classRemain.class2,
+                        "class3": classRemain.class3
+                    },
+                    "ticketPrice": price,
+                    "totalPrice": totalPrice
                     
                 })
             }
@@ -96,6 +114,12 @@ class Train{
         }
 
     }
+
+    static async showReservationSeat(req,res){
+        const { train_id , date } = req.body
+
+    }
+
     
 
     static findTrainOrderStation(foundTrainTemp,origin, destination){
@@ -155,43 +179,88 @@ class Train{
         // for(let i of foundTrain){
                 
             console.log(foundTrain.train_number)
-            let results = []
             if(Boolean(foundTrain.class_in_train.class_3.class_available)){
-                let rawdata = fs.readFileSync('fare.json');
-                let jsonTemp = JSON.parse(rawdata);
-                // console.log(jsonTemp)
-                for(let j in jsonTemp){       
-                    if(j == origin || j == destination){
-                        for(let k in jsonTemp[j]){
-                            if(k == origin || k == destination){
-                                // console.log("-->" + jsonTemp[j][k])
-                                return jsonTemp[j][k]
-                            }
-                        }
-                    }
-                }
+                return Train.calculatePriceClass(3, origin, destination)
             }
             else if(Boolean(foundTrain.class_in_train.class_2.class_available)){
-                let rawdata = fs.readFileSync('fare2.json');
-                let jsonTemp = JSON.parse(rawdata);
-                // console.log(jsonTemp)
-                for(let j in jsonTemp){       
-                    if(j == origin || j == destination){
-                        for(let k in jsonTemp[j]){
-                            if(k == origin || k == destination){
-                                // console.log("-->" + jsonTemp[j][k])
-                                return jsonTemp[j][k]
-                            }
-                        }
-                    }
-                }
+                return Train.calculatePriceClass(2, origin, destination)
             }
         // }
             
     }
 
+    static calculatePriceClass(classAvailable,origin,destination){
+        if(classAvailable == 3){
+            let rawdata = fs.readFileSync('./doc/fare.json');
+            let jsonTemp = JSON.parse(rawdata);
+            for(let j in jsonTemp){       
+                if(j == origin || j == destination){
+                    for(let k in jsonTemp[j]){
+                        if(k == origin || k == destination){
+                            // console.log("-->" + jsonTemp[j][k])
+                            return jsonTemp[j][k]
+                        }
+                    }
+                }
+            }
+        }
+        else if(classAvailable == 2){
+            let rawdata = fs.readFileSync('./doc/fare2.json');
+            let jsonTemp = JSON.parse(rawdata);
+            for(let j in jsonTemp){       
+                if(j == origin || j == destination){
+                    for(let k in jsonTemp[j]){
+                        if(k == origin || k == destination){
+                            // console.log("-->" + jsonTemp[j][k])
+                            return jsonTemp[j][k]
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     static filterDay(foundTrain,date){
+        const d = new Date(date);
+        const day = d.getDay()
+        // console.log(day)
+        const result = []
+        for(let i in foundTrain){
+            if(foundTrain[i].service_day.includes(day)){
+                // console.log(foundTrain[i].train_number + foundTrain[i].service_day)
+                result.push(foundTrain[i])
+            }
+        }
+        return result
         
+    }
+
+    static async calculateSeatRemain(train,date){
+        const d = new Date(date)
+        const exitTicket = await ticketModel.find({$and:[{"train_id": train._id},{"date": d}]})
+        // console.log("cat" + exitTicket)
+        let remain = {
+            "class1": Number(train.class_in_train.class_1.remain_seat),
+            "class2": Number(train.class_in_train.class_2.remain_seat),
+            "class3": Number(train.class_in_train.class_3.remain_seat)
+        }
+        for(let i in exitTicket){
+            if(Number(exitTicket[i].reservation_class) == 1){
+                remain.class1 -= Number(exitTicket[i].passenger)
+            }else if(Number(exitTicket[i].reservation_class) == 2){
+                remain.class2 -= Number(exitTicket[i].passenger)
+            }else if(Number(exitTicket[i].reservation_class) == 3){
+                remain.class3 -= Number(exitTicket[i].passenger)
+            }
+                
+        }
+        // console.log(remain)
+
+        return {
+            "class1": remain.class1,
+            "class2": remain.class2,
+            "class3": remain.class3
+        }
     }
 
 }

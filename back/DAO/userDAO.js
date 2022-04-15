@@ -36,7 +36,7 @@ class User{
             const token = jsonwebtoken.sign(
                 {user_id: user.id, email},
                 process.env.TOKEN_KEY,
-                {expiresIn: "2h"})
+                {expiresIn: "2d"})
 
             user.token = token
             user.save()
@@ -65,12 +65,13 @@ class User{
                 user = await userModel.findOne({ username: username })
             }
             const email = user.email
+            // console.log("cat : " + email)
             if(user && (await bcrypt.compare(password,user.password))){
                 const token = jsonwebtoken.sign(
                     {user_id: user._id, email},
                     process.env.TOKEN_KEY,
                     {
-                        expiresIn: "2h"
+                        expiresIn: "2d"
                     }
                 )
                 user.token = token
@@ -82,6 +83,18 @@ class User{
         }catch(err){
             console.log(err)
             res.send("error in backend")
+        }
+    }
+
+    static verifyTokenGetUserID(token){
+        try{
+            const decoded = jsonwebtoken.verify(token, process.env.TOKEN_KEY)
+            // console.log(decoded)
+            return decoded.user_id
+        }catch(err){
+            return false
+            console.log(err)
+            
         }
     }
 }
