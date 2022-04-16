@@ -22,6 +22,7 @@ class Staff{
                 const foundUser = await userModel.findById(userID)
                 
                 let temp = foundTicket[i].toObject()
+                // เพิ่ม fields
                 temp.firstname = foundUser.firstname
                 temp.lastname = foundUser.lastname
 

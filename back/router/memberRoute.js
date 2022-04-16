@@ -22,5 +22,8 @@ router.route('/staff/showTicket/:id').get(staffDAO.showTicket)
 router.route('/makeSeatLayout/:trainID/:date').get(ticketDAO.makeSeatLayout)
 router.route('/staff/showReservedTicket').post(staffDAO.showReservTicket)
 
+// Test
+router.route('/user/showUserProfile').post(userDAO.showUserProfile)
+
 // export default router
 module.exports = router

@@ -1,7 +1,9 @@
 const userModel = require('../model/user.js')
+const ticketModel = require('../model/ticket.js')
 const bcrypt = require('bcryptjs')
 const jsonwebtoken = require('jsonwebtoken')
 const auth = require('../middleware/auth')
+const { default: mongoose } = require('mongoose')
 
 
 class User{
@@ -50,7 +52,7 @@ class User{
 
     static async login(req,res){
         try{
-            console.log(req.body)
+            // console.log(req.body)
             const { username , password} = req.body
 
             if(!(username && password)){
@@ -94,7 +96,26 @@ class User{
         }catch(err){
             return false
             console.log(err)
+
+        }
+    }
+
+    static async showUserProfile(req, res) {
+        try {
+            // front ส่ง token เราเอา token มาหา id
+            const userID = await User.verifyTokenGetUserID(req.body.token)
+            // console.log(typeof(userID))
+            // console.log(userID)
+            const objUserID = mongoose.Types.ObjectId(userID)
             
+            // foundTicket => array of document ทุก documenyt ที่มี id ตรงกับ ที่ login เข้ามา
+            const foundTicket = await ticketModel.find({"user_id" : objUserID})
+
+            res.send(foundTicket)
+        }
+        catch (err) {
+            console.log(err)
+            res.send("Error from back")
         }
     }
 }
