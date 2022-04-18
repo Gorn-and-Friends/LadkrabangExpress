@@ -1,10 +1,14 @@
 {
   "header": "Log in to continue",
   "fields": {
-    "username": "Username or E-mail",
+    "username": "Username or email",
     "password": "Password"
   },
   "forgot": "Forgot password",
   "register": "Create an account",
-  "button": "Log In"
+  "button": "Log In",
+  "errors": {
+    "invalidUname": "Username or email not found",
+    "invalidPword": "Password incorrect"
+  }
 }

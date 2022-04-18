@@ -14,17 +14,15 @@
   width: 100%;
   height: $navbar-height;
   padding: 0 1.2rem;
+  z-index: 20;
+  position: sticky;
+  top: 0;
   @include languify() {
     font: 500 1.2rem l(navigation-font);
   }
   transition: all $transition-time ease-in-out;
   @include themify() {
     background-color: t(main-bg-color);
-  }
-
-  &.scrollable {
-    position: sticky;
-    top: 0;
   }
 
   &__container {

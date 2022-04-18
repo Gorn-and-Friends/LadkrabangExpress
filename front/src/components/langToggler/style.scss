@@ -20,7 +20,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    font: 800 1.2rem fontEN.$body-font;
+    font: 400 1.2rem fontEN.$title-font;
     transition: opacity $transition-time cubic-bezier(0.2, 0.8, 0.2, 1) 0s,
       transform calc($transition-time * 2.5)
         cubic-bezier(0.175, 0.885, 0.32, 1.2) 0s;

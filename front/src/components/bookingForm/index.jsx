@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import actions from "../../services/actions";
+import bookingService from "../../services/utils/booking";
 import "./style.scss";
 
 const BookingForm = () => {
-  useEffect(() => {
-    let min = new Date().toISOString().split("T")[0];
-    let max = new Date();
-    max.setDate(max.getDate() + 30);
-    max = max.toISOString().split("T")[0];
-    document.getElementById("date").setAttribute("min", min);
-    document.getElementById("date").setAttribute("max", max);
-    document.getElementById("returnDate").setAttribute("max", max);
-  }, []);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const location = useLocation();
   const lang = useSelector((state) => state.lang);
+  const params = new URLSearchParams(location.search);
+  const stations = require("../../assets/jsons/booking/station.json");
   const content =
     lang === "th"
       ? require("../../assets/jsons/booking/th.json")
       : require("../../assets/jsons/booking/en.json");
+  const [err, setErr] = useState(false);
+  const [missingInput, setMissingInput] = useState(false);
+  const [earlyReturn, setEarlyReturn] = useState(false);
+  const [incorrectStations, setIncorrectStations] = useState(false);
+  const [matchedStations, setMatchedStations] = useState(false);
+  const [origin, setOrigin] = useState("");
+  const [dest, setDest] = useState("");
+  const [pax, setPax] = useState("");
   const [returned, setReturned] = useState(false);
   const [curDate, setCurDate] = useState({
     value: "",
@@ -38,18 +45,27 @@ const BookingForm = () => {
     temp: "",
     onFocus: false,
   });
-  const [info, setInfo] = useState({
-    from: "",
-    to: "",
-    date: curDate.value,
-    time: curTime,
-    pax: "",
-    returnDate: curReturnDate.value,
-    returnTime: curReturnTime,
-  });
 
   useEffect(() => {
-    if (curDate.value != "") {
+    let min = new Date().toISOString().split("T")[0];
+    let max = new Date();
+    max.setDate(max.getDate() + 30);
+    max = max.toISOString().split("T")[0];
+    document.getElementById("date").setAttribute("min", min);
+    document.getElementById("date").setAttribute("max", max);
+    document.getElementById("returnDate").setAttribute("max", max);
+
+    setOrigin(params.get("from") ? params.get("from") : "");
+    setDest(params.get("to") ? params.get("to") : "");
+    setPax(params.get("pax") ? params.get("pax") : "");
+    setCurDate({ value: params.get("date"), onFocus: true });
+    setCurTime({ value: params.get("time"), onFocus: true });
+    setCurReturnDate({ value: params.get("date-return"), onFocus: true });
+    setCurReturnTime({ value: params.get("time-return"), onFocus: true });
+  }, []);
+
+  useEffect(() => {
+    if (curDate.value !== "") {
       document.getElementById("returnDate").setAttribute("min", curDate.value);
     } else {
       document
@@ -58,143 +74,201 @@ const BookingForm = () => {
     }
   }, [curDate.value]);
 
-  const handleInputOnChange = ({ currentTarget: input }) => {
-    const temp = { ...info };
-    if (input.id == "date") {
-      setCurDate({ value: input.value });
-    } else if (input.id == "returnDate") {
-      setCurReturnDate({ value: input.value });
-    } else if (input.id == "time") {
-      setCurTime({ value: input.value });
-    } else if (input.id == "returnTime") {
-      setCurReturnTime({ value: input.value });
-    }
-    temp[input.id] = input.value;
-    setInfo(temp);
-    console.log(temp);
-  };
-
-  const handleDateOnFocus = ({ currentTarget: input }) => {
-    input.type = "date";
-    if (input.value != "") {
-      let valArr = String(input.value).split("-");
-      let val = valArr[1] + "/" + valArr[2] + "/" + valArr[0];
-      input.value = val;
-      if (input.id == "date") {
-        setCurDate({ temp: val });
-      } else if (input.id == "returnDate") {
-        setCurReturnDate({ temp: val });
+  useEffect(() => {
+    if (origin !== "" || dest !== "") {
+      if (lang === "th") {
+        for (const i of stations) {
+          if (origin === i["en"]) {
+            setOrigin(i["th"]);
+          }
+          if (dest === i["en"]) {
+            setDest(i["th"]);
+          }
+        }
+      } else {
+        for (const i of stations) {
+          if (origin === i["th"]) {
+            setOrigin(i["en"]);
+          }
+          if (dest === i["th"]) {
+            setDest(i["en"]);
+          }
+        }
       }
     }
-    if (input.id == "date") {
-      setCurDate({ ...curDate, onFocus: true });
-    } else if (input.id == "returnDate") {
-      setCurReturnDate({ ...curReturnDate, onFocus: true });
-    }
-  };
+  }, [lang]);
 
-  const handleTimeOnFocus = ({ currentTarget: input }) => {
-    input.type = "time";
-    if (input.value != "") {
-      let valArr = String(input.value).split(":");
-      let hour = 0;
-      let AMPM = "AM";
-      Number(valArr[0]) >= 12 ? (AMPM = "PM") : (AMPM = "AM");
-      hour = Number(valArr[0]) % 12 || 12;
-      hour = hour < 10 ? "0" + String(hour) : String(hour);
-      let val = hour + ":" + valArr[1] + " " + AMPM;
-      input.value = val;
-      if (input.id == "time") {
-        setCurTime({ temp: val });
-      } else if (input.id == "returnTime") {
-        setCurReturnTime({ temp: val });
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    let missing = false;
+    let matchedStations = false;
+    let stationsExists = false;
+    let dtErr = false;
+    let originTH = "";
+    let destTH = "";
+    if (origin != "" && dest != "") {
+      for (const i of stations) {
+        if (
+          origin.toLowerCase() === i["en"].toLowerCase() ||
+          origin.toLowerCase() === i["th"].toLowerCase()
+        )
+          originTH = i["th"];
+        if (
+          dest.toLowerCase() === i["en"].toLowerCase() ||
+          dest.toLowerCase() === i["th"].toLowerCase()
+        )
+          destTH = i["th"];
       }
     }
-    if (input.id == "time") {
-      setCurTime({ ...curTime, onFocus: true });
-    } else if (input.id == "returnTime") {
-      setCurReturnTime({ ...curReturnTime, onFocus: true });
+    if (originTH === "") originTH = "NaN";
+    if (destTH === "") destTH = "NaN";
+    const info = {
+      from: originTH,
+      to: destTH,
+      pax: pax,
+      date: curDate.value,
+      time: curTime.value,
+      returnDate: returned ? curReturnDate.value : "",
+      returnTime: returned ? curReturnTime.value : "",
+    };
+    for (const key in info)
+      if (returned) {
+        if (info[key] == "" || info[key] == null) missing = true;
+      } else {
+        if (
+          key !== "returnDate" &&
+          key !== "returnTime" &&
+          (info[key] == "" || info[key] == null)
+        )
+          missing = true;
+      }
+    if (info.from === info.to) matchedStations = true;
+    else matchedStations = false;
+    if (info.from === "NaN" || info.to === "NaN") stationsExists = false;
+    else stationsExists = true;
+    if (returned) {
+      if (new Date(curReturnDate.value) < new Date(curDate.value)) dtErr = true;
+      else if (curReturnTime.value <= curTime.value) dtErr = true;
     }
-  };
 
-  const handleDateOnBlur = ({ currentTarget: input }) => {
-    input.type = "text";
-    if (input.value != "") {
-      let valArr = String(input.value).split("-");
-      let val = valArr[1] + "/" + valArr[2] + "/" + valArr[0];
-      input.value = val;
-      if (input.id == "date") {
-        setCurDate({ value: val });
-      } else if (input.id == "returnDate") {
-        setCurReturnDate({ value: val });
+    if (missing || matchedStations || !stationsExists || dtErr) {
+      setErr(true);
+      if (missing) setMissingInput(true);
+      else setMissingInput(false);
+      if (matchedStations) setMatchedStations(true);
+      else setMatchedStations(false);
+      if (!stationsExists) setIncorrectStations(true);
+      else setIncorrectStations(false);
+      if (dtErr) setEarlyReturn(true);
+      else setEarlyReturn(false);
+    } else {
+      setErr(false);
+      try {
+        navigate(
+          `/booking?page=0&from=${info.from}&to=${info.to}&pax=${info.pax}&date=${info.date}&time=${info.time}&date-return=${info.returnDate}&time-return=${info.returnTime}`
+        );
+        dispatch(actions.setLoading(true));
+        await bookingService.findTrains(info);
+        navigate(
+          `/booking?page=1&from=${info.from}&to=${info.to}&pax=${info.pax}&date=${info.date}&time=${info.time}&date-return=${info.returnDate}&time-return=${info.returnTime}`
+        );
+      } catch (er) {
+        dispatch(actions.setLoading(false));
+        console.log(er);
       }
     }
-    if (input.id == "date") {
-      setCurDate({ ...curDate, onFocus: false });
-    } else if (input.id == "returnDate") {
-      setCurReturnDate({ ...curReturnDate, onFocus: false });
-    }
   };
-
-  const handleTimeOnBlur = ({ currentTarget: input }) => {
-    input.type = "text";
-    if (input.value != "") {
-      let valArr = String(input.value).split(":");
-      let hour = 0;
-      let AMPM = "AM";
-      Number(valArr[0]) >= 12 ? (AMPM = "PM") : (AMPM = "AM");
-      hour = Number(valArr[0]) % 12 || 12;
-      hour = hour < 10 ? "0" + String(hour) : String(hour);
-      let val = hour + ":" + valArr[1] + " " + AMPM;
-      input.value = val;
-      if (input.id == "time") {
-        setCurTime({ value: val });
-      } else if (input.id == "returnTime") {
-        setCurReturnTime({ value: val });
-      }
-    }
-    if (input.id == "time") {
-      setCurTime({ ...curTime, onFocus: false });
-    } else if (input.id == "returnTime") {
-      setCurReturnTime({ ...curReturnTime, onFocus: false });
-    }
-  };
-
-  const handleOnSubmit = () => {};
 
   return (
     <form className="booking-form" onSubmit={handleOnSubmit}>
       <fieldset className="booking-form__container">
         <legend align="center">{content.form.header}</legend>
         <div className="booking-form__form">
+          {err && (
+            <div className="booking-form__form__errors">
+              {missingInput
+                ? content.form.errors.missingInput
+                : matchedStations
+                ? content.form.errors.invalidStations
+                : incorrectStations
+                ? content.form.errors.invalidStations
+                : earlyReturn
+                ? content.form.errors.earlyReturn
+                : ""}
+            </div>
+          )}
           <div className="booking-form__form__first-row">
             <div className="booking-form__form__50">
               <input
                 type="text"
                 id="from"
                 list="origin"
-                value={info.from}
-                onChange={handleInputOnChange}
+                value={origin}
+                onInput={({ currentTarget: input }) => {
+                  let opts = document.getElementById("origin").childNodes;
+                  for (let i = 0; i < opts.length; i++) {
+                    if (opts[i].value === input.value) {
+                      setOrigin(opts[i].value);
+                      break;
+                    }
+                  }
+                }}
+                onChange={({ currentTarget: input }) => setOrigin(input.value)}
                 placeholder=" "
                 autoComplete="off"
               />
               <datalist id="origin">
-                <option value="Hua Mak">หัวหมาก</option>
-                <option value="Ladkrabang">ลาดกระบัง</option>
-                <option value="c"></option>
+                {lang === "th"
+                  ? stations.map((option) => (
+                      <option value={option.th} key={option.en}>
+                        {option.en}
+                      </option>
+                    ))
+                  : stations.map((option) => (
+                      <option value={option.en} key={option.th}>
+                        {option.th}
+                      </option>
+                    ))}
               </datalist>
-              <label htmlFor="from">{content.form.fields.origin}</label>
+              <label htmlFor="from">
+                {content.form.fields.origin} <span>*</span>
+              </label>
             </div>
             <div className="booking-form__form__50">
               <input
                 type="text"
                 id="to"
-                value={info.to}
-                onChange={handleInputOnChange}
+                list="destination"
+                value={dest}
+                onInput={({ currentTarget: input }) => {
+                  let opts = document.getElementById("destination").childNodes;
+                  for (let i = 0; i < opts.length; i++) {
+                    if (opts[i].value === input.value) {
+                      setDest(opts[i].value);
+                      break;
+                    }
+                  }
+                }}
+                onChange={({ currentTarget: input }) => setDest(input.value)}
                 placeholder=" "
                 autoComplete="off"
               />
-              <label htmlFor="to">{content.form.fields.destination}</label>
+              <datalist id="destination">
+                {lang === "th"
+                  ? stations.map((option) => (
+                      <option value={option.th} key={option.en}>
+                        {option.en}
+                      </option>
+                    ))
+                  : stations.map((option) => (
+                      <option value={option.en} key={option.th}>
+                        {option.th}
+                      </option>
+                    ))}
+              </datalist>
+              <label htmlFor="to">
+                {content.form.fields.destination} <span>*</span>
+              </label>
             </div>
           </div>
           <div className="booking-form__form__second-row">
@@ -204,27 +278,81 @@ const BookingForm = () => {
                   type="text"
                   id="date"
                   value={curDate.onFocus ? curDate.value : curDate.temp}
-                  onChange={handleInputOnChange}
-                  onFocus={handleDateOnFocus}
-                  onBlur={handleDateOnBlur}
+                  onChange={({ currentTarget: input }) =>
+                    setCurDate({ value: input.value })
+                  }
+                  onFocus={({ currentTarget: input }) => {
+                    input.type = "date";
+                    if (input.value !== "") {
+                      let valArr = String(input.value).split("-");
+                      let val = valArr[1] + "/" + valArr[2] + "/" + valArr[0];
+                      input.value = val;
+                      setCurDate({ temp: val });
+                    }
+                    setCurDate({ ...curDate, onFocus: true });
+                  }}
+                  onBlur={({ currentTarget: input }) => {
+                    input.type = "text";
+                    if (input.value !== "") {
+                      let valArr = String(input.value).split("-");
+                      let val = valArr[1] + "/" + valArr[2] + "/" + valArr[0];
+                      input.value = val;
+                      setCurDate({ value: val });
+                    }
+                    setCurDate({ ...curDate, onFocus: false });
+                  }}
                   min={new Date().toISOString().split("T")[0]}
                   placeholder=" "
                   autoComplete="off"
                 />
-                <label htmlFor="date">{content.form.fields.date}</label>
+                <label htmlFor="date">
+                  {content.form.fields.date} <span>*</span>
+                </label>
               </div>
               <div className="booking-form__form__50">
                 <input
                   type="text"
                   id="time"
                   value={curTime.onFocus ? curTime.value : curTime.temp}
-                  onChange={handleInputOnChange}
-                  onFocus={handleTimeOnFocus}
-                  onBlur={handleTimeOnBlur}
+                  onChange={({ currentTarget: input }) =>
+                    setCurTime({ value: input.value })
+                  }
+                  onFocus={({ currentTarget: input }) => {
+                    input.type = "time";
+                    if (input.value !== "") {
+                      let valArr = String(input.value).split(":");
+                      let hour = 0;
+                      let AMPM = "AM";
+                      Number(valArr[0]) >= 12 ? (AMPM = "PM") : (AMPM = "AM");
+                      hour = Number(valArr[0]) % 12 || 12;
+                      hour = hour < 10 ? "0" + String(hour) : String(hour);
+                      let val = hour + ":" + valArr[1] + " " + AMPM;
+                      input.value = val;
+                      setCurTime({ temp: val });
+                    }
+                    setCurTime({ ...curTime, onFocus: true });
+                  }}
+                  onBlur={({ currentTarget: input }) => {
+                    input.type = "text";
+                    if (input.value !== "") {
+                      let valArr = String(input.value).split(":");
+                      let hour = 0;
+                      let AMPM = "AM";
+                      Number(valArr[0]) >= 12 ? (AMPM = "PM") : (AMPM = "AM");
+                      hour = Number(valArr[0]) % 12 || 12;
+                      hour = hour < 10 ? "0" + String(hour) : String(hour);
+                      let val = hour + ":" + valArr[1] + " " + AMPM;
+                      input.value = val;
+                      setCurTime({ value: val });
+                    }
+                    setCurTime({ ...curTime, onFocus: false });
+                  }}
                   placeholder=" "
                   autoComplete="off"
                 />
-                <label htmlFor="time">{content.form.fields.time}</label>
+                <label htmlFor="time">
+                  {content.form.fields.time} <span>*</span>
+                </label>
               </div>
             </div>
             <div className="booking-form__form__second-row__group">
@@ -233,14 +361,16 @@ const BookingForm = () => {
                   type="number"
                   id="pax"
                   min="1"
-                  max="20"
+                  max="10"
                   step="1"
-                  value={info.pax}
-                  onChange={handleInputOnChange}
+                  value={pax}
+                  onChange={({ currentTarget: input }) => setPax(input.value)}
                   placeholder=" "
                   autoComplete="off"
                 />
-                <label htmlFor="pax">{content.form.fields.passengers}</label>
+                <label htmlFor="pax">
+                  {content.form.fields.passengers} <span>*</span>
+                </label>
               </div>
               <div className="booking-form__form__checkbox">
                 <label>
@@ -270,9 +400,29 @@ const BookingForm = () => {
                     ? curReturnDate.temp
                     : ""
                 }
-                onChange={handleInputOnChange}
-                onFocus={handleDateOnFocus}
-                onBlur={handleDateOnBlur}
+                onChange={({ currentTarget: input }) =>
+                  setCurReturnDate({ value: input.value })
+                }
+                onFocus={({ currentTarget: input }) => {
+                  input.type = "date";
+                  if (input.value !== "") {
+                    let valArr = String(input.value).split("-");
+                    let val = valArr[1] + "/" + valArr[2] + "/" + valArr[0];
+                    input.value = val;
+                    setCurReturnDate({ temp: val });
+                  }
+                  setCurReturnDate({ ...curReturnDate, onFocus: true });
+                }}
+                onBlur={({ currentTarget: input }) => {
+                  input.type = "text";
+                  if (input.value !== "") {
+                    let valArr = String(input.value).split("-");
+                    let val = valArr[1] + "/" + valArr[2] + "/" + valArr[0];
+                    input.value = val;
+                    setCurReturnDate({ value: val });
+                  }
+                  setCurReturnDate({ ...curReturnDate, onFocus: false });
+                }}
                 placeholder=" "
                 autoComplete="off"
                 disabled={returned ? "" : "disabled"}
@@ -292,9 +442,39 @@ const BookingForm = () => {
                     ? curReturnTime.temp
                     : ""
                 }
-                onChange={handleInputOnChange}
-                onFocus={handleTimeOnFocus}
-                onBlur={handleTimeOnBlur}
+                onChange={({ currentTarget: input }) =>
+                  setCurReturnTime({ value: input.value })
+                }
+                onFocus={({ currentTarget: input }) => {
+                  input.type = "time";
+                  if (input.value !== "") {
+                    let valArr = String(input.value).split(":");
+                    let hour = 0;
+                    let AMPM = "AM";
+                    Number(valArr[0]) >= 12 ? (AMPM = "PM") : (AMPM = "AM");
+                    hour = Number(valArr[0]) % 12 || 12;
+                    hour = hour < 10 ? "0" + String(hour) : String(hour);
+                    let val = hour + ":" + valArr[1] + " " + AMPM;
+                    input.value = val;
+                    setCurReturnTime({ temp: val });
+                  }
+                  setCurReturnTime({ ...curReturnTime, onFocus: true });
+                }}
+                onBlur={({ currentTarget: input }) => {
+                  input.type = "text";
+                  if (input.value !== "") {
+                    let valArr = String(input.value).split(":");
+                    let hour = 0;
+                    let AMPM = "AM";
+                    Number(valArr[0]) >= 12 ? (AMPM = "PM") : (AMPM = "AM");
+                    hour = Number(valArr[0]) % 12 || 12;
+                    hour = hour < 10 ? "0" + String(hour) : String(hour);
+                    let val = hour + ":" + valArr[1] + " " + AMPM;
+                    input.value = val;
+                    setCurReturnTime({ value: val });
+                  }
+                  setCurReturnTime({ ...curReturnTime, onFocus: false });
+                }}
                 placeholder=" "
                 autoComplete="off"
                 disabled={returned ? "" : "disabled"}

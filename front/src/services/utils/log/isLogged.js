@@ -1,5 +1,5 @@
 const isLogged = () => {
-  return JSON.parse(localStorage.getItem("data"));
+  return localStorage.getItem("token");
 };
 
 export default isLogged;

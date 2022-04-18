@@ -21,6 +21,9 @@ const Login = () => {
     lang === "th"
       ? require("../../../assets/jsons/login/th.json")
       : require("../../../assets/jsons/login/en.json");
+  const [err, setErr] = useState(false);
+  const [invalidPword, setInvalidPword] = useState(false);
+  const [invalidUname, setInvalidUname] = useState(false);
   const [login, setLogin] = useState({
     uname: "",
     pword: "",
@@ -32,9 +35,9 @@ const Login = () => {
       dispatch(actions.setLoading(true));
       await log.logIn(login);
       navigate(-1);
-    } catch (err) {
+    } catch (er) {
       dispatch(actions.setLoading(false));
-      console.log(err);
+      console.log(er);
     }
   };
 
@@ -61,6 +64,15 @@ const Login = () => {
           )}
         </legend>
         <div className="login__form">
+          {err && (
+            <div className="login__form__errors">
+              {invalidUname
+                ? content.errors.invalidUname
+                : invalidPword
+                ? content.errors.invalidPword
+                : ""}
+            </div>
+          )}
           <h1 className="login__form__header">{content.header}</h1>
           <div className="login__form__container">
             <div className="login__form__item">

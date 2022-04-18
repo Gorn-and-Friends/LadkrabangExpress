@@ -23,6 +23,7 @@ const Register = () => {
   const [invalidRepwd, setInvalidRepwd] = useState(false);
   const [invalidEmail, setInvalidEmail] = useState(false);
   const [invalidUname, setInvalidUname] = useState(false);
+  const [repwd, setRepwd] = useState("");
   const [curDate, setCurDate] = useState({
     value: "",
     temp: "",
@@ -36,37 +37,33 @@ const Register = () => {
     pword: "",
     bdate: curDate.value,
   });
-  const [repwd, setRepwd] = useState("");
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
     let missing = false;
     let invalidPwd = false;
-    for (const i of Object.values(reg)) {
-      if (i == "") {
-        missing = true;
-      }
-    }
+    for (const i of Object.values(reg)) if (i == "") missing = true;
     if (reg.pword != "") {
-      var regEx = new RegExp(
+      let regEx = new RegExp(
         "(?=.*[0-9])(?=.*[!@#$%^&*.,])[a-zA-Z0-9!@#$%^&*.,]{8,}"
       );
       if (regEx.test(reg.pword)) {
-        invalidPwd = true;
-      } else {
         invalidPwd = false;
+      } else {
+        invalidPwd = true;
       }
     } else {
-      invalidPwd = false;
+      invalidPwd = true;
     }
-    if (missing || !invalidPwd || reg.pword != repwd) {
+
+    if (missing || invalidPwd || reg.pword != repwd) {
       setErr(true);
       if (missing) {
         setMissingInput(true);
       } else {
         setMissingInput(false);
       }
-      if (!invalidPwd) {
+      if (invalidPwd) {
         setInvalidPword(true);
       } else {
         setInvalidPword(false);
@@ -87,17 +84,6 @@ const Register = () => {
         console.log(er);
       }
     }
-    console.log(missing, invalidPwd, regEx.test(reg.pword));
-    // if (!err) {
-    //   try {
-    //     dispatch(actions.setLoading(true));
-    //     await register.register(reg);
-    //     navigate("/login");
-    //   } catch (er) {
-    //     dispatch(actions.setLoading(false));
-    //     console.log(er);
-    //   }
-    // }
   };
 
   const handleInputOnChange = ({ currentTarget: input }) => {
@@ -140,15 +126,15 @@ const Register = () => {
           {err && (
             <div className="register__form__errors">
               {missingInput
-                ? "inputMissing"
+                ? content.errors.missingInput
                 : invalidEmail
-                ? "invalidEmail"
+                ? content.errors.invalidEmail
                 : invalidUname
-                ? "invalidUname"
+                ? content.errors.invalidUname
                 : invalidPword
-                ? "invalidPword"
+                ? content.errors.invalidPword
                 : invalidRepwd
-                ? "invalidRepwd"
+                ? content.errors.invalidRepwd
                 : ""}
             </div>
           )}

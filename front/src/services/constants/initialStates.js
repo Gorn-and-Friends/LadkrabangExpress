@@ -6,6 +6,9 @@ const InitialStates = {
       ? "dark"
       : "light",
   LOADING: false,
+  TRAINLIST: [],
+  SEATLIST: [],
+  TICKET: {},
 };
 
 export default InitialStates;

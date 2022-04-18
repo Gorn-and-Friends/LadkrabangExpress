@@ -88,6 +88,10 @@
       background-color: t(main-bg-color);
       color: t(font-color-2);
     }
+
+    span {
+      color: red;
+    }
   }
 
   input:focus ~ label,
@@ -96,6 +100,10 @@
     left: 0.8em;
     font-size: 0.8em;
     cursor: default;
+
+    span {
+      display: none;
+    }
   }
 
   input:focus:not(:disabled) ~ label,
@@ -120,9 +128,10 @@
 
   legend {
     @include centered-flex;
-    padding: 0 0.3em;
     overflow-wrap: break-word;
-    width: 95%;
+    width: 88%;
+    transition: all $transition-time ease-in-out;
+    padding: 0 0.3em;
     @include languify() {
       font: 1000 2.8rem l(navigation-font);
     }
@@ -134,7 +143,7 @@
     position: relative;
     padding: 5rem 6rem 7rem 6rem;
     border-radius: 1rem;
-    width: 70vw;
+    width: 60vw;
     @include themify() {
       border: 0.2rem solid t(main-color);
     }
@@ -232,6 +241,19 @@
         content: "";
         position: absolute;
         display: none;
+      }
+    }
+
+    &__errors {
+      @include centered-flex;
+      width: 100%;
+      height: 3.5rem;
+      text-align: center;
+      border-radius: 0.2rem;
+      overflow: hidden;
+      background-color: red;
+      @include themify() {
+        color: #fff;
       }
     }
   }

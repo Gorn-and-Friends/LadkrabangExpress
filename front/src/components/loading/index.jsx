@@ -24,7 +24,7 @@ const Loading = () => {
             <div className="loading__windows" />
             <div id="up" className="loading__steam" />
             <div id="up" className="loading__steam-2" />
-            <div id="up" className="loading__steam-3"/>
+            <div id="up" className="loading__steam-3" />
           </div>
         </div>
       </div>

@@ -1,17 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Hero from "../../components/hero";
+import HomeForm from "../../components/homeForm";
 import NavBar from "../../components/navbar";
-import classService from "../../services/utils/class";
 
 const Home = () => {
-  useEffect(() => {
-    classService.classToggle("class", "navbar", "scrollable");
-  }, []);
-
   return (
     <>
       <NavBar />
       <Hero />
+      <HomeForm />
     </>
   );
 };

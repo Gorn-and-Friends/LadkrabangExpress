@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./style.scss";
@@ -8,7 +8,6 @@ import log from "../../services/utils/log";
 import ThemeToggler from "../themeToggler";
 import LanguageToggler from "../langToggler";
 import actions from "../../services/actions";
-import classService from "../../services/utils/class";
 
 const NavBar = () => {
   const dispatch = useDispatch();
@@ -47,9 +46,9 @@ const NavBar = () => {
       <div className="navbar__container">
         <ul className="navbar__list">
           <li>
-            <a href="/booking">{content.middle.booking.title}</a>
+            <a href="/booking?page=0">{content.middle.booking.title}</a>
           </li>
-          <li>
+          {/* <li>
             <a href="/" className="navbar__list__dropdown">
               {content.middle.information.title}
             </a>
@@ -66,7 +65,7 @@ const NavBar = () => {
                 <a href="/">{content.middle.information.items.routes.title}</a>
               </li>
             </ul>
-          </li>
+          </li> */}
           <li>
             <a href="/about" className="navbar__list__dropdown">
               {content.middle.about.title}

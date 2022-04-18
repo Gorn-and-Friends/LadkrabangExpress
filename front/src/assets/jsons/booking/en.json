@@ -1,4 +1,11 @@
 {
+  "progressbar": {
+    "trains": "Trains",
+    "classes": "Classes",
+    "seats": "Seats",
+    "foods": "Foods",
+    "checkout": "Checkout"
+  },
   "form": {
     "header": "Find the best train for your trip",
     "fields": {
@@ -15,11 +22,22 @@
       "continue": "Continue"
     },
     "errors": {
-      "earlyReturn":"The date of return must be in the future of the outward journey."
+      "missingInput": "Please enter all required fields.",
+      "earlyReturn": "The return date and time must be in the future of the outward journey.",
+      "invalidStations": "Please check your origin and destination stations."
     }
   },
-  "train": {},
-  "class": {},
+  "train": {
+    "pax": "Passengers"
+  },
+  "class": [
+    {
+      "header": "1st Class",
+      "list": ["Compartment car", "Air-cons", "Spacious"]
+    },
+    { "header": "2nd Class", "list": ["Saloon car", "Air-cons"] },
+    { "header": "3rd Class", "list": ["Saloon car", "Fans"] }
+  ],
   "seat": {},
   "checkout": {}
 }
