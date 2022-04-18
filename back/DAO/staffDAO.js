@@ -12,8 +12,11 @@ class Staff{
             const { trainNumber , date , trainClass} =req.body
 
             const d = new Date(date)
-            const foundTicket = await ticketModel.find({$and:[{"train_number" : String(trainNumber)}, {"date" : d}]})
 
+            console.log(d)
+
+            const foundTicket = await ticketModel.find({$and:[{"train_number" : String(trainNumber)}, {"date" : d}]})
+            console.log(foundTicket)
             let result = []
 
             for (let i = 0 ; i<foundTicket.length ; i++) {

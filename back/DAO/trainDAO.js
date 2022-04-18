@@ -57,14 +57,10 @@ class Train{
 
             const foundTrainTemp = await trainModel.find({$and:[{"station.station_name": origin},{"station.station_name": destination}]})
             
-            
             //เลือกแค่อันที่สถานีเป็นต้นทางกับปลายทางตามลำดับ
             let foundTrain = await Train.findTrainOrderStation(foundTrainTemp,origin, destination)
             foundTrain = await Train.filterDay(foundTrain,date)
             console.log("--------------------------------------------------------------------------------------------------")
-            
-            
-
             //Check class of train
             
             //Make JSON to front
@@ -166,7 +162,10 @@ class Train{
 
     static async test(req,res){
         try{
-            this.calculatePrice(req.body.origin,req.body.destination)
+            // this.calculatePrice(req.body.origin,req.body.destination)
+            const d1 = new Date("2022-04-23")
+            const d2 = new Date("2022-04-24")
+            console.log(d1 - d2)
             res.send("Good")
         }catch(err){
             console.log(err)

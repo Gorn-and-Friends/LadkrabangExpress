@@ -6,6 +6,7 @@ const User = require('./userDAO.js')
 const Train = require('./trainDAO')
 const fs = require('fs')
 const user = require('../model/user.js')
+const { verifyTokenGetUserID } = require('./userDAO.js')
 
 class Ticket{
     static async addTicket(req,res){
