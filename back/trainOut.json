@@ -9,7 +9,7 @@
 
     {"station_name": "หัวตะเข้",
     "departure_hour": 5,
-    "departure_minute": 10},
+    "departure_minute": 10}
 }
 
 "275":{
@@ -559,7 +559,7 @@
     "departure_hour": 10,
     "departure_minute": 40},
 
-    {"station_name": "สุขุมวิท71",
+    {"station_name": "สุขุมวิท 71",
     "departure_hour": 10,
     "departure_minute": 43},
 
@@ -755,7 +755,7 @@
     "departure_hour": 15,
     "departure_minute": 14},
 
-    {"station_name": "ปราจีนบุรี",
+    {"station_name": "ปราจีนบุรี ",
     "departure_hour": 15,
     "departure_minute": 22},
 
@@ -849,7 +849,7 @@
     "departure_hour": 15,
     "departure_minute": 52},
 
-    {"station_name": "สุขุมวิท71",
+    {"station_name": "สุขุมวิท 71",
     "departure_hour": 15,
     "departure_minute": 54},
 
@@ -925,7 +925,7 @@
     "departure_hour": 17,
     "departure_minute": 34},
 
-    {"station_name": "ปราจีนบุรี",
+    {"station_name": "ปราจีนบุรี ",
     "departure_hour": 17,
     "departure_minute": 41},
 
@@ -1045,7 +1045,7 @@
     "departure_hour": 18,
     "departure_minute": 11},
 
-    {"station_name": "สุขุมวิท71",
+    {"station_name": "สุขุมวิท 71",
     "departure_hour": 18,
     "departure_minute": 13},
 
@@ -1121,8 +1121,8 @@
     "departure_hour": 20,
     "departure_minute": 25},
 
-    {"station_name": "ปราจีนบุรี",
-    "departure_hour":20,
+    {"station_name": "ปราจีนบุรี ",
+    "departure_hour":20
     "departure_minute":32 },
 }
 
@@ -1151,7 +1151,7 @@
     "departure_hour": 18,
     "departure_minute": 52},
 
-    {"station_name": "สุขุมวิท71",
+    {"station_name": "สุขุมวิท 71",
     "departure_hour": 18,
     "departure_minute": 56},
 
