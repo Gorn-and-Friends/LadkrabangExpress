@@ -2,14 +2,14 @@ import axios from "axios";
 
 const findSeats = async (info) => {
   const port = 5000;
-  const url = `http://localhost:${port}/api/booking`;
+  const url = `http://localhost:${port}/api/makeSeatLayout`;
 
   const res = await axios.post(url, {
     trainID: info.trainId,
     date: info.date
   });
 
-  sessionStorage.setItem("seats", JSON.stringify(res.body.data));
+  sessionStorage.setItem("seatList", JSON.stringify(res.data));
 
   /*
   sessionStorage.setItem(

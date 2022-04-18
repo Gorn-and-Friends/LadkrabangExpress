@@ -6,7 +6,7 @@ import {
   FaRegDotCircle,
   FaMapMarkerAlt,
   FaRegClock,
-} from "react-icons/fa";  
+} from "react-icons/fa";
 import actions from "../../services/actions";
 import BookingButtons from "../bookingBtn";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -27,20 +27,30 @@ const TrainsDisplay = ({ step }) => {
   useEffect(() => {
     setChoice(params.get("choice") ? params.get("choice") : 0);
     dispatch(
-      actions.setTrainList(JSON.parse(sessionStorage.getItem("trainList")))
+      actions.setTrainList(
+        JSON.parse(sessionStorage.getItem("trainList"))
+          ? JSON.parse(sessionStorage.getItem("trainList"))
+          : []
+      )
     );
   }, [step]);
 
+  useEffect(() => {
+    console.log(trainList);
+  }, [trainList]);
+
   const handleOnNext = (e) => {
     e.preventDefault();
-    navigate(`/booking?page=1&choice=${choice}`);
-    navigate(
-      `/booking?page=2&c=${
-        trainList[choice - 1].seatRemain.class1 > 0 ? 1 : 0
-      }${trainList[choice - 1].seatRemain.class2 > 0 ? 1 : 0}${
-        trainList[choice - 1].seatRemain.class3 > 0 ? 1 : 0
-      }&idt=${trainList[choice - 1].train_id}&pax=${trainList[0].passenger}`
-    );
+    try {
+      navigate(`/booking?page=1&choice=${choice}`);
+      navigate(
+        `/booking?page=2&c=${
+          trainList[choice - 1].seatRemain.class1 > 0 ? 1 : 0
+        }${trainList[choice - 1].seatRemain.class2 > 0 ? 1 : 0}${
+          trainList[choice - 1].seatRemain.class3 > 0 ? 1 : 0
+        }&idt=${trainList[choice - 1].train_id}&pax=${trainList[0].passenger}`
+      );
+    } catch {}
   };
 
   return (
@@ -103,7 +113,7 @@ const TrainsDisplay = ({ step }) => {
                   <div className="train-display__card__ticket-touch__bottom" />
                 </div>
                 <div className="train-display__card__price">
-                  <span>from ฿</span>
+                  <span>from à¸¿</span>
                   {info.ticketPrice}
                 </div>
               </label>

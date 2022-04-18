@@ -14,7 +14,8 @@ const findTrains = async (info) => {
     timeReturn: info.returnTime,
   });
 
-  sessionStorage.setItem("trains", JSON.stringify(res.body.data));
+
+  sessionStorage.setItem("trainList", JSON.stringify(res.data));
 
   // sessionStorage.setItem(
   //   "trainList",

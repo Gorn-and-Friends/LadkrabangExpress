@@ -13,17 +13,19 @@ router.route('/addFood').post(foodDAO.add)
 router.route('/getAllFood').get(foodDAO.showAllFood)
 router.route('/updateFoodPrice').post(foodDAO.updatePrice)
 router.route('/addTrain').post(trainDAO.add)
-router.route('/findTrain').post(trainDAO.customerFindTrain)
+
 router.route('/register').post(userDAO.register)
 router.route('/login').post(userDAO.login)
-router.route('/test').get(trainDAO.test)
+
+router.route('/booking').post(trainDAO.customerFindTrain)
+router.route('/makeSeatLayout').post(ticketDAO.makeSeatLayout)
 router.route('/addTicket').post(ticketDAO.addTicket)
+
 router.route('/staff/showTicket/:id').get(staffDAO.showTicket)
-router.route('/makeSeatLayout/:trainID/:date').get(ticketDAO.makeSeatLayout)
 router.route('/staff/showReservedTicket').post(staffDAO.showReservTicket)
 
 // Test
 router.route('/user/showUserProfile').post(userDAO.showUserProfile)
-
+router.route('/test').get(trainDAO.test)
 // export default router
 module.exports = router

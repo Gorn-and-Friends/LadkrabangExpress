@@ -69,14 +69,14 @@ const SeatSelection = ({ step }) => {
         p: train.ticketPrice,
         s: [
           {
-            c: choice ? choice.split("-")[0] : "",
-            col: choice ? choice.split("-")[1] : "",
+            coach: choice ? choice.split("-")[0] : "",
+            column: choice ? choice.split("-")[1] : "",
             row: choice ? choice.split("-")[2] : "",
           },
           choice1
             ? {
-                c: choice1.split("-")[0],
-                col: choice1.split("-")[1],
+                coach: choice1.split("-")[0],
+                column: choice1.split("-")[1],
                 row: choice1.split("-")[2],
               }
             : "",

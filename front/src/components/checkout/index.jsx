@@ -53,15 +53,19 @@ const Checkout = ({ step }) => {
         newTickets[i] = {
           ...common,
           seat_reservation: {
-            coach: seats[i].c,
+            coach: seats[i].coach,
             row: seats[i].row,
-            column: seats[i].col,
+            column: seats[i].column,
           },
         };
       });
       setDisplayTickets(newTickets);
     } catch {}
   }, [tickets]);
+
+  useEffect(() => {
+    setErr(false);
+  }, [payment]);
 
   const handleInputOnChange = ({ currentTarget: input }) => {
     const temp = { ...payment };
@@ -73,11 +77,12 @@ const Checkout = ({ step }) => {
     e.preventDefault();
     if (logService.isLogged()) {
       const info = {
-        ...displayTickets,
+        ...tickets,
         token: localStorage.getItem("token"),
         user_id: localStorage.getItem("userId"),
         train_id: tickets.t_id,
       };
+      console.log(info)
       try {
         navigate(
           `/booking?page=4&c=${params.get("c")}&idt=${params.get(
@@ -198,7 +203,7 @@ const Checkout = ({ step }) => {
         </div>
         <BookingButtons
           onNext={handleOnNext}
-          disable={err}
+          disable={!err}
           step={step}
           pastUrlParams={`&c=${params.get("c")}&idt=${params.get(
             "idt"

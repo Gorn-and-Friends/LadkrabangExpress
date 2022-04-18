@@ -24,6 +24,7 @@ class Ticket{
                     arrivalTime,
                     seat_reservation
                 } =req.body
+            console.log(req.body)
             let user_id = User.verifyTokenGetUserID(token)
             if(user_id === false){
                 res.send("token expired").status(201)
@@ -85,7 +86,7 @@ class Ticket{
     static async makeSeatLayout(req,res){
         //trainID, d
         try{
-            let { trainID , date} = req.params
+            let { trainID , date} = req.body
             // console.log(req.params)
             trainID = mongoose.Types.ObjectId(trainID)
             date = new Date(date)
