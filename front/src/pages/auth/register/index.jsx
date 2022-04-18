@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import "../../../assets/styles/Register.scss";
-import register from "../../../services/utils/register";
-import Loading from "../../../components/loading";
+import { useDispatch, useSelector } from "react-redux";
+import "./style.scss";
+import register from "../../../services/utils/registry";
+import actions from "../../../services/actions";
 
 const Register = () => {
   useEffect(() => {
@@ -11,48 +11,133 @@ const Register = () => {
   }, []);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
   const content =
     lang === "th"
       ? require("../../../assets/jsons/register/th.json")
       : require("../../../assets/jsons/register/en.json");
+  const [err, setErr] = useState(false);
+  const [missingInput, setMissingInput] = useState(false);
+  const [invalidPword, setInvalidPword] = useState(false);
+  const [invalidRepwd, setInvalidRepwd] = useState(false);
+  const [invalidEmail, setInvalidEmail] = useState(false);
+  const [invalidUname, setInvalidUname] = useState(false);
+  const [repwd, setRepwd] = useState("");
+  const [curDate, setCurDate] = useState({
+    value: "",
+    temp: "",
+    onFocus: false,
+  });
   const [reg, setReg] = useState({
     fname: "",
     lname: "",
     email: "",
     uname: "",
     pword: "",
-    bdate: "",
+    bdate: curDate.value,
   });
-  const [loading, setLoading] = useState(false);
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    try {
-      setLoading(true);
-      await register(reg);
-      setLoading(false);
-      navigate("/login");
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
+    let missing = false;
+    let invalidPwd = false;
+    for (const i of Object.values(reg)) if (i == "") missing = true;
+    if (reg.pword != "") {
+      let regEx = new RegExp(
+        "(?=.*[0-9])(?=.*[!@#$%^&*.,])[a-zA-Z0-9!@#$%^&*.,]{8,}"
+      );
+      if (regEx.test(reg.pword)) {
+        invalidPwd = false;
+      } else {
+        invalidPwd = true;
+      }
+    } else {
+      invalidPwd = true;
+    }
+
+    if (missing || invalidPwd || reg.pword != repwd) {
+      setErr(true);
+      if (missing) {
+        setMissingInput(true);
+      } else {
+        setMissingInput(false);
+      }
+      if (invalidPwd) {
+        setInvalidPword(true);
+      } else {
+        setInvalidPword(false);
+      }
+      if (reg.pword != repwd) {
+        setInvalidRepwd(true);
+      } else {
+        setInvalidRepwd(false);
+      }
+    } else {
+      setErr(false);
+      try {
+        dispatch(actions.setLoading(true));
+        await register.register(reg);
+        navigate("/login");
+      } catch (er) {
+        dispatch(actions.setLoading(false));
+        console.log(er);
+      }
     }
   };
 
   const handleInputOnChange = ({ currentTarget: input }) => {
     const temp = { ...reg };
+    if (input.id == "bdate") {
+      setCurDate({ value: input.value });
+    }
     temp[input.id] = input.value;
-    setReg(temp);
     console.log(temp);
+    setReg(temp);
   };
 
-  return loading ? (
-    <Loading />
-  ) : (
+  const handleDateOnFocus = ({ currentTarget: input }) => {
+    input.type = "date";
+    if (input.value != "") {
+      let valArr = String(input.value).split("-");
+      let val = valArr[1] + "/" + valArr[2] + "/" + valArr[0];
+      input.value = val;
+      setCurDate({ temp: val });
+    }
+    setCurDate({ ...curDate, onFocus: true });
+  };
+
+  const handleDateOnBlur = ({ currentTarget: input }) => {
+    input.type = "text";
+    if (input.value != "") {
+      let valArr = String(input.value).split("-");
+      let val = valArr[1] + "/" + valArr[2] + "/" + valArr[0];
+      input.value = val;
+      setCurDate({ value: val });
+    }
+    setCurDate({ ...curDate, onFocus: false });
+  };
+
+  return (
     <form className="register" onSubmit={handleOnSubmit}>
       <fieldset className="register__container">
         <legend align="center">{content.header}</legend>
         <div className="register__form">
+          {err && (
+            <div className="register__form__errors">
+              {missingInput
+                ? content.errors.missingInput
+                : invalidEmail
+                ? content.errors.invalidEmail
+                : invalidUname
+                ? content.errors.invalidUname
+                : invalidPword
+                ? content.errors.invalidPword
+                : invalidRepwd
+                ? content.errors.invalidRepwd
+                : ""}
+            </div>
+          )}
           <div className="register__form__first-row">
             <div className="register__form__name">
               <input
@@ -63,7 +148,6 @@ const Register = () => {
                 onChange={handleInputOnChange}
                 placeholder=" "
                 autoComplete="off"
-                required
               />
               <label htmlFor="fname">
                 {content.fields.fname} <span>*</span>
@@ -78,7 +162,6 @@ const Register = () => {
                 onChange={handleInputOnChange}
                 placeholder=" "
                 autoComplete="off"
-                required
               />
               <label htmlFor="lname">
                 {content.fields.lname} <span>*</span>
@@ -94,7 +177,6 @@ const Register = () => {
               onChange={handleInputOnChange}
               placeholder=" "
               autoComplete="off"
-              required
             />
             <label htmlFor="email">
               {content.fields.email} <span>*</span>
@@ -109,7 +191,6 @@ const Register = () => {
               onChange={handleInputOnChange}
               placeholder=" "
               autoComplete="off"
-              required
             />
             <label htmlFor="uname">
               {content.fields.uname} <span>*</span>
@@ -122,14 +203,25 @@ const Register = () => {
               name="pword"
               value={reg.pword}
               onChange={handleInputOnChange}
-              pattern="^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}"
-              title="Password requires at least 8 charactors, a capital letter and a special charactor (!@#$%^&*)"
               placeholder=" "
               autoComplete="off"
-              required
             />
             <label htmlFor="pword">
               {content.fields.pword} <span>*</span>
+            </label>
+          </div>
+          <div className="register__form__others">
+            <input
+              type="password"
+              id="repwd"
+              name="repwd"
+              value={repwd}
+              onChange={({ currentTarget: input }) => setRepwd(input.value)}
+              placeholder=" "
+              autoComplete="off"
+            />
+            <label htmlFor="repwd">
+              {content.fields.repwd} <span>*</span>
             </label>
           </div>
           <div className="register__form__last-row">
@@ -141,13 +233,13 @@ const Register = () => {
                 type="text"
                 id="bdate"
                 name="bdate"
-                value={reg.bdate}
-                onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => (e.target.type = "text")}
+                value={curDate.onFocus ? curDate.value : curDate.temp}
                 onChange={handleInputOnChange}
+                onFocus={handleDateOnFocus}
+                onBlur={handleDateOnBlur}
+                max={new Date().toISOString().split("T")[0]}
                 placeholder=" "
                 autoComplete="off"
-                required
               />
               <label htmlFor="bdate">
                 {content.fields.bdate} <span>*</span>

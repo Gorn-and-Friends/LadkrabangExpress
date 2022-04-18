@@ -1,0 +1,202 @@
+@use "../../assets/styles/utils" as *;
+@use "../../assets/styles/fontTH";
+
+@mixin centered-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: $navbar-height;
+  padding: 0 1.2rem;
+  z-index: 20;
+  position: sticky;
+  top: 0;
+  @include languify() {
+    font: 500 1.2rem l(navigation-font);
+  }
+  transition: all $transition-time ease-in-out;
+  @include themify() {
+    background-color: t(main-bg-color);
+  }
+
+  &__container {
+    @include centered-flex;
+    flex: 1;
+
+    &:first-child a {
+      margin-right: auto;
+    }
+
+    &:last-child div {
+      margin-left: auto;
+    }
+  }
+
+  &__logo {
+    @include centered-flex;
+    position: relative;
+    width: 4.5rem;
+    height: $navbar-height;
+    transition: opacity $transition-time ease-in-out;
+
+    &__icon {
+      position: absolute;
+      opacity: 1;
+      width: 4.5rem;
+      pointer-events: none;
+
+      &.hide {
+        opacity: 0;
+      }
+    }
+  }
+
+  &__list {
+    @include centered-flex;
+
+    li {
+      display: inline-block;
+      text-align: center;
+      position: relative;
+      width: 10rem;
+      list-style: none;
+      transition: all $transition-time ease-in-out;
+
+      a {
+        line-height: $navbar-height;
+        display: block;
+        text-decoration: none;
+      }
+
+      &:hover {
+        @include themify() {
+          background-color: t(bg-color-2);
+        }
+
+        > ul {
+          display: block;
+        }
+      }
+    }
+
+    &__dropdown {
+      line-height: $navbar-height;
+      width: 10rem;
+      cursor: pointer;
+    }
+
+    &__sublist {
+      display: none;
+      position: absolute;
+      box-sizing: content-box;
+      @include themify() {
+        border-bottom: 1px solid t(font-color-2);
+      }
+      @include languify() {
+        font: 300 0.8em l(subtitle-font);
+      }
+
+      li,
+      li a {
+        line-height: calc($navbar-height * 0.8);
+        transition: all calc($transition-time / 3) ease-in;
+        z-index: 99;
+        @include themify() {
+          background-color: t(main-bg-color);
+        }
+        &:hover {
+          @include themify() {
+            background-color: t(bg-color-3);
+          }
+        }
+      }
+    }
+  }
+
+  &__right {
+    @include centered-flex;
+    gap: 1em;
+  }
+
+  &__auth {
+    li {
+      display: inline-block;
+      text-align: center;
+      position: relative;
+      width: 8rem;
+      list-style: none;
+
+      a {
+        line-height: $navbar-height;
+        display: block;
+
+        &:hover {
+          @include themify() {
+            background-color: t(bg-color-2);
+          }
+        }
+      }
+    }
+
+    &:hover > ul {
+      display: block;
+    }
+
+    > a {
+      margin: 0 3rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &__list {
+      display: none;
+      position: absolute;
+      width: 8rem;
+      @include languify() {
+        font: 300 0.8em l(subtitle-font);
+      }
+      @include themify() {
+        background-color: t(main-bg-color);
+        border-bottom: 1px solid t(font-color-2);
+      }
+
+      li,
+      li a {
+        line-height: 3rem;
+        transition: all calc($transition-time / 2) ease-in;
+
+        &:hover {
+          @include themify() {
+            background-color: t(bg-color-3);
+          }
+        }
+      }
+    }
+
+    &__dropdown {
+      @include centered-flex;
+      height: $navbar-height;
+      width: 8rem;
+      font: 900 1em fontTH.$body-font;
+      cursor: pointer;
+
+      &:hover {
+        @include themify() {
+          background-color: t(bg-color-2);
+        }
+      }
+    }
+  }
+
+  &__logout {
+    cursor: pointer;
+  }
+}

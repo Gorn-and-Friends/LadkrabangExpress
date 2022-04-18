@@ -5,6 +5,7 @@
 @use "./fontEN";
 
 $transition-time: 0.2s;
+$navbar-height: 3.8rem;
 
 $langs: (
   th: (
@@ -12,12 +13,14 @@ $langs: (
     title-font: fontTH.$title-font,
     subtitle-font: fontTH.$subtitle-font,
     body-font: fontTH.$body-font,
+    title-font-bal-ratio: fontTH.$title-font-bal-ratio,
   ),
   en: (
     navigation-font: fontEN.$navigation-font,
     title-font: fontEN.$title-font,
     subtitle-font: fontEN.$subtitle-font,
     body-font: fontEN.$body-font,
+    title-font-bal-ratio: fontEN.$title-font-bal-ratio,
   ),
 );
 
@@ -31,10 +34,13 @@ $themes: (
     main-bg-color: light.$main-bg-color,
     bg-color-2: light.$bg-color-2,
     bg-color-3: light.$bg-color-3,
+    bg-color-4: light.$bg-color-4,
+    bg-color-5: light.$bg-color-5,
     main-font-color: light.$main-font-color,
     font-color-2: light.$font-color-2,
     font-color-3: light.$font-color-3,
     font-color-4: light.$font-color-4,
+    faded: light.$faded,
   ),
   dark: (
     main-color: palette.$main-color,
@@ -45,10 +51,13 @@ $themes: (
     main-bg-color: dark.$main-bg-color,
     bg-color-2: dark.$bg-color-2,
     bg-color-3: dark.$bg-color-3,
+    bg-color-4: dark.$bg-color-4,
+    bg-color-5: dark.$bg-color-5,
     main-font-color: dark.$main-font-color,
     font-color-2: dark.$font-color-2,
     font-color-3: dark.$font-color-3,
     font-color-4: dark.$font-color-4,
+    faded: dark.$faded,
   ),
 );
 

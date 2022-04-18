@@ -1,30 +1,31 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import "../../assets/styles/NavBar.scss";
+import { useDispatch, useSelector } from "react-redux";
+import "./style.scss";
 import icon from "../../assets/icons/icon.png";
 import iconDark from "../../assets/icons/icon-dark.png";
 import log from "../../services/utils/log";
 import ThemeToggler from "../themeToggler";
 import LanguageToggler from "../langToggler";
+import actions from "../../services/actions";
 
 const NavBar = () => {
-  const user = log.isLogged() ? log.isLogged() : "Chanon";
+  const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
+  const theme = useSelector((state) => state.theme);
+  const displayName = log.isLogged() ? log.isLogged().firstname : null;
   const content =
     lang === "th"
       ? require("../../assets/jsons/navbar/th.json")
       : require("../../assets/jsons/navbar/en.json");
   const navigate = useNavigate();
-  const theme = useSelector((state) => state.theme);
-  const [loading, setLoading] = useState(false);
 
   const handleOnLogout = (e) => {
     e.preventDefault();
-    setLoading(true);
+    dispatch(actions.setLoading(true));
     log.logOut();
-    setLoading(false);
-    navigate("/");
+    dispatch(actions.setLoading(false));
+    navigate(0);
   };
 
   return (
@@ -45,9 +46,9 @@ const NavBar = () => {
       <div className="navbar__container">
         <ul className="navbar__list">
           <li>
-            <a href="/booking">{content.middle.booking.title}</a>
+            <a href="/booking?page=0">{content.middle.booking.title}</a>
           </li>
-          <li>
+          {/* <li>
             <a href="/" className="navbar__list__dropdown">
               {content.middle.information.title}
             </a>
@@ -64,7 +65,7 @@ const NavBar = () => {
                 <a href="/">{content.middle.information.items.routes.title}</a>
               </li>
             </ul>
-          </li>
+          </li> */}
           <li>
             <a href="/about" className="navbar__list__dropdown">
               {content.middle.about.title}
@@ -86,7 +87,7 @@ const NavBar = () => {
         <div className="navbar__right">
           {log.isLogged() ? (
             <div className="navbar__auth">
-              <div className="navbar__auth__dropdown">{user}</div>
+              <div className="navbar__auth__dropdown">{displayName}</div>
               <ul className="navbar__auth__list">
                 <li>
                   <a href="/profile">{content.right.logged.profile}</a>

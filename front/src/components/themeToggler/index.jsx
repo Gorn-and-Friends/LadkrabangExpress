@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "../../assets/styles/ThemeToggler.scss";
+import "./style.scss";
 import sun from "../../assets/svgs/sun.svg";
 import moon from "../../assets/svgs/moon.svg";
 import actions from "../../services/actions";

@@ -1,5 +1,6 @@
 import React from "react";
 import Hero from "../../components/hero";
+import HomeForm from "../../components/homeForm";
 import NavBar from "../../components/navbar";
 
 const Home = () => {
@@ -7,6 +8,7 @@ const Home = () => {
     <>
       <NavBar />
       <Hero />
+      <HomeForm />
     </>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Loading from "../components/loading";
 import Forgot from "../pages/auth/forgot";
 import Login from "../pages/auth/login";
@@ -12,8 +12,11 @@ import classService from "../services/utils/class";
 
 const Router = () => {
   const dispatch = useDispatch();
+  const location = useLocation();
+  const navigate = useNavigate();
   const theme = useSelector((state) => state.theme);
   const lang = useSelector((state) => state.lang);
+  const loading = useSelector((state) => state.loading);
 
   useEffect(() => {
     const localTheme = localStorage.getItem("theme");
@@ -32,19 +35,28 @@ const Router = () => {
   }, []);
 
   useEffect(() => {
+    dispatch(actions.setLoading(false));
+    dispatch(
+      actions.setTrainList(JSON.parse(sessionStorage.getItem("trainList")))
+    );
+  }, [navigate, location]);
+
+  useEffect(() => {
     document.documentElement.setAttribute("lang", lang);
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
     localStorage.setItem("lang", lang);
   }, [theme, lang]);
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot" element={<Forgot />} />
-      <Route path="/booking" element={<Loading />} />
+      <Route index element={<Home />} />
+      <Route path="login" element={<Login />} />
+      <Route path="register" element={<Register />} />
+      <Route path="forgot" element={<Forgot />} />
+      <Route path="booking" element={<Booking />} />
     </Routes>
   );
 };
