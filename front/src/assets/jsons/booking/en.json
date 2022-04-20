@@ -24,11 +24,16 @@
     "errors": {
       "missingInput": "Please enter all required fields.",
       "earlyReturn": "The return date and time must be in the future of the outward journey.",
-      "invalidStations": "Please check your origin and destination stations."
+      "invalidStations": "Please check your origin and destination stations.",
+      "routeErr": "There's currently no trains on this route yet."
     }
   },
   "train": {
-    "pax": "Passengers"
+    "depTime": "Departure on",
+    "pax": "Passengers",
+    "trainNo": "Train No.",
+    "seatsAvail": "Seat(s) available",
+    "price": "from"
   },
   "class": [
     {
@@ -39,5 +44,11 @@
     { "header": "3rd Class", "list": ["Saloon car", "Fans"] }
   ],
   "seat": {},
-  "checkout": {}
+  "checkout": {
+    "header": "Payment Information",
+    "name": "Card Holder Name",
+    "num": "Card Number",
+    "exp": "Expiraion Date",
+    "cvc": "CVV/CVC"
+  }
 }

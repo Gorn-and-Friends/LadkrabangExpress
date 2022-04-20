@@ -121,6 +121,7 @@
   transition: all $transition-time ease-in-out;
   @include themify() {
     background-color: t("main-bg-color");
+    color: t("main-font-color");
   }
   @include languify() {
     font: 500 1rem l("body-font");
@@ -273,6 +274,7 @@
     }
     @include themify() {
       background-color: t(main-bg-color);
+      color: t("main-font-color");
     }
 
     &:hover {

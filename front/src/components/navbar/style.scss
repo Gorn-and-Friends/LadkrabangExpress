@@ -25,6 +25,12 @@
     background-color: t(main-bg-color);
   }
 
+  * {
+    @include themify() {
+      color: t("main-font-color");
+    }
+  }
+
   &__container {
     @include centered-flex;
     flex: 1;

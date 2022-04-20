@@ -1,0 +1,19 @@
+{
+  "origin": "Origin",
+  "destination": "Destination",
+  "date": "Date",
+  "trainNo": "Train No.",
+  "depTime": {
+    "shortened": "Dep. Time",
+    "full": "Departure Time"
+  },
+  "arrTime": {
+    "shortened": "Arr. Time",
+    "full": "Arrival Time"
+  },
+  "duration": "Duration",
+  "class": "Class",
+  "coach": "Coach",
+  "seat": "Seat",
+  "price": "Price"
+}

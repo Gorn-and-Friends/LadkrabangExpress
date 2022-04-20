@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
 
-const BookingButtons = ({ onNext, disable, step, pastUrlParams }) => {
+const BookingButtons = ({ onNext, disabled, step, pastUrlParams }) => {
   const lang = useSelector((state) => state.lang);
   const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ const BookingButtons = ({ onNext, disable, step, pastUrlParams }) => {
       >
         {lang === "th" ? "กลับ" : "Back"}
       </button>
-      <button onClick={onNext} disabled={disable ? "" : "disabled"}>
+      <button onClick={onNext} disabled={disabled ? "disabled" : ""}>
         {lang === "th" ? "ต่อไป" : "Next"}
       </button>
     </div>

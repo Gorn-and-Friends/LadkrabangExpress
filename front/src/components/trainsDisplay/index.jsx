@@ -18,6 +18,7 @@ const TrainsDisplay = ({ step }) => {
   const params = new URLSearchParams(location.search);
   const lang = useSelector((state) => state.lang);
   const trainList = useSelector((state) => state.trains);
+  const stations = require("../../assets/jsons/booking/station.json");
   const content =
     lang === "th"
       ? require("../../assets/jsons/booking/th.json")
@@ -35,9 +36,25 @@ const TrainsDisplay = ({ step }) => {
     );
   }, [step]);
 
-  useEffect(() => {
-    console.log(trainList);
-  }, [trainList]);
+  const showStation = (OD) => {
+    var res = "";
+    try {
+      if (OD == "o") {
+        if (lang === "th") res = trainList[0].origin;
+        else {
+          for (const i of stations)
+            if (trainList[0].origin === i["th"]) res = i["en"];
+        }
+      } else {
+        if (lang === "th") res = trainList[0].destination;
+        else {
+          for (const i of stations)
+            if (trainList[0].destination === i["th"]) res = i["en"];
+        }
+      }
+    } catch {}
+    return res;
+  };
 
   const handleOnNext = (e) => {
     e.preventDefault();
@@ -48,7 +65,9 @@ const TrainsDisplay = ({ step }) => {
           trainList[choice - 1].seatRemain.class1 > 0 ? 1 : 0
         }${trainList[choice - 1].seatRemain.class2 > 0 ? 1 : 0}${
           trainList[choice - 1].seatRemain.class3 > 0 ? 1 : 0
-        }&idt=${trainList[choice - 1].train_id}&pax=${trainList[0].passenger}`
+        }&idt=${trainList[choice - 1].train_id}&pax=${
+          trainList[0].passenger
+        }&p=${trainList[0].ticketPrice}`
       );
     } catch {}
   };
@@ -60,16 +79,22 @@ const TrainsDisplay = ({ step }) => {
           <div className="train-display__info__item">
             <FaRegDotCircle />
             &ensp;
-            {trainList[0].origin}
+            {showStation("o")}
             &ensp;
             <FaMapMarkerAlt />
             &ensp;
-            {trainList[0].destination}
+            {showStation("d")}
           </div>
           <div className="train-display__info__item">
             <FaRegClock />
-            &ensp; Departure on &ensp;
-            <span>{trainList[0].date}</span>
+            &ensp;{content.train.depTime}&ensp;
+            <span>
+              {new Date(trainList[0].date).toLocaleString(lang, {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </span>
           </div>
           <div className="train-display__info__item">
             <FaWalking />
@@ -94,16 +119,46 @@ const TrainsDisplay = ({ step }) => {
                 <div className="train-display__card__info">
                   <div className="train-display__card__info__first-row">
                     <span>
-                      {info.departureTime} - {info.arrivalTime}
+                      {(info.departureTime.toString().split(":")[0] < 10
+                        ? "0" + info.departureTime.toString().split(":")[0]
+                        : info.departureTime.toString().split(":")[0]) +
+                        ":" +
+                        (info.departureTime.toString().split(":")[1] < 10
+                          ? "0" + info.departureTime.toString().split(":")[1]
+                          : info.departureTime.toString().split(":")[1])}
+                      &ensp;-&ensp;
+                      {(info.arrivalTime.toString().split(":")[0] < 10
+                        ? "0" + info.arrivalTime.toString().split(":")[0]
+                        : info.arrivalTime.toString().split(":")[0]) +
+                        ":" +
+                        (info.arrivalTime.toString().split(":")[1] < 10
+                          ? "0" + info.arrivalTime.toString().split(":")[1]
+                          : info.arrivalTime.toString().split(":")[1])}
                     </span>
-                    <span>{info.duration}</span>
+                    <span>
+                      {(info.duration.toString().split(":")[0] > 0
+                        ? info.duration.toString().split(":")[0] +
+                          (lang === "th" ? " ชั่วโมง " : " hours ")
+                        : "") +
+                        info.duration.toString().split(":")[1] +
+                        (lang === "th" ? " นาที" : " minutes")}
+                    </span>
                   </div>
                   <div className="train-display__card__info__second-row">
                     <span>
-                      Train# : &ensp;<span>{info.trainNumber}</span>
+                      {content.train.trainNo}&ensp;:&ensp;
+                      <span>{info.trainNumber}</span>
                     </span>
                     <span>
-                      Type : &ensp;<span>{info.type}</span>
+                      {content.train.seatsAvail}&ensp;:&ensp;
+                      <span>
+                        {"1st: " +
+                          info.seatRemain.class1 +
+                          ", 2nd: " +
+                          info.seatRemain.class2 +
+                          ", 3rd: " +
+                          info.seatRemain.class3}
+                      </span>
                     </span>
                   </div>
                 </div>
@@ -113,7 +168,7 @@ const TrainsDisplay = ({ step }) => {
                   <div className="train-display__card__ticket-touch__bottom" />
                 </div>
                 <div className="train-display__card__price">
-                  <span>from à¸¿</span>
+                  <span>{content.train.price} &#3647;</span>
                   {info.ticketPrice}
                 </div>
               </label>
@@ -122,7 +177,7 @@ const TrainsDisplay = ({ step }) => {
         </div>
         <BookingButtons
           onNext={handleOnNext}
-          disable={choice === 0 ? false : true}
+          disabled={choice === 0 ? true : false}
           step={step}
           pastUrlParams={""}
         />

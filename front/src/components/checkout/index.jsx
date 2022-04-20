@@ -21,12 +21,12 @@ const Checkout = ({ step }) => {
       : require("../../assets/jsons/booking/en.json");
   const [tickets, setTickets] = useState({});
   const [displayTickets, setDisplayTickets] = useState([]);
-  const [err, setErr] = useState(false);
+  const [err, setErr] = useState(true);
   const [payment, setPayment] = useState({
     name: "",
     num: "",
     exp: "",
-    cvv: "",
+    cvc: "",
   });
 
   useEffect(() => {
@@ -64,7 +64,14 @@ const Checkout = ({ step }) => {
   }, [tickets]);
 
   useEffect(() => {
-    setErr(false);
+    if (
+      payment.name !== "" &&
+      payment.num !== "" &&
+      payment.exp !== "" &&
+      payment.cvc !== ""
+    ) {
+      setErr(false);
+    } else setErr(true);
   }, [payment]);
 
   const handleInputOnChange = ({ currentTarget: input }) => {
@@ -82,7 +89,7 @@ const Checkout = ({ step }) => {
         user_id: localStorage.getItem("userId"),
         train_id: tickets.t_id,
       };
-      console.log(info)
+      console.log(info);
       try {
         navigate(
           `/booking?page=4&c=${params.get("c")}&idt=${params.get(
@@ -105,16 +112,13 @@ const Checkout = ({ step }) => {
     <div className="checkout">
       <div className="checkout__container">
         <div className="checkout__content">
-          <div className="scroll-blur top"></div>
           <div className="checkout__ticket">
             {displayTickets.map((ticket) => (
               <Ticket ticket={ticket} />
             ))}
-            {/* <pre>{JSON.stringify(displayTickets, null, 2)}</pre> */}
           </div>
-          <div className="scroll-blur bottom"></div>
           <fieldset>
-            <legend align="center">Payment Information</legend>
+            <legend align="center">{content.checkout.header}</legend>
             <form className="checkout__payment">
               <img src={visaMastercard} alt="" />
               <div className="checkout__payment__100">
@@ -128,7 +132,7 @@ const Checkout = ({ step }) => {
                   placeholder=" "
                 />
                 <label htmlFor="name">
-                  Card holder name <span>*</span>
+                  {content.checkout.name} <span>*</span>
                 </label>
               </div>
               <div className="checkout__payment__100">
@@ -150,7 +154,7 @@ const Checkout = ({ step }) => {
                   placeholder=" "
                 />
                 <label htmlFor="num">
-                  Card number <span>*</span>
+                  {content.checkout.num} <span>*</span>
                 </label>
               </div>
               <div className="checkout__payment__group">
@@ -179,22 +183,22 @@ const Checkout = ({ step }) => {
                     placeholder=" "
                   />
                   <label htmlFor="exp">
-                    Expiration date <span>*</span>
+                    {content.checkout.exp} <span>*</span>
                   </label>
                 </div>
                 <div className="checkout__payment__50">
                   <input
                     type="password"
-                    id="cvv"
-                    name="cvv"
-                    value={payment.cvv}
+                    id="cvc"
+                    name="cvc"
+                    value={payment.cvc}
                     onChange={handleInputOnChange}
                     maxLength="3"
                     autoComplete="off"
                     placeholder=" "
                   />
-                  <label htmlFor="cvv">
-                    CVV <span>*</span>
+                  <label htmlFor="cvc">
+                    {content.checkout.cvc} <span>*</span>
                   </label>
                 </div>
               </div>
@@ -203,7 +207,7 @@ const Checkout = ({ step }) => {
         </div>
         <BookingButtons
           onNext={handleOnNext}
-          disable={!err}
+          disabled={err}
           step={step}
           pastUrlParams={`&c=${params.get("c")}&idt=${params.get(
             "idt"

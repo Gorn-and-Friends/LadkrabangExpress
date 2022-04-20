@@ -7,7 +7,13 @@
   width: 100%;
   height: calc(100vh - 2.2 * $navbar-height);
   transition: all $transition-time ease-in-out;
-
+  
+  * {
+    @include themify() {
+      color: t("main-font-color");
+    }
+  }
+  
   &__container {
     display: flex;
     align-items: center;

@@ -23,13 +23,11 @@ const Booking = () => {
       <NavBar />
       {step > 0 ? <ProgressBar step={step} /> : null}
       {step === 0 ? <Form /> : null}
-      {step === 1 ? (
-        <TrainsDisplay step={step} />
-      ) : null}
+      {step === 1 ? <TrainsDisplay step={step} /> : null}
       {step === 2 ? <ClassSelection step={step} /> : null}
       {step === 3 ? <SeatSelection step={step} /> : null}
       {/* {step === 4 ? <FoodCatalog step={step} /> : null} */}
-      {step === 4 ? <Checkout step={step}/> : null}
+      {step === 4 ? <Checkout step={step} /> : null}
     </>
   );
 };

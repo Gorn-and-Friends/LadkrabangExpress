@@ -18,6 +18,7 @@ $footer-size: calc(1.8 * $navbar-height);
   transition: all $transition-time ease-in-out;
   @include themify() {
     background-color: t(main-bg-color);
+    color: t("main-font-color");
   }
 
   &__form {
@@ -49,6 +50,7 @@ $footer-size: calc(1.8 * $navbar-height);
           @include themify() {
             background-color: t(main-bg-color);
             border-bottom: 0.05rem solid t(font-color-2);
+            color: t("main-font-color");
           }
           @include languify() {
             font-family: l(body-font);
@@ -100,7 +102,7 @@ $footer-size: calc(1.8 * $navbar-height);
       font: 200 2rem l(subtitle-font);
       color: #fff;
     }
-    
+
     &:active {
       @include themify() {
         background-color: t(color-2);

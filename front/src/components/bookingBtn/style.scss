@@ -9,6 +9,12 @@ $height: calc(1.8 * $navbar-height);
   width: 100%;
   height: $height;
 
+  * {
+    @include themify() {
+      color: t("main-font-color");
+    }
+  }
+
   button {
     cursor: pointer;
     margin: 3rem 0;

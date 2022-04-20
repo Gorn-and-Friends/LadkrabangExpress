@@ -21,6 +21,7 @@ const ClassSelection = ({ step }) => {
       ? require("../../assets/jsons/booking/th.json")
       : require("../../assets/jsons/booking/en.json");
   const [choice, setChoice] = useState(0);
+  const [price, setPrice] = useState(0);
   const [availClasses, setAvailClasses] = useState({
     f: true,
     s: true,
@@ -28,24 +29,20 @@ const ClassSelection = ({ step }) => {
   });
 
   useEffect(() => {
-    setChoice(params.get("choice") ? params.get("choice") : 0);
-    if (params.get("c")) {
+    setChoice(params.get("cl") ? params.get("cl") : 0);
+    try {
+      setPrice(params.get("p"));
       setAvailClasses({
         f: params.get("c")[0] == 1 ? true : false,
         s: params.get("c")[1] == 1 ? true : false,
         t: params.get("c")[2] == 1 ? true : false,
       });
-    }
+    } catch {}
   }, [step]);
 
   const handleOnNext = async (e) => {
     e.preventDefault();
     try {
-      navigate(
-        `/booking?page=2&c=${params.get("c")}&idt=${params.get(
-          "idt"
-        )}&pax=${params.get("pax")}&choice=${choice}`
-      );
       dispatch(actions.setLoading(true));
       await bookingService.findSeats({
         trainId: params.get("idt"),
@@ -54,7 +51,7 @@ const ClassSelection = ({ step }) => {
       navigate(
         `/booking?page=3&c=${params.get("c")}&idt=${params.get(
           "idt"
-        )}&pax=${params.get("pax")}&cl=${choice}`
+        )}&pax=${params.get("pax")}&p=${params.get("p")}&cl=${choice}`
       );
     } catch (er) {
       dispatch(actions.setLoading(false));
@@ -83,7 +80,7 @@ const ClassSelection = ({ step }) => {
                 <li>{content.class[2].list[0]}</li>
                 <li>{content.class[2].list[1]}</li>
               </ul>
-              <span>฿27</span>
+              <span>&#3647;{price}</span>
             </div>
           </label>
           <input
@@ -130,7 +127,7 @@ const ClassSelection = ({ step }) => {
         </div>
         <BookingButtons
           onNext={handleOnNext}
-          disable={choice === 0 ? false : true}
+          disabled={choice === 0 ? true : false}
           step={step}
           pastUrlParams={""}
         />

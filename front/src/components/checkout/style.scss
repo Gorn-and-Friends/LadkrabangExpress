@@ -97,6 +97,9 @@
 
   * {
     transition: all $transition-time ease-in-out;
+    @include themify() {
+      color: t("main-font-color");
+    }
   }
 
   &__container {
@@ -117,13 +120,14 @@
   }
 
   &__ticket {
+    padding: 0.2rem 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
     width: 60%;
     max-height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;
 

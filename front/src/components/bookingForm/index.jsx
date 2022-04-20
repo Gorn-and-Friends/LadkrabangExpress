@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import "./style.scss";
 import actions from "../../services/actions";
 import bookingService from "../../services/utils/booking";
-import "./style.scss";
 
 const BookingForm = () => {
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ const BookingForm = () => {
       ? require("../../assets/jsons/booking/th.json")
       : require("../../assets/jsons/booking/en.json");
   const [err, setErr] = useState(false);
+  const [routeErr, setRouteErr] = useState(false);
   const [missingInput, setMissingInput] = useState(false);
   const [earlyReturn, setEarlyReturn] = useState(false);
   const [incorrectStations, setIncorrectStations] = useState(false);
@@ -54,10 +55,10 @@ const BookingForm = () => {
     document.getElementById("date").setAttribute("min", min);
     document.getElementById("date").setAttribute("max", max);
     document.getElementById("returnDate").setAttribute("max", max);
-
     setOrigin(params.get("from") ? params.get("from") : "");
     setDest(params.get("to") ? params.get("to") : "");
     setPax(params.get("pax") ? params.get("pax") : "");
+    setRouteErr(sessionStorage.getItem("routeError") == 1);
     setCurDate({ value: params.get("date"), onFocus: true });
     setCurTime({ value: params.get("time"), onFocus: true });
     setCurReturnDate({ value: params.get("date-return"), onFocus: true });
@@ -72,7 +73,13 @@ const BookingForm = () => {
         .getElementById("returnDate")
         .setAttribute("min", new Date().toISOString().split("T")[0]);
     }
-  }, [curDate.value]);
+  }, [curDate]);
+
+  useEffect(() => {
+    setRouteErr(sessionStorage.getItem("routeError") == 1);
+    console.log(routeErr);
+    setErr(routeErr);
+  }, [routeErr]);
 
   useEffect(() => {
     if (origin !== "" || dest !== "") {
@@ -98,11 +105,15 @@ const BookingForm = () => {
     }
   }, [lang]);
 
+  useEffect(() => {}, [navigate, location]);
+
   const handleOnSubmit = async (e) => {
     e.preventDefault();
+    sessionStorage.setItem("routeError", 0);
+    setRouteErr(false);
     let missing = false;
     let matchedStations = false;
-    let stationsExists = false;
+    let stationsNotExists = false;
     let dtErr = false;
     let originTH = "";
     let destTH = "";
@@ -144,34 +155,42 @@ const BookingForm = () => {
       }
     if (info.from === info.to) matchedStations = true;
     else matchedStations = false;
-    if (info.from === "NaN" || info.to === "NaN") stationsExists = false;
-    else stationsExists = true;
+    if (info.from === "NaN" || info.to === "NaN") stationsNotExists = true;
+    else stationsNotExists = false;
     if (returned) {
       if (new Date(curReturnDate.value) < new Date(curDate.value)) dtErr = true;
       else if (curReturnTime.value <= curTime.value) dtErr = true;
     }
+    console.log(info);
 
-    if (missing || matchedStations || !stationsExists || dtErr) {
+    if (
+      missing ||
+      matchedStations ||
+      stationsNotExists ||
+      dtErr ||
+      !!routeErr
+    ) {
       setErr(true);
       if (missing) setMissingInput(true);
       else setMissingInput(false);
       if (matchedStations) setMatchedStations(true);
       else setMatchedStations(false);
-      if (!stationsExists) setIncorrectStations(true);
+      if (stationsNotExists) setIncorrectStations(true);
       else setIncorrectStations(false);
       if (dtErr) setEarlyReturn(true);
       else setEarlyReturn(false);
     } else {
       setErr(false);
       try {
-        navigate(
-          `/booking?page=0&from=${info.from}&to=${info.to}&pax=${info.pax}&date=${info.date}&time=${info.time}&date-return=${info.returnDate}&time-return=${info.returnTime}`
-        );
         dispatch(actions.setLoading(true));
-        await bookingService.findTrains(info);
-        navigate(
-          `/booking?page=1&from=${info.from}&to=${info.to}&pax=${info.pax}&date=${info.date}&time=${info.time}&date-return=${info.returnDate}&time-return=${info.returnTime}`
-        );
+        const res = await bookingService.findTrains(info);
+        if (res === 200) {
+          navigate("/booking?page=1");
+        } else {
+          setErr(true);
+          sessionStorage.setItem("routeError", 1);
+          dispatch(actions.setLoading(false));
+        }
       } catch (er) {
         dispatch(actions.setLoading(false));
         console.log(er);
@@ -194,6 +213,8 @@ const BookingForm = () => {
                 ? content.form.errors.invalidStations
                 : earlyReturn
                 ? content.form.errors.earlyReturn
+                : !!routeErr
+                ? content.form.errors.routeErr
                 : ""}
             </div>
           )}

@@ -35,9 +35,13 @@ const Router = () => {
   }, []);
 
   useEffect(() => {
+    sessionStorage.setItem("routeError", 0);
     dispatch(actions.setLoading(false));
     dispatch(
       actions.setTrainList(JSON.parse(sessionStorage.getItem("trainList")))
+    );
+    dispatch(
+      actions.setSeatList(JSON.parse(sessionStorage.getItem("seatList")))
     );
   }, [navigate, location]);
 

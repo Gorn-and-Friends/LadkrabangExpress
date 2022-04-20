@@ -10,10 +10,10 @@ const logIn = async (info) => {
   });
 
   localStorage.setItem("userId", res.data._id);
-  localStorage.setItem("userName", [
-    res.data.firstname,
-    res.data.lastname,
-  ]);
+  localStorage.setItem("userName", {
+    fname: res.data.firstname,
+    lname: res.data.lastname,
+  });
   localStorage.setItem("token", res.data.token);
 };
 
