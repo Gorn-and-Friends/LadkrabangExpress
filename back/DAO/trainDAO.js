@@ -75,8 +75,9 @@ class Train{
             for (let i=0; i<foundTrain.length; i++) {
                 // หา origin ตรงกับที่ front ส่งมา
                 for (let j=0; foundTrain[i].station[j]; j++) {
+                    // console.log(foundTrain[i].station[j])
                     if (origin == foundTrain[i].station[j].station_name) {
-                        
+                        console.log("Justin")
                         // Get hours and minutes from DB
                         let hours = foundTrain[i].station[j].departure_hour
                         hours = String(hours)
@@ -98,12 +99,11 @@ class Train{
                         const timeFromfront = String(time)
                         
                         const text1 = `2017-05-02T${timeFromDB}`
-                        const text2 = `2017-05-02T${time}`
+                        const text2 = `2017-05-02T${timeFromfront}`
                         const d1 = new Date(Date.parse(text1));
                         const d2 = new Date(Date.parse(text2));                     
                         const diff = Train.getDuration(d1, d2);                       
                         const timeDiff = parseFloat(diff.toString())
-                      
                         // // ทำเป็น object เพื่อยัดใส่ trainSortTime
                         let temp = foundTrain[i].toObject()
                         temp.diff = timeDiff
@@ -113,8 +113,9 @@ class Train{
                         // console.log(temp.train_number)
                         // console.log(temp.diff)
                     }
-                    break
+                    // break
                 }
+                // break
             }
             // console.log(foundTrain[foundTrain.length-1])
             trainSortTime.sort((a, b) => (a.diff > b.diff) ? 1 : -1)
