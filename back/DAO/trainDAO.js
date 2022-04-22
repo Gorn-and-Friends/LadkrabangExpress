@@ -57,39 +57,98 @@ class Train{
 
             const foundTrainTemp = await trainModel.find({$and:[{"station.station_name": origin},{"station.station_name": destination}]})
             
+            // console.log(foundTrainTemp)
             //เลือกแค่อันที่สถานีเป็นต้นทางกับปลายทางตามลำดับ
             let foundTrain = await Train.findTrainOrderStation(foundTrainTemp,origin, destination)
             foundTrain = await Train.filterDay(foundTrain,date)
             console.log("--------------------------------------------------------------------------------------------------")
             //Check class of train
+
+            // On process--------------------------------------------------------------------------------------------------------------------------------------------------
+            // foundTrain = await Train.sortTime(foundTrainTemp, time, origin)
+            // console.log(foundTrain)
+            // console.log(foundTrain[0].station[0].station_name)
+            // console.log(foundTrain[0].station[1].station_name)
             
-            //Make JSON to front
+            let trainSortTime = []
+            // รันลูปเพื่อหาส่วนต่างเวลาของแต่ละ หมายเลข ขบวน
+            for (let i=0; i<foundTrain.length; i++) {
+                // หา origin ตรงกับที่ front ส่งมา
+                for (let j=0; foundTrain[i].station[j]; j++) {
+                    if (origin == foundTrain[i].station[j].station_name) {
+                        
+                        // Get hours and minutes from DB
+                        let hours = foundTrain[i].station[j].departure_hour
+                        hours = String(hours)
+                        let minutes = foundTrain[i].station[j].departure_minute
+                        minutes = String(minutes)
+
+                        // เติม 0
+                        if (hours.length <= 1){
+                            hours = "0"+hours
+                        }
+                        if (minutes.length <= 1){
+                            minutes = "0"+minutes
+                        }
+                        
+                        // format time from DB to HH:MM
+                        const timeFromDB = hours+":"+minutes
+                        
+                        // time from front
+                        const timeFromfront = String(time)
+                        
+                        const text1 = `2017-05-02T${timeFromDB}`
+                        const text2 = `2017-05-02T${time}`
+                        const d1 = new Date(Date.parse(text1));
+                        const d2 = new Date(Date.parse(text2));                     
+                        const diff = Train.getDuration(d1, d2);                       
+                        const timeDiff = parseFloat(diff.toString())
+                      
+                        // // ทำเป็น object เพื่อยัดใส่ trainSortTime
+                        let temp = foundTrain[i].toObject()
+                        temp.diff = timeDiff
+                        trainSortTime.push(temp)
+                        // console.log(temp)
+                        // console.log("----------------obj--------")
+                        // console.log(temp.train_number)
+                        // console.log(temp.diff)
+                    }
+                    break
+                }
+            }
+            // console.log(foundTrain[foundTrain.length-1])
+            trainSortTime.sort((a, b) => (a.diff > b.diff) ? 1 : -1)
+            console.log(trainSortTime)
+            // console.log(trainSortTime[trainSortTime.length-1])
+            //---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+            // Make JSON to front
             const filterTrainData = []
-            for(let i in foundTrain){
+            for(let i in trainSortTime){
 
                 //คำนวนราคาตั๋ว
-                let price = await Train.calculatePrice(foundTrain[i],origin,destination)
+                let price = await Train.calculatePrice(trainSortTime[i],origin,destination)
                 
                 //คำนวนราคาตั๋วรวม
                 const totalPrice = Number(price) * Number(passenger)
                 
                 //คำนวนเวลาออกเดินทาง เวลาถึง และเวลาที่ใช้ในการเดินทาง
-                const { deTime, arTime,duration} = await Train.findDepartureArrivalTime(foundTrain[i].station,origin,destination)
+                const { deTime, arTime,duration} = await Train.findDepartureArrivalTime(trainSortTime[i].station,origin,destination)
                 
                 //คำนวนที่นั่งที่ยังเหลือ
                 //return object
-                const classRemain = await Train.calculateSeatRemain(foundTrain[i],date)
-                console.log(foundTrain[i]._id)
+                const classRemain = await Train.calculateSeatRemain(trainSortTime[i],date)
+                console.log(trainSortTime[i]._id)
                 filterTrainData.push({
-                    "train_id": foundTrain[i]._id,
-                    "trainNumber": foundTrain[i].train_number,
+                    "train_id": trainSortTime[i]._id,
+                    "trainNumber": trainSortTime[i].train_number,
                     "origin": origin, 
                     "destination": destination, 
                     "departureTime": deTime, 
                     "arrivalTime": arTime, 
                     "duration": duration,
                     "date": date,
-                    "day": foundTrain[i].service_day,
+                    "day": trainSortTime[i].service_day,
                     "passenger": passenger,
                     "seatRemain":{
                         "class1": classRemain.class1,
@@ -111,12 +170,29 @@ class Train{
 
     }
 
+    static getDuration = function(d1, d2) {
+        const d3 = new Date(Math.abs(d2 - d1));
+        console.log(d3)
+        const d0 = new Date(0);
+    
+        return {
+            getHours: function(){
+                return d3.getHours() - d0.getHours();
+            },
+            getMinutes: function(){
+                return d3.getMinutes() - d0.getMinutes();
+            },
+            toString: function(){
+                return this.getHours() + "." +
+                       this.getMinutes()    
+            },
+        };
+    }
+
     static async showReservationSeat(req,res){
         const { train_id , date } = req.body
 
     }
-
-    
 
     static findTrainOrderStation(foundTrainTemp,origin, destination){
         let foundTrain = []
