@@ -119,7 +119,7 @@ class Train{
             }
             // console.log(foundTrain[foundTrain.length-1])
             trainSortTime.sort((a, b) => (a.diff > b.diff) ? 1 : -1)
-            console.log(trainSortTime)
+            // console.log(trainSortTime)
             // console.log(trainSortTime[trainSortTime.length-1])
             //---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -134,12 +134,29 @@ class Train{
                 const totalPrice = Number(price) * Number(passenger)
                 
                 //คำนวนเวลาออกเดินทาง เวลาถึง และเวลาที่ใช้ในการเดินทาง
-                const { deTime, arTime,duration} = await Train.findDepartureArrivalTime(trainSortTime[i].station,origin,destination)
+                let { deTime, arTime,duration} = await Train.findDepartureArrivalTime(trainSortTime[i].station,origin,destination)
+                
+                console.log("---------")
+                console.log(deTime)
+                const time = deTime.split(":")
+                if(time[1].length < 2){
+                    time[1] = "0" + time[1]
+                }
+                deTime = time[0] + ":" + time[1]
+
+                const timeA = arTime.split(":")
+                if(timeA[1].length < 2){
+                    timeA[1] = "0" + timeA[1]
+                }
+                arTime = timeA[0] + ":" + timeA[1]
+
+                
+                // console.log(h)
                 
                 //คำนวนที่นั่งที่ยังเหลือ
                 //return object
                 const classRemain = await Train.calculateSeatRemain(trainSortTime[i],date)
-                console.log(trainSortTime[i]._id)
+                // console.log(trainSortTime[i]._id)
                 filterTrainData.push({
                     "train_id": trainSortTime[i]._id,
                     "trainNumber": trainSortTime[i].train_number,
@@ -173,7 +190,7 @@ class Train{
 
     static getDuration = function(d1, d2) {
         const d3 = new Date(Math.abs(d2 - d1));
-        console.log(d3)
+        // console.log(d3)
         const d0 = new Date(0);
     
         return {
@@ -234,7 +251,12 @@ class Train{
             deltaH = arTimeH - deTimeH
             deltaM = arTimeM - deTimeM
         }
-        return String(deltaH) + ":" + String(deltaM)
+        deltaM = String(deltaM)
+
+        if(deltaM.length < 2){
+            deltaM = "0" + deltaM
+        }
+        return String(deltaH) + ":" + deltaM
     }
 
     static async test(req,res){
@@ -254,7 +276,7 @@ class Train{
     static calculatePrice(foundTrain , origin , destination){
         // for(let i of foundTrain){
                 
-            console.log(foundTrain.train_number)
+            // console.log(foundTrain.train_number)
             if(Boolean(foundTrain.class_in_train.class_3.class_available)){
                 return Train.calculatePriceClass(3, origin, destination)
             }
