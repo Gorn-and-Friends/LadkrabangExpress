@@ -6,12 +6,14 @@ import icon from "../../../assets/icons/icon.png";
 import iconDark from "../../../assets/icons/icon-dark.png";
 import log from "../../../services/utils/log";
 import actions from "../../../services/actions";
+import Loading from "../../../components/loading";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme);
   const lang = useSelector((state) => state.lang);
+  const loading = useSelector((state) => state.loading);
 
   useEffect(() => {
     document.title = "Log in - LKBX";
@@ -47,7 +49,9 @@ const Login = () => {
     setLogin(temp);
   };
 
-  return (
+  return loading ? (
+    <Loading reduceHeigh={0} />
+  ) : (
     <form className="login" onSubmit={handleOnSubmit}>
       <fieldset className="login__container">
         <legend align="center">

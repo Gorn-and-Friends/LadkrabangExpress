@@ -9,7 +9,7 @@ import actions from "../../services/actions";
 import bookingService from "../../services/utils/booking";
 import BookingButtons from "../bookingBtn";
 
-const ClassSelection = ({ step }) => {
+const ClassSelection = ({ step, onSecond }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -29,16 +29,17 @@ const ClassSelection = ({ step }) => {
   });
 
   useEffect(() => {
-    setChoice(params.get("cl") ? params.get("cl") : 0);
-    try {
-      setPrice(params.get("p"));
-      setAvailClasses({
-        f: params.get("c")[0] == 1 ? true : false,
-        s: params.get("c")[1] == 1 ? true : false,
-        t: params.get("c")[2] == 1 ? true : false,
-      });
-    } catch {}
-  }, [step]);
+    if (onSecond) {
+      try {
+        setPrice(params.get("p"));
+        setAvailClasses({
+          f: params.get("c")[0] == 1 ? true : false,
+          s: params.get("c")[1] == 1 ? true : false,
+          t: params.get("c")[2] == 1 ? true : false,
+        });
+      } catch {}
+    }
+  }, [onSecond]);
 
   const handleOnNext = async (e) => {
     e.preventDefault();
@@ -100,7 +101,7 @@ const ClassSelection = ({ step }) => {
                 <li>{content.class[1].list[0]}</li>
                 <li>{content.class[1].list[1]}</li>
               </ul>
-              <span>฿50</span>
+              <span>&#3647;{price}</span>
             </div>
           </label>
           <input
@@ -121,12 +122,15 @@ const ClassSelection = ({ step }) => {
                 <li>{content.class[0].list[1]}</li>
                 <li>{content.class[0].list[2]}</li>
               </ul>
-              <span>฿102</span>
+              <span>&#3647;{price}</span>
             </div>
           </label>
         </div>
         <BookingButtons
           onNext={handleOnNext}
+          price={
+            choice ? Number(params.get("p")) * Number(params.get("pax")) : 0
+          }
           disabled={choice === 0 ? true : false}
           step={step}
           pastUrlParams={""}

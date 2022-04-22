@@ -69,7 +69,9 @@
     }
 
     span {
-      color: red;
+      @include themify() {
+        color: red;
+      }
     }
   }
 

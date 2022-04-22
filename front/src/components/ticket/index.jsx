@@ -173,7 +173,7 @@ const Ticket = ({ ticket }) => {
             </div>
             <div className="ticket__info__7">
               <span>{content.price}</span>
-              <h1>{displayTicket ? displayTicket.ticketPrice : ""}</h1>
+              <h1>{displayTicket ? displayTicket.eaTicketPrice : ""}</h1>
             </div>
           </div>
         </div>
@@ -237,7 +237,7 @@ const Ticket = ({ ticket }) => {
           {/* <li>+&ensp;Food&ensp;x1</li> */}
           <li>
             <span>{content.price}&ensp;:</span>&ensp;&#3647;
-            {displayTicket ? displayTicket.ticketPrice : ""}
+            {displayTicket ? displayTicket.eaTicketPrice : ""}
           </li>
         </ul>
       </div>

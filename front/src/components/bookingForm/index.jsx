@@ -5,7 +5,7 @@ import "./style.scss";
 import actions from "../../services/actions";
 import bookingService from "../../services/utils/booking";
 
-const BookingForm = () => {
+const BookingForm = ({ reset }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const location = useLocation();
@@ -48,22 +48,26 @@ const BookingForm = () => {
   });
 
   useEffect(() => {
-    let min = new Date().toISOString().split("T")[0];
-    let max = new Date();
-    max.setDate(max.getDate() + 30);
-    max = max.toISOString().split("T")[0];
-    document.getElementById("date").setAttribute("min", min);
-    document.getElementById("date").setAttribute("max", max);
-    document.getElementById("returnDate").setAttribute("max", max);
-    setOrigin(params.get("from") ? params.get("from") : "");
-    setDest(params.get("to") ? params.get("to") : "");
-    setPax(params.get("pax") ? params.get("pax") : "");
-    setRouteErr(sessionStorage.getItem("routeError") == 1);
-    setCurDate({ value: params.get("date"), onFocus: true });
-    setCurTime({ value: params.get("time"), onFocus: true });
-    setCurReturnDate({ value: params.get("date-return"), onFocus: true });
-    setCurReturnTime({ value: params.get("time-return"), onFocus: true });
-  }, []);
+    if (reset) {
+      let min = new Date().toISOString().split("T")[0];
+      let max = new Date();
+      max.setDate(max.getDate() + 30);
+      max = max.toISOString().split("T")[0];
+      document.getElementById("date").setAttribute("min", min);
+      document.getElementById("date").setAttribute("max", max);
+      document.getElementById("returnDate").setAttribute("max", max);
+      setOrigin(params.get("from") ? params.get("from") : "");
+      setDest(params.get("to") ? params.get("to") : "");
+      setPax(params.get("pax") ? params.get("pax") : "");
+      setRouteErr(sessionStorage.getItem("routeError") == 1);
+      setCurDate({ value: params.get("date"), onFocus: true });
+      setCurTime({ value: params.get("time"), onFocus: true });
+      setCurReturnDate({ value: params.get("date-return"), onFocus: true });
+      setCurReturnTime({ value: params.get("time-return"), onFocus: true });
+      sessionStorage.setItem("trainList", JSON.stringify([]));
+      sessionStorage.setItem("seatList", JSON.stringify([]));
+    }
+  }, [reset]);
 
   useEffect(() => {
     if (curDate.value !== "") {
@@ -77,9 +81,10 @@ const BookingForm = () => {
 
   useEffect(() => {
     setRouteErr(sessionStorage.getItem("routeError") == 1);
-    console.log(routeErr);
     setErr(routeErr);
   }, [routeErr]);
+
+  useEffect(() => {}, [err]);
 
   useEffect(() => {
     if (origin !== "" || dest !== "") {
@@ -109,8 +114,6 @@ const BookingForm = () => {
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    sessionStorage.setItem("routeError", 0);
-    setRouteErr(false);
     let missing = false;
     let matchedStations = false;
     let stationsNotExists = false;
@@ -163,13 +166,7 @@ const BookingForm = () => {
     }
     console.log(info);
 
-    if (
-      missing ||
-      matchedStations ||
-      stationsNotExists ||
-      dtErr ||
-      !!routeErr
-    ) {
+    if (missing || matchedStations || stationsNotExists || dtErr) {
       setErr(true);
       if (missing) setMissingInput(true);
       else setMissingInput(false);

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
 
-const BookingButtons = ({ onNext, disabled, step, pastUrlParams }) => {
+const BookingButtons = ({ onNext, price, disabled, step, pastUrlParams }) => {
   const lang = useSelector((state) => state.lang);
   const navigate = useNavigate();
 
@@ -14,6 +14,13 @@ const BookingButtons = ({ onNext, disabled, step, pastUrlParams }) => {
       >
         {lang === "th" ? "กลับ" : "Back"}
       </button>
+      {price > 0 ? (
+        lang === "th" ? (
+          <span>ราคารวม&ensp;🛈&ensp;&ensp;&ensp;&#3647;{price}</span>
+        ) : (
+          <span>Total&ensp;🛈&ensp;&ensp;&ensp;&#3647;{price}</span>
+        )
+      ) : null}
       <button onClick={onNext} disabled={disabled ? "disabled" : ""}>
         {lang === "th" ? "ต่อไป" : "Next"}
       </button>

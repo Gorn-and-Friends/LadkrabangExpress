@@ -191,7 +191,7 @@
       @include centered-flex;
       height: $navbar-height;
       width: 8rem;
-      font: 900 1em fontTH.$body-font;
+      font: 900 0.9em fontTH.$body-font;
       cursor: pointer;
 
       &:hover {

@@ -149,6 +149,10 @@
         fill: t(main-color);
       }
     }
+
+    &.obsolete > svg {
+      cursor: default;
+    }
   }
 
   input[type="radio"] {
@@ -185,6 +189,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      top: calc(50% - 1.1rem);
       transition: all $transition-time ease-in-out;
       @include themify() {
         background-color: t(color-2);

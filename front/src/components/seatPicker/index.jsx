@@ -7,7 +7,13 @@ import {
   BsFillCaretRightFill,
 } from "react-icons/bs";
 
-const SeatPicker = ({ seats, amount, setSeats, setSelected, disabled }) => {
+const SeatPicker = ({
+  seats,
+  amount,
+  setFinalSeats,
+  setSeatSelected,
+  disabled,
+}) => {
   const lang = useSelector((state) => state.lang);
   const content =
     lang === "th"
@@ -17,9 +23,33 @@ const SeatPicker = ({ seats, amount, setSeats, setSelected, disabled }) => {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    setSelected(selectedSeats.length == amount);
-    setSeats(selectedSeats);
+    let temp = Array(Math.abs(selectedSeats.length - amount)).fill("C-—-x");
+    setFinalSeats(selectedSeats.concat(temp));
+    setSeatSelected(selectedSeats.length > 0);
+    if (selectedSeats.length === amount)
+      document.querySelectorAll(".seat-picker__seat").forEach((e) => {
+        if (
+          !e.classList.contains("selected") &&
+          !e.classList.contains("occupied")
+        )
+          e.classList.toggle("obsolete");
+      });
+    else
+      document.querySelectorAll(".seat-picker__seat").forEach((e) => {
+        if (e.classList.contains("obsolete")) e.classList.toggle("obsolete");
+      });
   }, [selectedSeats]);
+
+  useEffect(() => {
+    if (document.querySelector(".seat-picker").classList.contains("disabled")) {
+      document.querySelectorAll(".seat-picker__seat").forEach((e) => {
+        if (e.classList.contains("selected")) {
+          e.classList.toggle("selected");
+          setSelectedSeats([]);
+        }
+      });
+    }
+  }, [disabled]);
 
   const handleOnSelect = ({ currentTarget: e }) => {
     if (!disabled) {
@@ -45,12 +75,16 @@ const SeatPicker = ({ seats, amount, setSeats, setSelected, disabled }) => {
   return (
     <fieldset className={`seat-picker${disabled ? " disabled" : ""}`}>
       <legend align="right">
-        You selected <span>{selectedSeats.length}</span> of{" "}
-        <span>{amount}</span>
+        {content.seat.legend.main}
+        {selectedSeats.length}
+        {content.seat.legend.of}
+        {amount}
       </legend>
       <div className="seat-picker__container">
         <div className="seat-picker__overflow">
-          <div className="seat-picker__coach-index">Coach : {page}</div>
+          <div className="seat-picker__coach-index">
+            {content.seat.coachNo + page}
+          </div>
           {seats.map((_, i) => (
             <input
               type="radio"
@@ -73,8 +107,9 @@ const SeatPicker = ({ seats, amount, setSeats, setSelected, disabled }) => {
                           data.seat[4 * j + k].isReserv != "" ? " occupied" : ""
                         }`}
                         id={
+                          "CH" +
                           data.coach +
-                          "-" +
+                          "—" +
                           String.fromCharCode(k + 65) +
                           (j + 1)
                         }
@@ -117,26 +152,26 @@ const SeatPicker = ({ seats, amount, setSeats, setSelected, disabled }) => {
         <div className="seat-picker__footer">
           <div className="seat-picker__seat-index">
             {selectedSeats.length != 0
-              ? "Selected Seats : " + selectedSeats.join(",  ")
+              ? content.seat.selectedSeats + selectedSeats.join(",  ")
               : ""}
           </div>
           <ul className="seat-picker__showcase">
             <li>
               <div className="seat-picker__seat showcase">
                 <BsLaptopFill />
-                Available
+                {content.seat.showcase.avail}
               </div>
             </li>
             <li>
               <div className="seat-picker__seat showcase occupied">
                 <BsLaptopFill />
-                Occupied
+                {content.seat.showcase.occup}
               </div>
             </li>
             <li>
               <div className="seat-picker__seat showcase selected">
                 <BsLaptopFill />
-                Selected
+                {content.seat.showcase.seled}
               </div>
             </li>
           </ul>

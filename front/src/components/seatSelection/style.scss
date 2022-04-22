@@ -28,7 +28,7 @@
       color: t("main-font-color");
     }
 
-    label {
+    > label {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -36,7 +36,7 @@
       padding-left: 2rem;
       cursor: pointer;
 
-      div {
+      > div {
         display: inline-block;
         transition: all $transition-time ease-in-out;
         @include languify() {
@@ -44,7 +44,7 @@
         }
       }
 
-      input {
+      > input {
         position: absolute;
         opacity: 0;
         cursor: pointer;
@@ -60,7 +60,7 @@
         }
       }
 
-      span::after {
+      > span::after {
         left: 0.5rem;
         top: 0.18rem;
         width: 0.4rem;
@@ -79,13 +79,13 @@
       height: 1.5rem;
       width: 1.5rem;
       background-color: #eee;
-
       border-radius: 15px;
-    }
-    span:after {
-      content: "";
-      position: absolute;
-      display: none;
+
+      &::after {
+        content: "";
+        position: absolute;
+        display: none;
+      }
     }
   }
 }

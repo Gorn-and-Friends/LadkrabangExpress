@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./style.scss";
 import register from "../../../services/utils/registry";
 import actions from "../../../services/actions";
+import Loading from "../../../components/loading";
 
 const Register = () => {
   useEffect(() => {
@@ -13,6 +14,7 @@ const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
+  const loading = useSelector((state) => state.loading);
   const content =
     lang === "th"
       ? require("../../../assets/jsons/register/th.json")
@@ -118,7 +120,9 @@ const Register = () => {
     setCurDate({ ...curDate, onFocus: false });
   };
 
-  return (
+  return loading ? (
+    <Loading reduceHeight={0} />
+  ) : (
     <form className="register" onSubmit={handleOnSubmit}>
       <fieldset className="register__container">
         <legend align="center">{content.header}</legend>

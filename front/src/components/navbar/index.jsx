@@ -13,7 +13,14 @@ const NavBar = () => {
   const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
   const theme = useSelector((state) => state.theme);
-  const displayName = log.isLogged() ? log.isLogged().firstname : null;
+  const displayName =
+    lang === "th"
+      ? log.isLogged()
+        ? "คุณ "+log.isLogged().fname
+        : null
+      : log.isLogged()
+      ? "Mx. " + log.isLogged().lname
+      : null;
   const content =
     lang === "th"
       ? require("../../assets/jsons/navbar/th.json")

@@ -43,7 +43,20 @@
     { "header": "2nd Class", "list": ["Saloon car", "Air-cons"] },
     { "header": "3rd Class", "list": ["Saloon car", "Fans"] }
   ],
-  "seat": {},
+  "seat": {
+    "wantSelectSeat": "Select seat (+฿10 / seat)",
+    "legend": {
+      "main": "You selected ",
+      "of": " of "
+    },
+    "coachNo": "Coach : ",
+    "selectedSeats": "Selected Seats : ",
+    "showcase": {
+      "avail": "Available",
+      "occup": "Occupied",
+      "seled": "Selected"
+    }
+  },
   "checkout": {
     "header": "Payment Information",
     "name": "Card Holder Name",

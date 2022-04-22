@@ -11,7 +11,7 @@ import actions from "../../services/actions";
 import BookingButtons from "../bookingBtn";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const TrainsDisplay = ({ step }) => {
+const TrainsDisplay = ({ step, onFirst }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,15 +26,17 @@ const TrainsDisplay = ({ step }) => {
   const [choice, setChoice] = useState(0);
 
   useEffect(() => {
-    setChoice(params.get("choice") ? params.get("choice") : 0);
-    dispatch(
-      actions.setTrainList(
-        JSON.parse(sessionStorage.getItem("trainList"))
-          ? JSON.parse(sessionStorage.getItem("trainList"))
-          : []
-      )
-    );
-  }, [step]);
+    if (onFirst) {
+      setChoice(params.get("choice") ? params.get("choice") : 0);
+      dispatch(
+        actions.setTrainList(
+          JSON.parse(sessionStorage.getItem("trainList"))
+            ? JSON.parse(sessionStorage.getItem("trainList"))
+            : []
+        )
+      );
+    }
+  }, [onFirst]);
 
   const showStation = (OD) => {
     var res = "";
@@ -177,6 +179,7 @@ const TrainsDisplay = ({ step }) => {
         </div>
         <BookingButtons
           onNext={handleOnNext}
+          price={0}
           disabled={choice === 0 ? true : false}
           step={step}
           pastUrlParams={""}

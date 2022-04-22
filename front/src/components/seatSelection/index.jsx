@@ -6,7 +6,7 @@ import actions from "../../services/actions";
 import BookingButtons from "../bookingBtn";
 import SeatPicker from "../seatPicker";
 
-const SeatSelection = ({ step }) => {
+const SeatSelection = ({ step, onThird }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -18,29 +18,31 @@ const SeatSelection = ({ step }) => {
     lang === "th"
       ? require("../../assets/jsons/booking/th.json")
       : require("../../assets/jsons/booking/en.json");
-  const [pax, setPax] = useState(0);
+  const [pax, setPax] = useState(-1);
   const [seats, setSeats] = useState([]);
   const [trainId, setTrainId] = useState("");
   const [train, setTrain] = useState({});
   const [availClass, setAvailClass] = useState(111);
   const [selectedClass, setSelectedClass] = useState(0);
   const [ticket, setTicket] = useState([]);
-  const [selectSeats, setSelectSeats] = useState(false);
-  const [selected, setSelected] = useState(false);
+  const [wantSelectSeat, setWantSelectSeat] = useState(false);
+  const [seatSelected, setSeatSelected] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState([]);
 
   useEffect(() => {
-    setTrainId(params.get("idt") ? params.get("idt") : "");
-    setPax(params.get("pax") ? params.get("pax") : 0);
-    setAvailClass(params.get("c") ? params.get("c") : 111);
-    setSelectedClass(params.get("cl") ? params.get("cl") : 0);
-    dispatch(
-      actions.setTrainList(JSON.parse(sessionStorage.getItem("trainList")))
-    );
-    dispatch(
-      actions.setSeatList(JSON.parse(sessionStorage.getItem("seatList")))
-    );
-  }, [step]);
+    if (onThird) {
+      setTrainId(params.get("idt") ? params.get("idt") : "");
+      setPax(Number(params.get("pax")) ? Number(params.get("pax")) : 0);
+      setAvailClass(params.get("c") ? params.get("c") : 111);
+      setSelectedClass(params.get("cl") ? params.get("cl") : 0);
+      dispatch(
+        actions.setTrainList(JSON.parse(sessionStorage.getItem("trainList")))
+      );
+      dispatch(
+        actions.setSeatList(JSON.parse(sessionStorage.getItem("seatList")))
+      );
+    }
+  }, [onThird]);
 
   useEffect(() => {
     var temp = [];
@@ -61,7 +63,6 @@ const SeatSelection = ({ step }) => {
 
   useEffect(() => {
     try {
-      const temp = [];
       const unselectTemp = [];
       for (let i = 0; i < pax; i++) {
         unselectTemp.push({
@@ -70,11 +71,12 @@ const SeatSelection = ({ step }) => {
           row: "",
         });
       }
-      selectedSeats.map((s) => {
+      const temp = [];
+      selectedSeats.map((seat) => {
         temp.push({
-          coach: s ? s.split("-")[0] : "-",
-          column: s ? s.split("-")[1][0] : "-",
-          row: s ? s.split("-")[1].slice(1) : "-",
+          coach: seat.split("—")[0][seat.split("—")[0].length - 1],
+          column: seat.split("—")[1][0],
+          row: seat.split("—")[1][1] !== "x" ? seat.split("—")[1].slice(1) : "",
         });
       });
       setTicket({
@@ -89,14 +91,13 @@ const SeatSelection = ({ step }) => {
         a_t: train.arrivalTime,
         d: train.duration,
         p: train.ticketPrice,
-        s: selectSeats ? temp : unselectTemp,
+        s: wantSelectSeat ? temp : unselectTemp,
       });
     } catch {}
   }, [train, selectedSeats]);
 
   const handleOnNext = (e) => {
     e.preventDefault();
-
     let rplc = {
       "{": "%7B",
       "}": "%7D",
@@ -105,18 +106,11 @@ const SeatSelection = ({ step }) => {
       ",": "%2C",
     };
     navigate(
-      `/booking?page=3&c=${availClass}&idt=${trainId}&pax=${params.get(
-        "pax"
-      )}&cl=${selectedClass}&choice=${selectSeats}`,
-      { replace: true }
-    );
-    navigate(
       `/booking?page=4&c=${availClass}&idt=${trainId}&pax=${params.get(
         "pax"
-      )}&cl=${selectedClass}&tkt=${JSON.stringify(ticket).replace(
-        /[{}:",]/g,
-        (i) => rplc[i]
-      )}`
+      )}&p=${params.get("p")}&cl=${selectedClass}&tkt=${JSON.stringify(
+        ticket
+      ).replace(/[{}:",]/g, (i) => rplc[i])}`
     );
   };
 
@@ -125,11 +119,11 @@ const SeatSelection = ({ step }) => {
       <div className="seat-selector__container">
         <span className="seat-selector__btn">
           <label>
-            <div>{"Select seats (+15฿)"}</div>
+            <div>{content.seat.wantSelectSeat}&ensp;🛈</div>
             <input
               type="checkbox"
               onClick={({ currentTarget: input }) => {
-                setSelectSeats(input.checked);
+                setWantSelectSeat(input.checked);
               }}
             />
             <span />
@@ -138,17 +132,21 @@ const SeatSelection = ({ step }) => {
         <SeatPicker
           seats={seats}
           amount={pax}
-          setSeats={setSelectedSeats}
-          setSelected={setSelected}
-          disabled={!selectSeats}
+          setFinalSeats={setSelectedSeats}
+          setSeatSelected={setSeatSelected}
+          disabled={!wantSelectSeat}
         />
         <BookingButtons
           onNext={handleOnNext}
-          disabled={!selected && selectSeats}
+          price={
+            Number(params.get("p")) * Number(params.get("pax")) +
+            selectedSeats.filter((f) => f != "C-—-x").length * 10
+          }
+          disabled={wantSelectSeat ? (seatSelected ? false : true) : false}
           step={step}
           pastUrlParams={`&c=${availClass}&idt=${trainId}&pax=${params.get(
             "pax"
-          )}&p=${params.get("p")}&cl=${selectedClass}`}
+          )}&p=${params.get("p")}`}
         />
       </div>
     </div>

@@ -9,7 +9,7 @@ import logService from "../../services/utils/log";
 import bookingService from "../../services/utils/booking";
 import actions from "../../services/actions";
 
-const Checkout = ({ step }) => {
+const Checkout = ({ step, onFourth }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -22,6 +22,7 @@ const Checkout = ({ step }) => {
   const [tickets, setTickets] = useState({});
   const [displayTickets, setDisplayTickets] = useState([]);
   const [err, setErr] = useState(true);
+  const [totalPrice, setTotalPrice] = useState(-1);
   const [payment, setPayment] = useState({
     name: "",
     num: "",
@@ -30,8 +31,9 @@ const Checkout = ({ step }) => {
   });
 
   useEffect(() => {
-    setTickets(JSON.parse(params.get("tkt") ? params.get("tkt") : {}));
-  }, [step]);
+    if (onFourth)
+      setTickets(JSON.parse(params.get("tkt") ? params.get("tkt") : {}));
+  }, [onFourth]);
 
   useEffect(() => {
     try {
@@ -45,13 +47,15 @@ const Checkout = ({ step }) => {
         departureTime: tickets.d_t,
         arrivalTime: tickets.a_t,
         duration: tickets.d,
-        ticketPrice: tickets.p,
+        ticketPrice: totalPrice > 0 ? totalPrice : tickets.p,
       };
       var seats = [...tickets.s];
       var newTickets = new Array();
       Array.from({ length: seats.length }, (_, i) => {
         newTickets[i] = {
           ...common,
+          eaTicketPrice:
+            seats[i].coach === "-" ? Number(tickets.p) : Number(tickets.p) + 10,
           seat_reservation: {
             coach: seats[i].coach,
             row: seats[i].row,
@@ -61,7 +65,17 @@ const Checkout = ({ step }) => {
       });
       setDisplayTickets(newTickets);
     } catch {}
-  }, [tickets]);
+  }, [tickets, totalPrice]);
+
+  useEffect(() => {
+    try {
+      var sum = 0;
+      displayTickets.map((dt) => {
+        sum += Number(dt.eaTicketPrice);
+      });
+      setTotalPrice(sum);
+    } catch {}
+  }, [displayTickets]);
 
   useEffect(() => {
     if (
@@ -207,11 +221,14 @@ const Checkout = ({ step }) => {
         </div>
         <BookingButtons
           onNext={handleOnNext}
+          price={totalPrice}
           disabled={err}
           step={step}
           pastUrlParams={`&c=${params.get("c")}&idt=${params.get(
             "idt"
-          )}&pax=${params.get("pax")}&cl=${params.get("cl")}`}
+          )}&pax=${params.get("pax")}&p=${params.get("p")}&cl=${params.get(
+            "cl"
+          )}`}
         />
       </div>
     </div>

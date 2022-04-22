@@ -72,15 +72,21 @@
         }
 
         &:first-child {
+          width: 40%;
           border-radius: 0.5rem 0 0 0;
         }
 
+        &:nth-child(2) {
+          width: 40%;
+        }
+
         &:last-child {
+          width: 20%;
           border-radius: 0 0.5rem 0 0;
         }
 
         > h1 {
-          font-size: 1.5vw;
+          font-size: 1.2vw;
         }
 
         > span {
@@ -205,8 +211,8 @@
   }
 
   &__detail {
-    width: 18vw;
-    padding-left: 1rem;
+    width: 24vw;
+    padding-left: 1.2rem;
     margin-left: auto;
     margin-right: auto;
     left: 0;
@@ -217,10 +223,11 @@
     background-color: rgb(242, 233, 218);
 
     h3 {
-      margin: 1rem 0;
+      margin: 0.8rem 0;
     }
-
+    
     ul {
+      margin: 1rem 0;
       list-style: none;
       line-height: 150%;
 
