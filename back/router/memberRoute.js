@@ -27,5 +27,6 @@ router.route('/staff/showReservedTicket').post(staffDAO.showReservTicket)
 // Test
 router.route('/user/showUserProfile').post(userDAO.showUserProfile)
 router.route('/test').get(trainDAO.test)
+
 // export default router
 module.exports = router
