@@ -72,6 +72,7 @@ const DisplayBookingTicket = () => {
   return (
     <>
       <NavBar />
+      Hello world
       <div className="display-ticket">
         <div className="display-ticket__header">
           <Link to="edit">Edit</Link>
