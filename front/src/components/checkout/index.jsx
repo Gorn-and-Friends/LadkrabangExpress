@@ -1,41 +1,47 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  createSearchParams,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import "./style.scss";
 import visaMastercard from "../../assets/images/visa-mastercard.png";
-import BookingButtons from "../bookingBtn";
+import BookingButtons from "../bookingBtns";
 import Ticket from "../ticket";
-import logService from "../../services/utils/log";
+import logServices from "../../services/utils/log";
 import bookingService from "../../services/utils/booking";
 import actions from "../../services/actions";
 
-const Checkout = ({ step }) => {
+const Checkout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
-  const params = new URLSearchParams(location.search);
+  const [searchParams, _] = useSearchParams({});
   const content =
     lang === "th"
       ? require("../../assets/jsons/booking/th.json")
       : require("../../assets/jsons/booking/en.json");
   const [tickets, setTickets] = useState({});
   const [displayTickets, setDisplayTickets] = useState([]);
-  const [err, setErr] = useState(false);
+  const [err, setErr] = useState(true);
+  const [totalPrice, setTotalPrice] = useState(-1);
   const [payment, setPayment] = useState({
     name: "",
     num: "",
     exp: "",
-    cvv: "",
+    cvc: "",
   });
 
   useEffect(() => {
-    setTickets(JSON.parse(params.get("tkt") ? params.get("tkt") : {}));
-  }, [step]);
+    setTickets(JSON.parse(searchParams.get("tkt")));
+  }, []);
 
   useEffect(() => {
     try {
-      var common = {
+      let common = {
         trainNumber: tickets.t_n,
         date: tickets.dt,
         origin: tickets.or,
@@ -45,13 +51,15 @@ const Checkout = ({ step }) => {
         departureTime: tickets.d_t,
         arrivalTime: tickets.a_t,
         duration: tickets.d,
-        ticketPrice: tickets.p,
+        ticketPrice: totalPrice > 0 ? totalPrice : tickets.p,
       };
-      var seats = [...tickets.s];
-      var newTickets = new Array();
+      let seats = [...tickets.s];
+      let newTickets = new Array();
       Array.from({ length: seats.length }, (_, i) => {
         newTickets[i] = {
           ...common,
+          eaTicketPrice:
+            seats[i].coach === "-" ? Number(tickets.p) : Number(tickets.p) + 10,
           seat_reservation: {
             coach: seats[i].coach,
             row: seats[i].row,
@@ -61,10 +69,27 @@ const Checkout = ({ step }) => {
       });
       setDisplayTickets(newTickets);
     } catch {}
-  }, [tickets]);
+  }, [tickets, totalPrice]);
 
   useEffect(() => {
-    setErr(false);
+    try {
+      let sum = 0;
+      displayTickets.map((dt) => {
+        sum += Number(dt.eaTicketPrice);
+      });
+      setTotalPrice(sum);
+    } catch {}
+  }, [displayTickets]);
+
+  useEffect(() => {
+    if (
+      payment.name !== "" &&
+      payment.num !== "" &&
+      payment.exp !== "" &&
+      payment.cvc !== ""
+    ) {
+      setErr(false);
+    } else setErr(true);
   }, [payment]);
 
   const handleInputOnChange = ({ currentTarget: input }) => {
@@ -75,22 +100,15 @@ const Checkout = ({ step }) => {
 
   const handleOnNext = async (e) => {
     e.preventDefault();
-    if (logService.isLogged()) {
+    if (logServices.isLogged()) {
       const info = {
         ...tickets,
         token: localStorage.getItem("token"),
         user_id: localStorage.getItem("userId"),
         train_id: tickets.t_id,
       };
-      console.log(info)
+      console.log(info);
       try {
-        navigate(
-          `/booking?page=4&c=${params.get("c")}&idt=${params.get(
-            "idt"
-          )}&pax=${params.get("pax")}&cl=${params.get("cl")}&tkt=${params.get(
-            "tkt"
-          )}`
-        );
         dispatch(actions.setLoading(true));
         await bookingService.submitTicket(info);
         navigate("/profile");
@@ -98,23 +116,26 @@ const Checkout = ({ step }) => {
         dispatch(actions.setLoading(false));
         console.log(er);
       }
-    } else navigate("/login");
+    } else
+      navigate({
+        pathname: "/auth/login",
+        search: createSearchParams({
+          q: location.pathname + "?" + searchParams.toString(),
+        }).toString(),
+      });
   };
 
   return (
     <div className="checkout">
       <div className="checkout__container">
         <div className="checkout__content">
-          <div className="scroll-blur top"></div>
           <div className="checkout__ticket">
             {displayTickets.map((ticket) => (
               <Ticket ticket={ticket} />
             ))}
-            {/* <pre>{JSON.stringify(displayTickets, null, 2)}</pre> */}
           </div>
-          <div className="scroll-blur bottom"></div>
           <fieldset>
-            <legend align="center">Payment Information</legend>
+            <legend align="center">{content.checkout.header}</legend>
             <form className="checkout__payment">
               <img src={visaMastercard} alt="" />
               <div className="checkout__payment__100">
@@ -128,7 +149,7 @@ const Checkout = ({ step }) => {
                   placeholder=" "
                 />
                 <label htmlFor="name">
-                  Card holder name <span>*</span>
+                  {content.checkout.name} <span>*</span>
                 </label>
               </div>
               <div className="checkout__payment__100">
@@ -139,9 +160,9 @@ const Checkout = ({ step }) => {
                   value={payment.num}
                   onChange={handleInputOnChange}
                   onKeyUp={({ currentTarget: input }) => {
-                    var formatted = input.value.replace(/[^\d]/g, "");
+                    let formatted = input.value.replace(/[^\d]/g, "");
                     formatted = formatted.substring(0, 16);
-                    var section = formatted.match(/\d{1,4}/g);
+                    let section = formatted.match(/\d{1,4}/g);
                     if (section !== null) formatted = section.join(" ");
                     if (input.value !== formatted) input.value = formatted;
                   }}
@@ -150,7 +171,7 @@ const Checkout = ({ step }) => {
                   placeholder=" "
                 />
                 <label htmlFor="num">
-                  Card number <span>*</span>
+                  {content.checkout.num} <span>*</span>
                 </label>
               </div>
               <div className="checkout__payment__group">
@@ -162,8 +183,8 @@ const Checkout = ({ step }) => {
                     value={payment.exp}
                     onChange={handleInputOnChange}
                     onKeyUp={(e) => {
-                      var code = e.keyCode;
-                      var allowedKeys = [8];
+                      let code = e.keyCode;
+                      let allowedKeys = [8];
                       if (allowedKeys.indexOf(code) !== -1) return;
                       e.target.value = e.target.value
                         .replace(/^([1-9]\/|[2-9])$/g, "0$1/")
@@ -179,22 +200,22 @@ const Checkout = ({ step }) => {
                     placeholder=" "
                   />
                   <label htmlFor="exp">
-                    Expiration date <span>*</span>
+                    {content.checkout.exp} <span>*</span>
                   </label>
                 </div>
                 <div className="checkout__payment__50">
                   <input
                     type="password"
-                    id="cvv"
-                    name="cvv"
-                    value={payment.cvv}
+                    id="cvc"
+                    name="cvc"
+                    value={payment.cvc}
                     onChange={handleInputOnChange}
                     maxLength="3"
                     autoComplete="off"
                     placeholder=" "
                   />
-                  <label htmlFor="cvv">
-                    CVV <span>*</span>
+                  <label htmlFor="cvc">
+                    {content.checkout.cvc} <span>*</span>
                   </label>
                 </div>
               </div>
@@ -203,11 +224,10 @@ const Checkout = ({ step }) => {
         </div>
         <BookingButtons
           onNext={handleOnNext}
-          disable={!err}
-          step={step}
-          pastUrlParams={`&c=${params.get("c")}&idt=${params.get(
-            "idt"
-          )}&pax=${params.get("pax")}&cl=${params.get("cl")}`}
+          price={totalPrice}
+          disabled={err}
+          page={4}
+          pastUrlParams={searchParams.toString().split("%3E")[0]}
         />
       </div>
     </div>

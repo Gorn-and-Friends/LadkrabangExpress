@@ -8,8 +8,15 @@ $height: calc(1.8 * $navbar-height);
   align-items: center;
   width: 100%;
   height: $height;
+  position: relative;
 
-  button {
+  * {
+    @include themify() {
+      color: t("main-font-color");
+    }
+  }
+
+  > button {
     cursor: pointer;
     margin: 3rem 0;
     height: 2.8em;
@@ -40,6 +47,14 @@ $height: calc(1.8 * $navbar-height);
         border: 0.1rem solid t(font-color-4);
       }
       cursor: default;
+    }
+  }
+
+  > span {
+    position: absolute;
+    right: 15%;
+    @include languify() {
+      font: 500 1.5rem l(subtitle-font);
     }
   }
 }

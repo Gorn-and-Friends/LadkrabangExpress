@@ -17,7 +17,7 @@ const submitTicket = async (info) => {
     arrivalTime: info.a_t,
     seat_reservation: info.s,
   });
-    
+
   console.log(res.data);
 };
 

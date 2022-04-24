@@ -9,12 +9,18 @@ const logIn = async (info) => {
     password: info.pword,
   });
 
-  localStorage.setItem("userId", res.data._id);
-  localStorage.setItem("userName", [
-    res.data.firstname,
-    res.data.lastname,
-  ]);
-  localStorage.setItem("token", res.data.token);
+  localStorage.setItem(
+    "user",
+    JSON.stringify({
+      id: res.data._id,
+      token: res.data.token,
+      fname: res.data.firstname,
+      lname: res.data.lastname,
+      email: res.data.email,
+      uname: res.data.username,
+      bdate: res.data.birthdate,
+    })
+  );
 };
 
 export default logIn;

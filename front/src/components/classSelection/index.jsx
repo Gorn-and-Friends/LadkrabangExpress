@@ -1,61 +1,60 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import "./style.scss";
 import class1 from "../../assets/images/class1.jpg";
 import class2 from "../../assets/images/class2.jpeg";
 import class3 from "../../assets/images/class3.jpg";
 import actions from "../../services/actions";
 import bookingService from "../../services/utils/booking";
-import BookingButtons from "../bookingBtn";
+import BookingButtons from "../bookingBtns";
 
-const ClassSelection = ({ step }) => {
+const ClassSelection = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
-  const trainList = useSelector((state) => state.trains);
-  const params = new URLSearchParams(location.search);
   const content =
     lang === "th"
       ? require("../../assets/jsons/booking/th.json")
       : require("../../assets/jsons/booking/en.json");
+  const [searchParams, _] = useSearchParams();
   const [choice, setChoice] = useState(0);
+  const [price, setPrice] = useState(0);
   const [availClasses, setAvailClasses] = useState({
-    f: true,
-    s: true,
-    t: true,
+    f: false,
+    s: false,
+    t: false,
   });
 
   useEffect(() => {
-    setChoice(params.get("choice") ? params.get("choice") : 0);
-    if (params.get("c")) {
-      setAvailClasses({
-        f: params.get("c")[0] == 1 ? true : false,
-        s: params.get("c")[1] == 1 ? true : false,
-        t: params.get("c")[2] == 1 ? true : false,
-      });
-    }
-  }, [step]);
+    setPrice(searchParams.get("p"));
+    setAvailClasses({
+      f: searchParams.get("c")[0] == 1 ? true : false,
+      s: searchParams.get("c")[1] == 1 ? true : false,
+      t: searchParams.get("c")[2] == 1 ? true : false,
+    });
+    sessionStorage.setItem("seatList", JSON.stringify([]));
+  }, []);
 
   const handleOnNext = async (e) => {
     e.preventDefault();
     try {
-      navigate(
-        `/booking?page=2&c=${params.get("c")}&idt=${params.get(
-          "idt"
-        )}&pax=${params.get("pax")}&choice=${choice}`
-      );
       dispatch(actions.setLoading(true));
       await bookingService.findSeats({
-        trainId: params.get("idt"),
-        date: trainList[0].date,
+        trainId: searchParams.get("idt"),
+        date: searchParams.get("date"),
       });
-      navigate(
-        `/booking?page=3&c=${params.get("c")}&idt=${params.get(
-          "idt"
-        )}&pax=${params.get("pax")}&cl=${choice}`
-      );
+      navigate({
+        pathname: "/booking/3",
+        search:
+          searchParams.toString() +
+          ".00000&" +
+          createSearchParams({ cl: choice }).toString(),
+      });
     } catch (er) {
       dispatch(actions.setLoading(false));
       console.log(er);
@@ -83,7 +82,7 @@ const ClassSelection = ({ step }) => {
                 <li>{content.class[2].list[0]}</li>
                 <li>{content.class[2].list[1]}</li>
               </ul>
-              <span>฿27</span>
+              <span>&#3647;{price}</span>
             </div>
           </label>
           <input
@@ -103,7 +102,7 @@ const ClassSelection = ({ step }) => {
                 <li>{content.class[1].list[0]}</li>
                 <li>{content.class[1].list[1]}</li>
               </ul>
-              <span>฿50</span>
+              <span>&#3647;{price}</span>
             </div>
           </label>
           <input
@@ -124,15 +123,20 @@ const ClassSelection = ({ step }) => {
                 <li>{content.class[0].list[1]}</li>
                 <li>{content.class[0].list[2]}</li>
               </ul>
-              <span>฿102</span>
+              <span>&#3647;{price}</span>
             </div>
           </label>
         </div>
         <BookingButtons
           onNext={handleOnNext}
-          disable={choice === 0 ? false : true}
-          step={step}
-          pastUrlParams={""}
+          price={
+            choice
+              ? Number(searchParams.get("p")) * Number(searchParams.get("pax"))
+              : 0
+          }
+          disabled={choice === 0 ? true : false}
+          page={2}
+          pastUrlParams={searchParams.toString().split(".000")[0]}
         />
       </div>
     </div>

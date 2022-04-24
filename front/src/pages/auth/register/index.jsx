@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./style.scss";
 import register from "../../../services/utils/registry";
 import actions from "../../../services/actions";
+import Loading from "../../../components/loading";
 
 const Register = () => {
   useEffect(() => {
@@ -13,6 +14,7 @@ const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
+  const loading = useSelector((state) => state.loading);
   const content =
     lang === "th"
       ? require("../../../assets/jsons/register/th.json")
@@ -35,7 +37,6 @@ const Register = () => {
     email: "",
     uname: "",
     pword: "",
-    bdate: curDate.value,
   });
 
   const handleOnSubmit = async (e) => {
@@ -44,9 +45,7 @@ const Register = () => {
     let invalidPwd = false;
     for (const i of Object.values(reg)) if (i == "") missing = true;
     if (reg.pword != "") {
-      let regEx = new RegExp(
-        "(?=.*[0-9])(?=.*[!@#$%^&*.,])[a-zA-Z0-9!@#$%^&*.,]{8,}"
-      );
+      let regEx = new RegExp("(?=.*[0-9])[a-zA-Z0-9]{8,}");
       if (regEx.test(reg.pword)) {
         invalidPwd = false;
       } else {
@@ -118,7 +117,9 @@ const Register = () => {
     setCurDate({ ...curDate, onFocus: false });
   };
 
-  return (
+  return loading ? (
+    <Loading reduceHeight={0} />
+  ) : (
     <form className="register" onSubmit={handleOnSubmit}>
       <fieldset className="register__container">
         <legend align="center">{content.header}</legend>
@@ -228,23 +229,6 @@ const Register = () => {
             <a href="/login" className="register__form__last-row__back">
               {content.buttons.back}
             </a>
-            <div className="register__form__date">
-              <input
-                type="text"
-                id="bdate"
-                name="bdate"
-                value={curDate.onFocus ? curDate.value : curDate.temp}
-                onChange={handleInputOnChange}
-                onFocus={handleDateOnFocus}
-                onBlur={handleDateOnBlur}
-                max={new Date().toISOString().split("T")[0]}
-                placeholder=" "
-                autoComplete="off"
-              />
-              <label htmlFor="bdate">
-                {content.fields.bdate} <span>*</span>
-              </label>
-            </div>
             <input
               type="submit"
               className="register__form__last-row__submit"

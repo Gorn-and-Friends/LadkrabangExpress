@@ -121,6 +121,7 @@
   transition: all $transition-time ease-in-out;
   @include themify() {
     background-color: t("main-bg-color");
+    color: t("main-font-color");
   }
   @include languify() {
     font: 500 1rem l("body-font");
@@ -129,9 +130,9 @@
   legend {
     @include centered-flex;
     overflow-wrap: break-word;
+    padding: 0 0.3em;
     width: 88%;
     transition: all $transition-time ease-in-out;
-    padding: 0 0.3em;
     @include languify() {
       font: 1000 2.8rem l(navigation-font);
     }
@@ -273,6 +274,7 @@
     }
     @include themify() {
       background-color: t(main-bg-color);
+      color: t("main-font-color");
     }
 
     &:hover {

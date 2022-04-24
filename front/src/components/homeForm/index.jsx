@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, createSearchParams } from "react-router-dom";
 import "./style.scss";
 
 const HomeForm = () => {
@@ -50,9 +50,16 @@ const HomeForm = () => {
   const handleOnSubmit = (e) => {
     e.preventDefault();
     if (origin == "" && dest == "" && pax == "") {
-      navigate("/booking?page=0");
+      navigate("booking");
     } else {
-      navigate(`/booking?page=0&from=${origin}&to=${dest}&pax=${pax}`);
+      navigate({
+        pathname: "booking",
+        search: createSearchParams({
+          from: origin,
+          to: dest,
+          pax: pax,
+        }).toString(),
+      });
     }
   };
 

@@ -95,6 +95,7 @@
   }
   @include themify() {
     background-color: t(main-bg-color);
+    color: t("main-font-color");
   }
 
   &__container {
@@ -175,6 +176,9 @@
 
         a {
           font-size: 0.8em;
+          @include themify() {
+            color: t("main-font-color");
+          }
 
           &:hover {
             text-decoration: underline;
@@ -211,6 +215,7 @@
     }
     @include themify() {
       background-color: t(main-bg-color);
+      color: t("main-font-color");
     }
 
     &:hover {

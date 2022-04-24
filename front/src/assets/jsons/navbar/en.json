@@ -18,15 +18,7 @@
       }
     },
     "about": {
-      "title": "About",
-      "items": {
-        "aboutUs": {
-          "title": "About Us"
-        },
-        "contactUs": {
-          "title": "Contact Us"
-        }
-      }
+      "title": "About"
     }
   },
   "right": {

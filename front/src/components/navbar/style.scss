@@ -1,5 +1,4 @@
 @use "../../assets/styles/utils" as *;
-@use "../../assets/styles/fontTH";
 
 @mixin centered-flex {
   display: flex;
@@ -17,12 +16,19 @@
   z-index: 20;
   position: sticky;
   top: 0;
+  transition: all $transition-time ease-in-out;
   @include languify() {
     font: 500 1.2rem l(navigation-font);
   }
-  transition: all $transition-time ease-in-out;
   @include themify() {
     background-color: t(main-bg-color);
+  }
+
+  * {
+    transition: all $transition-time ease-in-out;
+    @include themify() {
+      color: t("main-font-color");
+    }
   }
 
   &__container {
@@ -108,7 +114,7 @@
         transition: all calc($transition-time / 3) ease-in;
         z-index: 99;
         @include themify() {
-          background-color: t(main-bg-color);
+          background-color: t(bg-color-2);
         }
         &:hover {
           @include themify() {
@@ -129,23 +135,25 @@
       display: inline-block;
       text-align: center;
       position: relative;
-      width: 8rem;
+      width: 12rem;
       list-style: none;
 
       a {
         line-height: $navbar-height;
         display: block;
-
-        &:hover {
-          @include themify() {
-            background-color: t(bg-color-2);
-          }
-        }
       }
     }
 
-    &:hover > ul {
-      display: block;
+    &:hover {
+      > div {
+        @include themify() {
+          background-color: t(bg-color-2);
+        }
+      }
+
+      > ul {
+        display: block;
+      }
     }
 
     > a {
@@ -159,12 +167,12 @@
     &__list {
       display: none;
       position: absolute;
-      width: 8rem;
+      width: 12rem;
       @include languify() {
         font: 300 0.8em l(subtitle-font);
       }
       @include themify() {
-        background-color: t(main-bg-color);
+        background-color: t(bg-color-2);
         border-bottom: 1px solid t(font-color-2);
       }
 
@@ -184,14 +192,9 @@
     &__dropdown {
       @include centered-flex;
       height: $navbar-height;
-      width: 8rem;
-      font: 900 1em fontTH.$body-font;
-      cursor: pointer;
-
-      &:hover {
-        @include themify() {
-          background-color: t(bg-color-2);
-        }
+      width: 12rem;
+      @include languify() {
+        font: 900 0.9em l(subtitle-font);
       }
     }
   }

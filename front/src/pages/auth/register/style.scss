@@ -167,6 +167,7 @@
         @include themify() {
           border: 0.08rem solid t(main-color);
           background-color: t(main-bg-color);
+          color: t("main-font-color");
         }
 
         &:hover {

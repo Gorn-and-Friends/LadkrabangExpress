@@ -2,7 +2,7 @@ import setLanguage from "./languageAction";
 import setLoading from "./loadingAction";
 import setSeatList from "./seatListAction";
 import setTheme from "./themeAction";
-import setTicket from "./ticketAction";
+import setTicketList from "./ticketListAction";
 import setTrainList from "./trainListAction";
 
 const actions = {
@@ -11,7 +11,7 @@ const actions = {
   setLoading,
   setTrainList,
   setSeatList,
-  setTicket,
+  setTicketList,
 };
 
 export default actions;

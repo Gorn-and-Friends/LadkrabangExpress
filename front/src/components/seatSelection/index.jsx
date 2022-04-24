@@ -1,60 +1,88 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
+import "./style.scss";
 import actions from "../../services/actions";
-import BookingButtons from "../bookingBtn";
+import BookingButtons from "../bookingBtns";
+import SeatPicker from "../seatPicker";
+import { FaRedo } from "react-icons/fa";
+import bookingService from "../../services/utils/booking";
 
-const SeatSelection = ({ step }) => {
+const SeatSelection = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
   const trainList = useSelector((state) => state.trains);
   const seatList = useSelector((state) => state.seats);
-  const params = new URLSearchParams(location.search);
   const content =
     lang === "th"
       ? require("../../assets/jsons/booking/th.json")
       : require("../../assets/jsons/booking/en.json");
-  const [choice, setChoice] = useState("");
-  const [choice1, setChoice1] = useState("");
-  const [choice2, setChoice2] = useState("");
-  const [choice3, setChoice3] = useState("");
-  const [choice4, setChoice4] = useState("");
-  const [choice5, setChoice5] = useState("");
-  const [choice6, setChoice6] = useState("");
-  const [choice7, setChoice7] = useState("");
-  const [choice8, setChoice8] = useState("");
-  const [choice9, setChoice9] = useState("");
+  const [searchParams, _] = useSearchParams({});
+  const [pax, setPax] = useState(-1);
+  const [seats, setSeats] = useState([]);
   const [trainId, setTrainId] = useState("");
   const [train, setTrain] = useState({});
-  const [pax, setPax] = useState(0);
-  const [availClass, setAvailClass] = useState(111);
   const [selectedClass, setSelectedClass] = useState(0);
   const [ticket, setTicket] = useState([]);
+  const [wantSelectSeat, setWantSelectSeat] = useState(false);
+  const [seatSelected, setSeatSelected] = useState(false);
+  const [selectedSeats, setSelectedSeats] = useState([]);
 
   useEffect(() => {
-    setTrainId(params.get("idt") ? params.get("idt") : "");
-    setPax(params.get("pax") ? params.get("pax") : 0);
-    setAvailClass(params.get("c") ? params.get("c") : 111);
-    setSelectedClass(params.get("cl") ? params.get("cl") : 0);
-    setChoice(params.get("choice") ? params.get("choice") : "");
+    setTrainId(searchParams.get("idt") ? searchParams.get("idt") : "");
+    setPax(
+      Number(searchParams.get("pax")) ? Number(searchParams.get("pax")) : 0
+    );
+    setSelectedClass(searchParams.get("cl") ? searchParams.get("cl") : 0);
     dispatch(
       actions.setTrainList(JSON.parse(sessionStorage.getItem("trainList")))
     );
     dispatch(
       actions.setSeatList(JSON.parse(sessionStorage.getItem("seatList")))
     );
-  }, [step]);
+  }, []);
+
+  useEffect(() => {
+    var temp = [];
+    if (seatList && seatList != [])
+      seatList.map((data) => {
+        temp.push({
+          coach: data.coach,
+          seat: data.seat,
+        });
+      });
+    setSeats(temp);
+  }, [seatList]);
 
   useEffect(() => {
     setTrain(
       trainList ? trainList.filter((obj) => obj.train_id == trainId)[0] : {}
     );
-  }, [trainId]);
+  }, [trainList]);
 
   useEffect(() => {
     try {
+      const unselectTemp = [];
+      for (let i = 0; i < pax; i++) {
+        unselectTemp.push({
+          coach: "-",
+          column: "-",
+          row: "",
+        });
+      }
+      const temp = [];
+      selectedSeats.map((seat) => {
+        temp.push({
+          coach: seat.split("—")[0][seat.split("—")[0].length - 1],
+          column: seat.split("—")[1][0],
+          row: seat.split("—")[1][1] !== "x" ? seat.split("—")[1].slice(1) : "",
+        });
+      });
       setTicket({
         t_id: trainId,
         t_n: train.trainNumber,
@@ -67,82 +95,86 @@ const SeatSelection = ({ step }) => {
         a_t: train.arrivalTime,
         d: train.duration,
         p: train.ticketPrice,
-        s: [
-          {
-            coach: choice ? choice.split("-")[0] : "",
-            column: choice ? choice.split("-")[1] : "",
-            row: choice ? choice.split("-")[2] : "",
-          },
-          choice1
-            ? {
-                coach: choice1.split("-")[0],
-                column: choice1.split("-")[1],
-                row: choice1.split("-")[2],
-              }
-            : "",
-        ],
+        s: wantSelectSeat ? temp : unselectTemp,
       });
     } catch {}
-  }, [
-    train,
-    choice,
-    choice1,
-    choice2,
-    choice3,
-    choice4,
-    choice5,
-    choice6,
-    choice7,
-    choice8,
-    choice9,
-  ]);
-
-  const handleOnClick = (e) => {};
+  }, [train, selectedSeats]);
 
   const handleOnNext = (e) => {
     e.preventDefault();
-    let rplc = {
-      "{": "%7B",
-      "}": "%7D",
-      ":": "%3A",
-      '"': "%22",
-      ",": "%2C",
-    };
-    navigate(
-      `/booking?page=3&c=${availClass}&idt=${trainId}&pax=${pax}&cl=${selectedClass}&choice=${choice}`
-    );
-    navigate(
-      `/booking?page=4&c=${availClass}&idt=${trainId}&pax=${pax}&cl=${selectedClass}&tkt=${JSON.stringify(
-        ticket
-      ).replace(/[{}:",]/g, (i) => rplc[i])}`
-    );
+    navigate({
+      pathname: "/booking/4",
+      search:
+        searchParams.toString() +
+        ">&" +
+        createSearchParams({ tkt: JSON.stringify(ticket) }).toString(),
+    });
+  };
+
+  const handleOnReload = async (e) => {
+    e.preventDefault();
+    if (!searchParams.get("idt") && !searchParams.get("date")) {
+      navigate("/booking");
+    } else {
+      dispatch(actions.setLoading(true));
+      const res = await bookingService.findSeats({
+        trainId: searchParams.get("idt"),
+        date: searchParams.get("date"),
+      });
+      if (res === 200) {
+        navigate({
+          pathname: "",
+          search: searchParams.toString(),
+        });
+      } else {
+        sessionStorage.setItem("routeError", 1);
+        navigate("/booking");
+      }
+    }
   };
 
   return (
     <div className="seat-selector">
-      Selected Class : &ensp;
-      {selectedClass}
-      <br />
-      Select seat{`(`}s{`)`} : &ensp;
-      <br />
-      <input
-        type="text"
-        value={choice}
-        onChange={(e) => setChoice(e.target.value)}
-      />
-      <br />
-      <input
-        type="text"
-        value={choice1}
-        onChange={(e) => setChoice1(e.target.value)}
-      />
-      <br />
-      <BookingButtons
-        onNext={handleOnNext}
-        disable={choice === "" ? false : true}
-        step={step}
-        pastUrlParams={`&c=${availClass}&idt=${trainId}&pax=${pax}&cl=${selectedClass}`}
-      />
+      <div className="seat-selector__container">
+        {seats && seats.length !== 0 ? (
+          <>
+            <div className="seat-selector__btn">
+              <label>
+                <div>{content.seat.wantSelectSeat}&ensp;🛈</div>
+                <input
+                  type="checkbox"
+                  onClick={({ currentTarget: input }) => {
+                    setWantSelectSeat(input.checked);
+                  }}
+                />
+                <span />
+              </label>
+            </div>
+            <SeatPicker
+              seats={seats}
+              amount={pax}
+              setFinalSeats={setSelectedSeats}
+              setSeatSelected={setSeatSelected}
+              disabled={!wantSelectSeat}
+            />
+          </>
+        ) : (
+          <section>
+            <FaRedo onClick={handleOnReload} />
+            <span>{lang === "th" ? "ลองใหม่อีกครั้ง" : "Try again"}</span>
+          </section>
+        )}
+        <BookingButtons
+          onNext={handleOnNext}
+          price={
+            Number(searchParams.get("p")) * Number(searchParams.get("pax")) +
+            selectedSeats.filter((f) => f != "C-—-x").length * 10
+          }
+          disabled={wantSelectSeat ? (seatSelected ? false : true) : false}
+          page={3}
+          pastUrlParams={searchParams.toString().split(".00000")[0]}
+        />
+      </div>
     </div>
   );
 };
