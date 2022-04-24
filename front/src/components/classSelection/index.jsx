@@ -1,59 +1,60 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import "./style.scss";
 import class1 from "../../assets/images/class1.jpg";
 import class2 from "../../assets/images/class2.jpeg";
 import class3 from "../../assets/images/class3.jpg";
 import actions from "../../services/actions";
 import bookingService from "../../services/utils/booking";
-import BookingButtons from "../bookingBtn";
+import BookingButtons from "../bookingBtns";
 
-const ClassSelection = ({ step, onSecond }) => {
+const ClassSelection = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
-  const trainList = useSelector((state) => state.trains);
-  const params = new URLSearchParams(location.search);
   const content =
     lang === "th"
       ? require("../../assets/jsons/booking/th.json")
       : require("../../assets/jsons/booking/en.json");
+  const [searchParams, _] = useSearchParams();
   const [choice, setChoice] = useState(0);
   const [price, setPrice] = useState(0);
   const [availClasses, setAvailClasses] = useState({
-    f: true,
-    s: true,
-    t: true,
+    f: false,
+    s: false,
+    t: false,
   });
 
   useEffect(() => {
-    if (onSecond) {
-      try {
-        setPrice(params.get("p"));
-        setAvailClasses({
-          f: params.get("c")[0] == 1 ? true : false,
-          s: params.get("c")[1] == 1 ? true : false,
-          t: params.get("c")[2] == 1 ? true : false,
-        });
-      } catch {}
-    }
-  }, [onSecond]);
+    setPrice(searchParams.get("p"));
+    setAvailClasses({
+      f: searchParams.get("c")[0] == 1 ? true : false,
+      s: searchParams.get("c")[1] == 1 ? true : false,
+      t: searchParams.get("c")[2] == 1 ? true : false,
+    });
+    sessionStorage.setItem("seatList", JSON.stringify([]));
+  }, []);
 
   const handleOnNext = async (e) => {
     e.preventDefault();
     try {
       dispatch(actions.setLoading(true));
       await bookingService.findSeats({
-        trainId: params.get("idt"),
-        date: trainList[0].date,
+        trainId: searchParams.get("idt"),
+        date: searchParams.get("date"),
       });
-      navigate(
-        `/booking?page=3&c=${params.get("c")}&idt=${params.get(
-          "idt"
-        )}&pax=${params.get("pax")}&p=${params.get("p")}&cl=${choice}`
-      );
+      navigate({
+        pathname: "/booking/3",
+        search:
+          searchParams.toString() +
+          ".00000&" +
+          createSearchParams({ cl: choice }).toString(),
+      });
     } catch (er) {
       dispatch(actions.setLoading(false));
       console.log(er);
@@ -129,11 +130,13 @@ const ClassSelection = ({ step, onSecond }) => {
         <BookingButtons
           onNext={handleOnNext}
           price={
-            choice ? Number(params.get("p")) * Number(params.get("pax")) : 0
+            choice
+              ? Number(searchParams.get("p")) * Number(searchParams.get("pax"))
+              : 0
           }
           disabled={choice === 0 ? true : false}
-          step={step}
-          pastUrlParams={""}
+          page={2}
+          pastUrlParams={searchParams.toString().split(".000")[0]}
         />
       </div>
     </div>

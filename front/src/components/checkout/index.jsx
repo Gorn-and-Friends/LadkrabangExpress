@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  createSearchParams,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import "./style.scss";
 import visaMastercard from "../../assets/images/visa-mastercard.png";
-import BookingButtons from "../bookingBtn";
+import BookingButtons from "../bookingBtns";
 import Ticket from "../ticket";
 import logService from "../../services/utils/log";
 import bookingService from "../../services/utils/booking";
 import actions from "../../services/actions";
 
-const Checkout = ({ step, onFourth }) => {
+const Checkout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
-  const params = new URLSearchParams(location.search);
+  const [searchParams, _] = useSearchParams({});
   const content =
     lang === "th"
       ? require("../../assets/jsons/booking/th.json")
@@ -31,13 +36,12 @@ const Checkout = ({ step, onFourth }) => {
   });
 
   useEffect(() => {
-    if (onFourth)
-      setTickets(JSON.parse(params.get("tkt") ? params.get("tkt") : {}));
-  }, [onFourth]);
+    setTickets(JSON.parse(searchParams.get("tkt")));
+  }, []);
 
   useEffect(() => {
     try {
-      var common = {
+      let common = {
         trainNumber: tickets.t_n,
         date: tickets.dt,
         origin: tickets.or,
@@ -49,8 +53,8 @@ const Checkout = ({ step, onFourth }) => {
         duration: tickets.d,
         ticketPrice: totalPrice > 0 ? totalPrice : tickets.p,
       };
-      var seats = [...tickets.s];
-      var newTickets = new Array();
+      let seats = [...tickets.s];
+      let newTickets = new Array();
       Array.from({ length: seats.length }, (_, i) => {
         newTickets[i] = {
           ...common,
@@ -69,7 +73,7 @@ const Checkout = ({ step, onFourth }) => {
 
   useEffect(() => {
     try {
-      var sum = 0;
+      let sum = 0;
       displayTickets.map((dt) => {
         sum += Number(dt.eaTicketPrice);
       });
@@ -105,13 +109,6 @@ const Checkout = ({ step, onFourth }) => {
       };
       console.log(info);
       try {
-        navigate(
-          `/booking?page=4&c=${params.get("c")}&idt=${params.get(
-            "idt"
-          )}&pax=${params.get("pax")}&cl=${params.get("cl")}&tkt=${params.get(
-            "tkt"
-          )}`
-        );
         dispatch(actions.setLoading(true));
         await bookingService.submitTicket(info);
         navigate("/profile");
@@ -119,7 +116,13 @@ const Checkout = ({ step, onFourth }) => {
         dispatch(actions.setLoading(false));
         console.log(er);
       }
-    } else navigate("/login");
+    } else
+      navigate({
+        pathname: "/auth/login",
+        search: createSearchParams({
+          q: location.pathname + "?" + searchParams.toString(),
+        }).toString(),
+      });
   };
 
   return (
@@ -157,9 +160,9 @@ const Checkout = ({ step, onFourth }) => {
                   value={payment.num}
                   onChange={handleInputOnChange}
                   onKeyUp={({ currentTarget: input }) => {
-                    var formatted = input.value.replace(/[^\d]/g, "");
+                    let formatted = input.value.replace(/[^\d]/g, "");
                     formatted = formatted.substring(0, 16);
-                    var section = formatted.match(/\d{1,4}/g);
+                    let section = formatted.match(/\d{1,4}/g);
                     if (section !== null) formatted = section.join(" ");
                     if (input.value !== formatted) input.value = formatted;
                   }}
@@ -180,8 +183,8 @@ const Checkout = ({ step, onFourth }) => {
                     value={payment.exp}
                     onChange={handleInputOnChange}
                     onKeyUp={(e) => {
-                      var code = e.keyCode;
-                      var allowedKeys = [8];
+                      let code = e.keyCode;
+                      let allowedKeys = [8];
                       if (allowedKeys.indexOf(code) !== -1) return;
                       e.target.value = e.target.value
                         .replace(/^([1-9]\/|[2-9])$/g, "0$1/")
@@ -223,12 +226,8 @@ const Checkout = ({ step, onFourth }) => {
           onNext={handleOnNext}
           price={totalPrice}
           disabled={err}
-          step={step}
-          pastUrlParams={`&c=${params.get("c")}&idt=${params.get(
-            "idt"
-          )}&pax=${params.get("pax")}&p=${params.get("p")}&cl=${params.get(
-            "cl"
-          )}`}
+          page={4}
+          pastUrlParams={searchParams.toString().split("%3E")[0]}
         />
       </div>
     </div>

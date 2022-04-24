@@ -4,7 +4,7 @@ import themeReducer from "./themeReducer";
 import loadingReducer from "./loadingReducer";
 import trainListReducer from "./trainListReducer";
 import seatListReducer from "./seatListReducer";
-import ticketReducer from "./ticketReducer";
+import ticketListReducer from "./ticketListReducer";
 
 const reducers = combineReducers({
   theme: themeReducer,
@@ -12,7 +12,7 @@ const reducers = combineReducers({
   loading: loadingReducer,
   trains: trainListReducer,
   seats: seatListReducer,
-  ticket: ticketReducer,
+  tickets: ticketListReducer,
 });
 
 export default reducers;

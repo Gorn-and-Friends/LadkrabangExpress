@@ -130,9 +130,9 @@
   legend {
     @include centered-flex;
     overflow-wrap: break-word;
+    padding: 0 0.3em;
     width: 88%;
     transition: all $transition-time ease-in-out;
-    padding: 0 0.3em;
     @include languify() {
       font: 1000 2.8rem l(navigation-font);
     }

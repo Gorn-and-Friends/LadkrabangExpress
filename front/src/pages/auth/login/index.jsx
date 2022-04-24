@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./style.scss";
 import icon from "../../../assets/icons/icon.png";
@@ -23,6 +23,7 @@ const Login = () => {
     lang === "th"
       ? require("../../../assets/jsons/login/th.json")
       : require("../../../assets/jsons/login/en.json");
+  const [searchParams, _] = useSearchParams({});
   const [err, setErr] = useState(false);
   const [invalidPword, setInvalidPword] = useState(false);
   const [invalidUname, setInvalidUname] = useState(false);
@@ -36,7 +37,7 @@ const Login = () => {
     try {
       dispatch(actions.setLoading(true));
       await log.logIn(login);
-      navigate(-1);
+      navigate(searchParams.get("q") ? searchParams.get("q") : "/");
     } catch (er) {
       dispatch(actions.setLoading(false));
       console.log(er);

@@ -37,7 +37,6 @@ const Register = () => {
     email: "",
     uname: "",
     pword: "",
-    bdate: curDate.value,
   });
 
   const handleOnSubmit = async (e) => {
@@ -46,9 +45,7 @@ const Register = () => {
     let invalidPwd = false;
     for (const i of Object.values(reg)) if (i == "") missing = true;
     if (reg.pword != "") {
-      let regEx = new RegExp(
-        "(?=.*[0-9])(?=.*[!@#$%^&*.,])[a-zA-Z0-9!@#$%^&*.,]{8,}"
-      );
+      let regEx = new RegExp("(?=.*[0-9])[a-zA-Z0-9]{8,}");
       if (regEx.test(reg.pword)) {
         invalidPwd = false;
       } else {
@@ -232,23 +229,6 @@ const Register = () => {
             <a href="/login" className="register__form__last-row__back">
               {content.buttons.back}
             </a>
-            <div className="register__form__date">
-              <input
-                type="text"
-                id="bdate"
-                name="bdate"
-                value={curDate.onFocus ? curDate.value : curDate.temp}
-                onChange={handleInputOnChange}
-                onFocus={handleDateOnFocus}
-                onBlur={handleDateOnBlur}
-                max={new Date().toISOString().split("T")[0]}
-                placeholder=" "
-                autoComplete="off"
-              />
-              <label htmlFor="bdate">
-                {content.fields.bdate} <span>*</span>
-              </label>
-            </div>
             <input
               type="submit"
               className="register__form__last-row__submit"

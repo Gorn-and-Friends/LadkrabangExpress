@@ -153,23 +153,24 @@
 
     &__top,
     &__bottom {
-      transition: all $transition-time ease-in-out;
       width: 0.7rem;
       height: 0.5rem;
+      transition: all $transition-time ease-in-out;
       @include themify() {
         background-color: t(main-bg-color);
       }
     }
-
+    
     &__top {
       border-radius: 0 0 0.7rem 0.7rem;
     }
-
+    
     &__middle {
       width: 10%;
       height: 100%;
+      transition: all $transition-time ease-in-out;
       @include themify() {
-        border-right: 2px dotted t(font-color-4);
+        border-right: 2px dotted t(main-bg-color);
       }
     }
 

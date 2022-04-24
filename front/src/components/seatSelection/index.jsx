@@ -1,28 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import "./style.scss";
 import actions from "../../services/actions";
-import BookingButtons from "../bookingBtn";
+import BookingButtons from "../bookingBtns";
 import SeatPicker from "../seatPicker";
+import { FaRedo } from "react-icons/fa";
+import bookingService from "../../services/utils/booking";
 
-const SeatSelection = ({ step, onThird }) => {
+const SeatSelection = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
   const trainList = useSelector((state) => state.trains);
   const seatList = useSelector((state) => state.seats);
-  const params = new URLSearchParams(location.search);
   const content =
     lang === "th"
       ? require("../../assets/jsons/booking/th.json")
       : require("../../assets/jsons/booking/en.json");
+  const [searchParams, _] = useSearchParams({});
   const [pax, setPax] = useState(-1);
   const [seats, setSeats] = useState([]);
   const [trainId, setTrainId] = useState("");
   const [train, setTrain] = useState({});
-  const [availClass, setAvailClass] = useState(111);
   const [selectedClass, setSelectedClass] = useState(0);
   const [ticket, setTicket] = useState([]);
   const [wantSelectSeat, setWantSelectSeat] = useState(false);
@@ -30,28 +34,28 @@ const SeatSelection = ({ step, onThird }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
 
   useEffect(() => {
-    if (onThird) {
-      setTrainId(params.get("idt") ? params.get("idt") : "");
-      setPax(Number(params.get("pax")) ? Number(params.get("pax")) : 0);
-      setAvailClass(params.get("c") ? params.get("c") : 111);
-      setSelectedClass(params.get("cl") ? params.get("cl") : 0);
-      dispatch(
-        actions.setTrainList(JSON.parse(sessionStorage.getItem("trainList")))
-      );
-      dispatch(
-        actions.setSeatList(JSON.parse(sessionStorage.getItem("seatList")))
-      );
-    }
-  }, [onThird]);
+    setTrainId(searchParams.get("idt") ? searchParams.get("idt") : "");
+    setPax(
+      Number(searchParams.get("pax")) ? Number(searchParams.get("pax")) : 0
+    );
+    setSelectedClass(searchParams.get("cl") ? searchParams.get("cl") : 0);
+    dispatch(
+      actions.setTrainList(JSON.parse(sessionStorage.getItem("trainList")))
+    );
+    dispatch(
+      actions.setSeatList(JSON.parse(sessionStorage.getItem("seatList")))
+    );
+  }, []);
 
   useEffect(() => {
     var temp = [];
-    seatList.map((data) => {
-      temp.push({
-        coach: data.coach,
-        seat: data.seat,
+    if (seatList && seatList != [])
+      seatList.map((data) => {
+        temp.push({
+          coach: data.coach,
+          seat: data.seat,
+        });
       });
-    });
     setSeats(temp);
   }, [seatList]);
 
@@ -59,7 +63,7 @@ const SeatSelection = ({ step, onThird }) => {
     setTrain(
       trainList ? trainList.filter((obj) => obj.train_id == trainId)[0] : {}
     );
-  }, [trainId]);
+  }, [trainList]);
 
   useEffect(() => {
     try {
@@ -98,55 +102,77 @@ const SeatSelection = ({ step, onThird }) => {
 
   const handleOnNext = (e) => {
     e.preventDefault();
-    let rplc = {
-      "{": "%7B",
-      "}": "%7D",
-      ":": "%3A",
-      '"': "%22",
-      ",": "%2C",
-    };
-    navigate(
-      `/booking?page=4&c=${availClass}&idt=${trainId}&pax=${params.get(
-        "pax"
-      )}&p=${params.get("p")}&cl=${selectedClass}&tkt=${JSON.stringify(
-        ticket
-      ).replace(/[{}:",]/g, (i) => rplc[i])}`
-    );
+    navigate({
+      pathname: "/booking/4",
+      search:
+        searchParams.toString() +
+        ">&" +
+        createSearchParams({ tkt: JSON.stringify(ticket) }).toString(),
+    });
+  };
+
+  const handleOnReload = async (e) => {
+    e.preventDefault();
+    if (!searchParams.get("idt") && !searchParams.get("date")) {
+      navigate("/booking");
+    } else {
+      dispatch(actions.setLoading(true));
+      const res = await bookingService.findSeats({
+        trainId: searchParams.get("idt"),
+        date: searchParams.get("date"),
+      });
+      if (res === 200) {
+        navigate({
+          pathname: "",
+          search: searchParams.toString(),
+        });
+      } else {
+        sessionStorage.setItem("routeError", 1);
+        navigate("/booking");
+      }
+    }
   };
 
   return (
     <div className="seat-selector">
       <div className="seat-selector__container">
-        <span className="seat-selector__btn">
-          <label>
-            <div>{content.seat.wantSelectSeat}&ensp;🛈</div>
-            <input
-              type="checkbox"
-              onClick={({ currentTarget: input }) => {
-                setWantSelectSeat(input.checked);
-              }}
+        {seats && seats.length !== 0 ? (
+          <>
+            <div className="seat-selector__btn">
+              <label>
+                <div>{content.seat.wantSelectSeat}&ensp;🛈</div>
+                <input
+                  type="checkbox"
+                  onClick={({ currentTarget: input }) => {
+                    setWantSelectSeat(input.checked);
+                  }}
+                />
+                <span />
+              </label>
+            </div>
+            <SeatPicker
+              seats={seats}
+              amount={pax}
+              setFinalSeats={setSelectedSeats}
+              setSeatSelected={setSeatSelected}
+              disabled={!wantSelectSeat}
             />
-            <span />
-          </label>
-        </span>
-        <SeatPicker
-          seats={seats}
-          amount={pax}
-          setFinalSeats={setSelectedSeats}
-          setSeatSelected={setSeatSelected}
-          disabled={!wantSelectSeat}
-        />
+          </>
+        ) : (
+          <section>
+            <FaRedo onClick={handleOnReload} />
+            <span>{lang === "th" ? "ลองใหม่อีกครั้ง" : "Try again"}</span>
+          </section>
+        )}
         <BookingButtons
           onNext={handleOnNext}
           price={
-            Number(params.get("p")) * Number(params.get("pax")) +
+            Number(searchParams.get("p")) * Number(searchParams.get("pax")) +
             selectedSeats.filter((f) => f != "C-—-x").length * 10
           }
           disabled={wantSelectSeat ? (seatSelected ? false : true) : false}
-          step={step}
-          pastUrlParams={`&c=${availClass}&idt=${trainId}&pax=${params.get(
-            "pax"
-          )}&p=${params.get("p")}`}
+          page={3}
+          pastUrlParams={searchParams.toString().split(".00000")[0]}
         />
       </div>
     </div>

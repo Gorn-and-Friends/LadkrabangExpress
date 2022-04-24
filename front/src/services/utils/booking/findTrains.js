@@ -10,8 +10,8 @@ const findTrains = async (info) => {
     date: info.date,
     time: info.time,
     passenger: info.pax,
-    dateReturn: info.returnDate,
-    timeReturn: info.returnTime,
+    // dateReturn: info.returnDate,
+    // timeReturn: info.returnTime,
   });
 
   if (res.data.length > 0) {

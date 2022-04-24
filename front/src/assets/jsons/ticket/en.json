@@ -15,5 +15,8 @@
   "class": "Class",
   "coach": "Coach",
   "seat": "Seat",
-  "price": "Price"
+  "row": "Row",
+  "column": "Column",
+  "price": "Price",
+  "passenger": "Passenger"
 }

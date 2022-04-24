@@ -16,6 +16,9 @@ const logIn = async (info) => {
       token: res.data.token,
       fname: res.data.firstname,
       lname: res.data.lastname,
+      email: res.data.email,
+      uname: res.data.username,
+      bdate: res.data.birthdate,
     })
   );
 };

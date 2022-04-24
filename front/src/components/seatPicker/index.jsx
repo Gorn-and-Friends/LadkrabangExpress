@@ -43,7 +43,10 @@ const SeatPicker = ({
   useEffect(() => {
     if (document.querySelector(".seat-picker").classList.contains("disabled")) {
       document.querySelectorAll(".seat-picker__seat").forEach((e) => {
-        if (e.classList.contains("selected")) {
+        if (
+          e.classList.contains("selected") &&
+          !e.classList.contains("showcase")
+        ) {
           e.classList.toggle("selected");
           setSelectedSeats([]);
         }
@@ -100,23 +103,27 @@ const SeatPicker = ({
             {seats.map((data) => (
               <div className="seat-picker__coach">
                 {Array.from({ length: 16 }, (_, j) => (
-                  <div className="seat-picker__row">
+                  <div className={`seat-picker__row-${j + 1}`}>
                     {Array.from({ length: 4 }, (_, k) => (
-                      <div
-                        className={`seat-picker__seat${
-                          data.seat[4 * j + k].isReserv != "" ? " occupied" : ""
-                        }`}
-                        id={
-                          "CH" +
-                          data.coach +
-                          "—" +
-                          String.fromCharCode(k + 65) +
-                          (j + 1)
-                        }
-                        onClick={handleOnSelect}
-                      >
-                        <BsLaptopFill />
-                      </div>
+                      <>
+                        <div
+                          className={`seat-picker__seat${
+                            data.seat[4 * j + k].isReserv != ""
+                              ? " occupied"
+                              : ""
+                          }`}
+                          id={
+                            "CH" +
+                            data.coach +
+                            "—" +
+                            String.fromCharCode(k + 65) +
+                            (j + 1)
+                          }
+                          onClick={handleOnSelect}
+                        >
+                          <BsLaptopFill />
+                        </div>
+                      </>
                     ))}
                   </div>
                 ))}

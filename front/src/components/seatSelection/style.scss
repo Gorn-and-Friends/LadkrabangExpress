@@ -6,17 +6,43 @@
   justify-content: center;
   width: 100%;
 
-  * {
-    @include languify() {
-      font: 400 1rem l(subtitle-font);
-    }
-  }
-
   &__container {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 2.2 * $navbar-height);
     width: 70%;
+
+    > section {
+      display: flex;
+      justify-content: center;
+      height: 100%;
+      flex-direction: column;
+      gap: 1.5vw;
+      text-align: center;
+      @include themify() {
+        color: t(main-font-color);
+      }
+      @include languify() {
+        font: 400 1.5vw l(subtitle-font);
+      }
+
+      svg {
+        cursor: pointer;
+        align-self: center;
+        font-size: 5vw;
+        transition: transform calc($transition-time * 2) ease-in-out,
+          color $transition-time ease-in-out;
+
+        &:hover {
+          transform: rotate(360deg) scale(1.4);
+        }
+
+        &:active {
+          transition: transform calc($transition-time / 5) ease-in-out;
+          transform: rotate(370deg) scale(1.35);
+        }
+      }
+    }
   }
 
   &__btn {
@@ -24,8 +50,11 @@
     height: calc(1.8 * $navbar-height);
     display: flex;
     align-items: center;
+    @include languify() {
+      font: 400 1rem l(subtitle-font);
+    }
     @include themify() {
-      color: t("main-font-color");
+      color: t(main-font-color);
     }
 
     > label {

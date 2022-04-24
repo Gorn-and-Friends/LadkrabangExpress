@@ -9,7 +9,12 @@ const findSeats = async (info) => {
     date: info.date,
   });
 
-  sessionStorage.setItem("seatList", JSON.stringify(res.data));
+  if (res.data.length > 0) {
+    sessionStorage.setItem("seatList", JSON.stringify(res.data));
+    return 200;
+  } else {
+    return 204;
+  }
 };
 
 export default findSeats;

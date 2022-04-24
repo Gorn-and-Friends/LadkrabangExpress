@@ -6,6 +6,8 @@ import Login from "../pages/auth/login";
 import Register from "../pages/auth/register";
 import Booking from "../pages/booking";
 import Home from "../pages/home";
+import Profile from "../pages/profile";
+import Ticket from "../pages/ticket/display";
 import actions from "../services/actions";
 import classService from "../services/utils/class";
 
@@ -53,10 +55,15 @@ const Router = () => {
   return (
     <Routes>
       <Route index element={<Home />} />
-      <Route path="login" element={<Login />} />
-      <Route path="register" element={<Register />} />
-      <Route path="forgot" element={<Forgot />} />
+      <Route path="auth/login" element={<Login />} />
+      <Route path="auth/register" element={<Register />} />
+      <Route path="auth/forgot" element={<Forgot />} />
+      <Route path="auth/reset-password" element={<></>} />
+      <Route path="profile" element={<Profile />} />
+      <Route path="profile/ticket/:id" element={<Ticket />} />
+      <Route path="profile/ticket/:id/edit" element={<Ticket />} />
       <Route path="booking" element={<Booking />} />
+      <Route path="booking/:page" element={<Booking />} />
     </Routes>
   );
 };

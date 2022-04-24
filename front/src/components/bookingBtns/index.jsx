@@ -3,14 +3,20 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "./style.scss";
 
-const BookingButtons = ({ onNext, price, disabled, step, pastUrlParams }) => {
+const BookingButtons = ({ onNext, price, disabled, page, pastUrlParams }) => {
   const lang = useSelector((state) => state.lang);
   const navigate = useNavigate();
 
   return (
     <div className="booking-btns">
       <button
-        onClick={() => navigate(`/booking?page=${step - 1}${pastUrlParams}`)}
+        onClick={() =>
+          navigate(
+            `/booking${
+              page > 1 ? "/" + (page - 1).toString() + "?" : ""
+            }${pastUrlParams}`
+          )
+        }
       >
         {lang === "th" ? "กลับ" : "Back"}
       </button>
