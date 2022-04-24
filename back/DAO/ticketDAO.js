@@ -13,7 +13,6 @@ class Ticket{
         try{
             let {
                     token,
-                    // user_id,
                     train_id, 
                     date,
                     origin,
@@ -22,9 +21,10 @@ class Ticket{
                     reservation_class,
                     departureTime,
                     arrivalTime,
-                    seat_reservation
+                    seat_reservation,
+                    food_reservation
                 } =req.body
-            console.log(req.body)
+            // console.log(req.body)
             let user_id = User.verifyTokenGetUserID(token)
             if(user_id === false){
                 res.send("token expired").status(201)
@@ -39,13 +39,18 @@ class Ticket{
 
             let ticketPrice = 0
             let reservationPrice = 0
+            let foodPrice = 0
             let seatLayout = Object
             if(seat_reservation.length > 0){
-                reservationPrice = 15
-                // seatLayout = Train.makeSeatLayout(train_id, d)
+                reservationPrice = 10
+            }
+            if(food_reservation.length > 0){
+                for(let i = 0 ; i < food_reservation.length ; i++){
+                    foodPrice += Number(food_reservation[i].price) * Number(food_reservation[i].amount)
+                }
             }
             ticketPrice = await Train.calculatePriceClass(reservation_class,origin,destination) 
-            let totalPrice = (passenger * ticketPrice) + reservationPrice
+            let totalPrice = (passenger * ticketPrice) + reservationPrice + foodPrice
             const trainNumber = await trainModel.findById(mongoose.Types.ObjectId(train_id))
             //สร้าง doc ลง database
 
@@ -63,13 +68,12 @@ class Ticket{
                 reservation_class: reservation_class,
 
                 seat_reservation: seat_reservation,
-
+                food_reservation: food_reservation,
                 ticketPrice: ticketPrice,
                 reservation_price: reservationPrice,
                 total_price: totalPrice,
             })
 
-            
             ticketAdded.save()
             userAddTicket.ticket.push(ticketAdded._id)
             userAddTicket.save()
@@ -87,17 +91,14 @@ class Ticket{
         //trainID, d
         try{
             let { trainID , date} = req.body
-            // console.log(req.params)
             trainID = mongoose.Types.ObjectId(trainID)
             date = new Date(date)
 
             const exitTicket = await Ticket.findReservedSeat(trainID,date)
             let reservedSeat = Ticket.filterOnlySeat(exitTicket)
-            console.log(reservedSeat)
 
             const rawdata = fs.readFileSync('./doc/seatLayout.json');
             let jsonTemp = JSON.parse(rawdata); 
-            // console.log(jsonTemp)
 
             //Do main function
 
@@ -108,7 +109,6 @@ class Ticket{
             const seatPerRow = 4
             let tempClass = 0
             if(thatTrain.class_in_train.class_2.class_available == true){
-                console.log("cat")
                 numberOfCoach = 3
                 tempClass = 2
             }else if(thatTrain.class_in_train.class_3.class_available == true){

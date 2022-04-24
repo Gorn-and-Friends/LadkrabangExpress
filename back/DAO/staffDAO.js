@@ -3,8 +3,8 @@ const userModel = require('../model/user.js')
 const staffModel = require('../model/staff.js')
 const mongoose = require('mongoose')
 const Ticket = require("./ticketDAO.js")
-const staff = require('../model/staff.js')
-
+const bcrypt = require('bcryptjs')
+const jsonwebtoken = require('jsonwebtoken')
 
 class Staff{
     
@@ -15,30 +15,44 @@ class Staff{
 
             const d = new Date(date)
 
-            console.log(d)
-
             const foundTicket = await ticketModel.find({$and:[{"train_number" : String(trainNumber)}, {"date" : d}]})
-            console.log(foundTicket)
-            let result = []
 
+            let result = []
             for (let i = 0 ; i<foundTicket.length ; i++) {
                 const userID = foundTicket[i].user_id
-                // const objID = mongoose.Types.ObjectId(strID)
                 const foundUser = await userModel.findById(userID)
-                
-                let temp = foundTicket[i].toObject()
-                // เพิ่ม fields
-                temp.firstname = foundUser.firstname
-                temp.lastname = foundUser.lastname
+                let isAddedFood = false
+                for(let j = 0 ; j < foundTicket[i].seat_reservation.length ; j++){
 
-                result.push(temp)
+                    console.log(foundTicket[i].train_number)
+                    let isReservSeat = true
+                    console.log(foundTicket[i].seat_reservation)
+                    if(foundTicket[i].seat_reservation[j].coach === null && foundTicket[i].seat_reservation[j].row === null && foundTicket[i].seat_reservation[j].column === null){
+                        isReservSeat = false
+                    }
+
+                    let tempFood = []
+                    if(foundTicket[i].food_reservation.length > 0 && isAddedFood === false){
+                        tempFood = foundTicket[i].food_reservation
+                        isAddedFood = true
+                    }
+
+                    const temp = {
+                        "ticketID": String(foundTicket[i]._id),
+                        "firstname": foundUser.firstname, 
+                        "lastname": foundUser.lastname, 
+                        "origin": foundTicket[i].origin, 
+                        "destination": foundTicket[i].destination, 
+                        "class": foundTicket[i].reservation_class, 
+                        "coach": foundTicket[i].seat_reservation[j].coach, 
+                        "row": foundTicket[i].seat_reservation[j].row, 
+                        "column": foundTicket[i].seat_reservation[j].column, 
+                        "food": tempFood,
+                        "isReservSeat": isReservSeat
+                    }
+                    result.push(temp)
+                }  
             }
-
-            // const trainTemp = await ticketModel.findOne({"train_number" : String(trainNumber)})
-            // console.log(trainID)
-            // const d = new Date(date)
-            // const foundTicket = await Ticket.findReservedSeat(trainTemp.train_id, d)
-            // console.log(foundTicket)
 
             res.send(result)
         }catch (err){
@@ -93,13 +107,12 @@ class Staff{
             const encrytedPassword = await bcrypt.hash(password, 10)
             
             // const brithDate = new Date(birthdate)
-            const staff = new userModel({
-                firstname: firstName,
-                lastname: lastName,
+            const staff = new staffModel({
+                firstname: firstname,
+                lastname: lastname,
                 email: email,
                 username: username,
                 password: encrytedPassword
-                // birthdate: brithDate,
             })
 
             const token = jsonwebtoken.sign(
@@ -110,7 +123,7 @@ class Staff{
             staff.token = token
             staff.save()
 
-            res.status(201).json(user)
+            res.status(201).json(staff)
 
         }catch(err){
             console.log(err)
@@ -119,7 +132,6 @@ class Staff{
 
     static async login(req,res){
         try{
-            // console.log(req.body)
             const { username , password} = req.body
 
             if(!(username && password)){
@@ -129,15 +141,21 @@ class Staff{
             //check is user input username or email
             let staff = Object
             if(username.includes("@")){
-                staff = await userModel.findOne({ email: username })
+                staff = await staffModel.findOne({ email: username })
             }else{
-                staff = await userModel.findOne({ username: username })
+                staff = await staffModel.findOne({ username: username })
             }
+
+            if(staff === null){
+                res.status(400).send("username not found")
+                return
+            }
+            console.log(staff)
             const email = staff.email
-            // console.log("cat : " + email)
+
             if(staff && (await bcrypt.compare(password,staff.password))){
                 const token = jsonwebtoken.sign(
-                    {user_id: staff._id, email},
+                    {staff_id: staff._id, email},
                     process.env.TOKEN_KEY,
                     {
                         expiresIn: "2d"
@@ -145,7 +163,6 @@ class Staff{
                 )
                 staff.token = token
                 res.status(200).json(staff)
-                // res.status(200).send(token)
             }else{
                 res.status(400).send("Invalid login")
             }

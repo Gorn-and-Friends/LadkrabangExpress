@@ -61,14 +61,8 @@ class Train{
             //เลือกแค่อันที่สถานีเป็นต้นทางกับปลายทางตามลำดับ
             let foundTrain = await Train.findTrainOrderStation(foundTrainTemp,origin, destination)
             foundTrain = await Train.filterDay(foundTrain,date)
-            console.log("--------------------------------------------------------------------------------------------------")
+            
             //Check class of train
-
-            // On process--------------------------------------------------------------------------------------------------------------------------------------------------
-            // foundTrain = await Train.sortTime(foundTrainTemp, time, origin)
-            // console.log(foundTrain)
-            // console.log(foundTrain[0].station[0].station_name)
-            // console.log(foundTrain[0].station[1].station_name)
             
             let trainSortTime = []
             // รันลูปเพื่อหาส่วนต่างเวลาของแต่ละ หมายเลข ขบวน
@@ -77,7 +71,6 @@ class Train{
                 for (let j=0; foundTrain[i].station[j]; j++) {
                     // console.log(foundTrain[i].station[j])
                     if (origin == foundTrain[i].station[j].station_name) {
-                        console.log("Justin")
                         // Get hours and minutes from DB
                         let hours = foundTrain[i].station[j].departure_hour
                         hours = String(hours)
@@ -108,21 +101,15 @@ class Train{
                         let temp = foundTrain[i].toObject()
                         temp.diff = timeDiff
                         trainSortTime.push(temp)
-                        // console.log(temp)
-                        // console.log("----------------obj--------")
-                        // console.log(temp.train_number)
-                        // console.log(temp.diff)
+                        
                     }
-                    // break
+                    
                 }
-                // break
+                
             }
             // console.log(foundTrain[foundTrain.length-1])
             trainSortTime.sort((a, b) => (a.diff > b.diff) ? 1 : -1)
-            // console.log(trainSortTime)
-            // console.log(trainSortTime[trainSortTime.length-1])
-            //---------------------------------------------------------------------------------------------------------------------------------------------------------
-
+            
             // Make JSON to front
             const filterTrainData = []
             for(let i in trainSortTime){
@@ -136,8 +123,7 @@ class Train{
                 //คำนวนเวลาออกเดินทาง เวลาถึง และเวลาที่ใช้ในการเดินทาง
                 let { deTime, arTime,duration} = await Train.findDepartureArrivalTime(trainSortTime[i].station,origin,destination)
                 
-                console.log("---------")
-                console.log(deTime)
+
                 const time = deTime.split(":")
                 if(time[1].length < 2){
                     time[1] = "0" + time[1]

@@ -11,7 +11,7 @@
 - เพิ่ม model-staff ตัด ticket birthdate          OK
 - ทำ staffDAO ก็อบ userDAO ถึง verify
 - สร้าง staff ใน DB ทดลองทำสิ่งต่างๆ
-- เพิ่มใน reserve non-reserve showReservTicket
+
 ---------------------------------------------Task in process
 
 - makeSeatLayout

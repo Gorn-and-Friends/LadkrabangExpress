@@ -12,9 +12,9 @@ class User{
 
             console.log(req.body)
 
-            const {firstname,lastname,email,username,password,birthdate} = req.body
+            const {firstname,lastname,email,username,password} = req.body
 
-            if(!(firstname && lastname && email && username && password && birthdate)){
+            if(!(firstname && lastname && email && username && password)){
                 res.status(400).send("All input required")
             }
 
@@ -25,14 +25,12 @@ class User{
             }
             const encrytedPassword = await bcrypt.hash(password, 10)
             
-            const brithDate = new Date(birthdate)
             const user = new userModel({
                 firstname: firstName,
                 lastname: lastName,
                 email: email,
                 username: username,
                 password: encrytedPassword,
-                birthdate: brithDate,
             })
 
             const token = jsonwebtoken.sign(
@@ -66,6 +64,12 @@ class User{
             }else{
                 user = await userModel.findOne({ username: username })
             }
+
+            if(user === null){
+                res.status(400).send("username not found")
+                return
+            }
+
             const email = user.email
             // console.log("cat : " + email)
             if(user && (await bcrypt.compare(password,user.password))){

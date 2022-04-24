@@ -6,9 +6,7 @@ const staffSchema = new mongoose.Schema({
     email: { type: String, default: null },
     username: { type: String, default: null },
     password: { type: String },
-    // birthdate: { type: Object, default: null},
     token: { type: String },
-    // ticket: [],
 })
 
 module.exports = mongoose.model('staff', staffSchema);

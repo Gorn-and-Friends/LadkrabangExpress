@@ -21,6 +21,9 @@ router.route('/booking').post(trainDAO.customerFindTrain)
 router.route('/makeSeatLayout').post(ticketDAO.makeSeatLayout)
 router.route('/addTicket').post(ticketDAO.addTicket)
 
+//Staff
+router.route('/staff/login').post(staffDAO.login)
+router.route('/staff/register').post(staffDAO.register)
 router.route('/staff/showTicket/:id').get(staffDAO.showTicket)
 router.route('/staff/showReservedTicket').post(staffDAO.showReservTicket)
 
