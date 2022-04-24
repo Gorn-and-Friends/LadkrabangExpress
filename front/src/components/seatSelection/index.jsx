@@ -49,15 +49,20 @@ const SeatSelection = () => {
 
   useEffect(() => {
     var temp = [];
-    if (seatList && seatList != [])
-      seatList.map((data) => {
-        temp.push({
-          coach: data.coach,
-          seat: data.seat,
+    try {
+      if (
+        JSON.parse(sessionStorage.getItem("seatList")) &&
+        JSON.parse(sessionStorage.getItem("seatList")).length > 0
+      )
+        JSON.parse(sessionStorage.getItem("seatList")).map((data) => {
+          temp.push({
+            coach: data.coach,
+            seat: data.seat,
+          });
         });
-      });
-    setSeats(temp);
-  }, [seatList]);
+      setSeats(temp);
+    } catch {}
+  }, []);
 
   useEffect(() => {
     setTrain(

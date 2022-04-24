@@ -10,8 +10,7 @@ const search = async (info) => {
     class: info.class,
   });
 
-  sessionStorage.setItem("staffRes", JSON.stringify(res.data));
-  if (res.data && res.data.length === 0) return 200;
+  if (res.data && res.data.length > 0) return res.data;
   else return 204;
 };
 

@@ -176,6 +176,10 @@
         border-bottom: 1px solid t(font-color-2);
       }
 
+      li div {
+        cursor: pointer;
+      }
+
       li,
       li a {
         line-height: 3rem;
@@ -197,9 +201,5 @@
         font: 900 0.9em l(subtitle-font);
       }
     }
-  }
-
-  &__logout {
-    cursor: pointer;
   }
 }

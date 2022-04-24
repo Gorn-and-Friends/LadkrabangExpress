@@ -23,14 +23,8 @@ const Register = () => {
   const [missingInput, setMissingInput] = useState(false);
   const [invalidPword, setInvalidPword] = useState(false);
   const [invalidRepwd, setInvalidRepwd] = useState(false);
-  const [invalidEmail, setInvalidEmail] = useState(false);
-  const [invalidUname, setInvalidUname] = useState(false);
+  const [invalidAcc, setInvalidAcc] = useState(false);
   const [repwd, setRepwd] = useState("");
-  const [curDate, setCurDate] = useState({
-    value: "",
-    temp: "",
-    onFocus: false,
-  });
   const [reg, setReg] = useState({
     fname: "",
     lname: "",
@@ -76,45 +70,20 @@ const Register = () => {
       setErr(false);
       try {
         dispatch(actions.setLoading(true));
-        await register.register(reg);
-        navigate("/login");
+        const res = await register.register(reg);
+        if (res != 409) navigate("/auth/login");
       } catch (er) {
         dispatch(actions.setLoading(false));
-        console.log(er);
+        setInvalidAcc(true);
+        setErr(true);
       }
     }
   };
 
   const handleInputOnChange = ({ currentTarget: input }) => {
     const temp = { ...reg };
-    if (input.id == "bdate") {
-      setCurDate({ value: input.value });
-    }
     temp[input.id] = input.value;
-    console.log(temp);
     setReg(temp);
-  };
-
-  const handleDateOnFocus = ({ currentTarget: input }) => {
-    input.type = "date";
-    if (input.value != "") {
-      let valArr = String(input.value).split("-");
-      let val = valArr[1] + "/" + valArr[2] + "/" + valArr[0];
-      input.value = val;
-      setCurDate({ temp: val });
-    }
-    setCurDate({ ...curDate, onFocus: true });
-  };
-
-  const handleDateOnBlur = ({ currentTarget: input }) => {
-    input.type = "text";
-    if (input.value != "") {
-      let valArr = String(input.value).split("-");
-      let val = valArr[1] + "/" + valArr[2] + "/" + valArr[0];
-      input.value = val;
-      setCurDate({ value: val });
-    }
-    setCurDate({ ...curDate, onFocus: false });
   };
 
   return loading ? (
@@ -128,10 +97,8 @@ const Register = () => {
             <div className="register__form__errors">
               {missingInput
                 ? content.errors.missingInput
-                : invalidEmail
-                ? content.errors.invalidEmail
-                : invalidUname
-                ? content.errors.invalidUname
+                : invalidAcc
+                ? content.errors.invalidAcc
                 : invalidPword
                 ? content.errors.invalidPword
                 : invalidRepwd

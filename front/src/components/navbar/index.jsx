@@ -13,6 +13,7 @@ import log from "../../services/utils/log";
 import ThemeToggler from "../themeToggler";
 import LanguageToggler from "../langToggler";
 import actions from "../../services/actions";
+import userServices from "../../services/utils/user";
 
 const NavBar = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,18 @@ const NavBar = () => {
     lang === "th"
       ? require("../../assets/jsons/navbar/th.json")
       : require("../../assets/jsons/navbar/en.json");
+
+  const handleOnProfile = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(actions.setLoading(true));
+      await userServices.fetchProfile();
+      navigate("/profile");
+    } catch (er) {
+      dispatch(actions.setLoading(false));
+      console.log(er);
+    }
+  };
 
   const handleOnLogout = (e) => {
     e.preventDefault();
@@ -94,10 +107,12 @@ const NavBar = () => {
               <div className="navbar__auth__dropdown">{displayName}</div>
               <ul className="navbar__auth__list">
                 <li>
-                  <Link to="/profile">{content.right.logged.profile}</Link>
+                  <div onClick={handleOnProfile}>
+                    {content.right.logged.profile}
+                  </div>
                 </li>
                 <li>
-                  <div className="navbar__logout" onClick={handleOnLogout}>
+                  <div onClick={handleOnLogout}>
                     {content.right.logged.logOut}
                   </div>
                 </li>

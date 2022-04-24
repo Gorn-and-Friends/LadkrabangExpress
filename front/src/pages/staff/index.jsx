@@ -38,10 +38,9 @@ const Staff = () => {
     };
     try {
       const res = await staffServices.search(query);
-      setResList(sessionStorage.getItem("staffRes"));
       if (res === 204) {
         alert("Double check you queries | กรุณาตรวจสอบข้อมูลที่กรอกอีกครั้ง");
-      }
+      } else setResList(res);
     } catch (er) {
       console.log(er);
     }
@@ -149,13 +148,21 @@ const Staff = () => {
                     <tr>
                       <td>{res.trainNumber}</td>
                       <td>{res.firstname + " " + res.lastname}</td>
-                      <td>{res.date}</td>
+                      <td>
+                        {new Date(res.date).toLocaleString(lang, {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </td>
                       <td>{res.origin}</td>
                       <td>{res.destination}</td>
                       <td>{res.class}</td>
-                      <td>{res.coach}</td>
-                      <td>{res.seat}</td>
-                      <td>{res.present}</td>
+                      <td>{res.coach ? res.coach : "-"}</td>
+                      <td>
+                        {res.row && res.column ? res.row + res.column : "-"}
+                      </td>
+                      <td></td>
                     </tr>
                   ))
                 : null}

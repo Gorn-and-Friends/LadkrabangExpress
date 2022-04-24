@@ -103,8 +103,8 @@ const Checkout = () => {
     if (logServices.isLogged()) {
       const info = {
         ...tickets,
-        token: localStorage.getItem("token"),
-        user_id: localStorage.getItem("userId"),
+        token: JSON.parse(localStorage.getItem("user")).token,
+        user_id: JSON.parse(localStorage.getItem("user")).id,
         train_id: tickets.t_id,
       };
       console.log(info);

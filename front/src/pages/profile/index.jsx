@@ -8,7 +8,6 @@ import { FaRedo } from "react-icons/fa";
 
 const Profile = () => {
   const lang = useSelector((state) => state.lang);
-  const ticketList = useSelector((state) => state.tickets);
   const stations = require("../../assets/jsons/booking/station.json");
   const profileContent =
     lang === "th"
@@ -23,143 +22,13 @@ const Profile = () => {
 
   useEffect(() => {
     try {
-      setDisplayTickets([
-        {
-          _id: "625d9557eb0fb239a2618927",
-          user_id: "6247da547ff27848c5703958",
-          train_id: "62481fb15d7c934a072ea5ff",
-          train_number: "997",
-          origin: "กรุงเทพ",
-          destination: "ชลบุรี",
-          departureTime: "6:45",
-          arrivalTime: "8:37",
-          date: "2022-04-23T00:00:00.000+00:00",
-          passenger: 2,
-          reservation_class: 2,
-          seat_reservation: [
-            {
-              coach: 2,
-              row: 2,
-              column: "A",
-              _id: "625d9557eb0fb239a2618928",
-            },
-            {
-              coach: 2,
-              row: 2,
-              column: "B",
-              _id: "625d9557eb0fb239a2618929",
-            },
-          ],
-          ticketPrice: 170,
-          reservation_price: 15,
-          total_price: 355,
-          __v: 0,
-        },
-        {
-          _id: "625d9557eb0fb239a2618928",
-          user_id: "6247da547ff27848c5703958",
-          train_id: "62481fb15d7c934a072ea5ff",
-          train_number: "997",
-          origin: "กรุงเทพ",
-          destination: "ชลบุรี",
-          departureTime: "6:45",
-          arrivalTime: "8:37",
-          date: "2022-04-23T00:00:00.000+00:00",
-          passenger: 2,
-          reservation_class: 3,
-          seat_reservation: [
-            {
-              coach: 2,
-              row: 2,
-              column: "A",
-              _id: "625d9557eb0fb239a2618928",
-            },
-            {
-              coach: null,
-              row: null,
-              column: null,
-              _id: "625d9557eb0fb239a2618929",
-            },
-          ],
-          ticketPrice: 170,
-          reservation_price: 15,
-          total_price: 355,
-          __v: 0,
-        },
-      ]);
-      sessionStorage.setItem("ticketList",
-        JSON.stringify([
-          {
-            _id: "625d9557eb0fb239a2618927",
-            user_id: "6247da547ff27848c5703958",
-            train_id: "62481fb15d7c934a072ea5ff",
-            train_number: "997",
-            origin: "กรุงเทพ",
-            destination: "ชลบุรี",
-            departureTime: "6:45",
-            arrivalTime: "8:37",
-            date: "2022-04-23T00:00:00.000+00:00",
-            passenger: 2,
-            reservation_class: 2,
-            seat_reservation: [
-              {
-                coach: 2,
-                row: 2,
-                column: "A",
-                _id: "625d9557eb0fb239a2618928",
-              },
-              {
-                coach: 2,
-                row: 2,
-                column: "B",
-                _id: "625d9557eb0fb239a2618929",
-              },
-            ],
-            ticketPrice: 170,
-            reservation_price: 15,
-            total_price: 355,
-            __v: 0,
-          },
-          {
-            _id: "625d9557eb0fb239a2618928",
-            user_id: "6247da547ff27848c5703958",
-            train_id: "62481fb15d7c934a072ea5ff",
-            train_number: "997",
-            origin: "กรุงเทพ",
-            destination: "ชลบุรี",
-            departureTime: "6:45",
-            arrivalTime: "8:37",
-            date: "2022-04-23T00:00:00.000+00:00",
-            passenger: 2,
-            reservation_class: 3,
-            seat_reservation: [
-              {
-                coach: 2,
-                row: 2,
-                column: "A",
-                _id: "625d9557eb0fb239a2618928",
-              },
-              {
-                coach: null,
-                row: null,
-                column: null,
-                _id: "625d9557eb0fb239a2618929",
-              },
-            ],
-            ticketPrice: 170,
-            reservation_price: 15,
-            total_price: 355,
-            __v: 0,
-          },
-        ])
-      );
-      // setDisplayTickets(null);
+      setDisplayTickets(JSON.parse(sessionStorage.getItem("ticketList")));
     } catch {}
   }, []);
 
-  // useEffect(() => {
-  //   setDisplayTickets(ticketList);
-  // }, [ticketList]);
+  useEffect(() => {
+    console.log(displayTickets);
+  }, [displayTickets]);
 
   const showStation = (data) => {
     let res = "";

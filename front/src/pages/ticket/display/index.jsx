@@ -48,7 +48,7 @@ const DisplayBookingTicket = () => {
         reservation_class: tickets.reservation_class,
         departureTime: tickets.departureTime,
         arrivalTime: tickets.arrivalTime,
-        duration: "",
+        duration: tickets.duration,
         totalPrice: tickets.total_price,
       };
       let seats = [...tickets.seat_reservation];
@@ -81,9 +81,11 @@ const DisplayBookingTicket = () => {
         <div className="display-ticket__container">
           <div className="display-ticket__header">
             <Link to="edit">{lang === "th" ? "แก้ไข" : "Edit"}</Link>
-            <Link to="/profile"><h1>
-              {lang === "th" ? "ขอให้เดินทางโดยสวัสดิภาพ!" : "Bon Voyage!"}
-            </h1></Link>
+            <Link to="/profile">
+              <h1>
+                {lang === "th" ? "ขอให้เดินทางโดยสวัสดิภาพ!" : "Bon Voyage!"}
+              </h1>
+            </Link>
             <button onClick={handlePrint}>
               <AiFillPrinter />
             </button>
