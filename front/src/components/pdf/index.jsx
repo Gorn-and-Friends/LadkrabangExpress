@@ -4,7 +4,7 @@ import "./style.scss";
 import icon from "../../assets/icons/icon.png";
 import { MdMyLocation, MdLocationOn, MdAccessTime } from "react-icons/md";
 
-const TicketPDF = ({ ref, QR, tickets }) => {
+const TicketPDF = React.forwardRef(({ QR, tickets, disabled }, ref) => {
   const lang = useSelector((state) => state.lang);
   const stations = require("../../assets/jsons/booking/station.json");
   const content =
@@ -65,7 +65,7 @@ const TicketPDF = ({ ref, QR, tickets }) => {
   };
 
   return (
-    <div ref={ref} className="pdf">
+    <div ref={ref} className={`pdf${disabled ? " disabled" : ""}`}>
       <div className="pdf__container">
         <img src={icon} alt="" />
         <img src={QR} alt="" />
@@ -150,6 +150,6 @@ const TicketPDF = ({ ref, QR, tickets }) => {
       </div>
     </div>
   );
-};
+});
 
 export default TicketPDF;

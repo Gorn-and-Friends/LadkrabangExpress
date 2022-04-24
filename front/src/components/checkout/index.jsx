@@ -10,7 +10,7 @@ import "./style.scss";
 import visaMastercard from "../../assets/images/visa-mastercard.png";
 import BookingButtons from "../bookingBtns";
 import Ticket from "../ticket";
-import logService from "../../services/utils/log";
+import logServices from "../../services/utils/log";
 import bookingService from "../../services/utils/booking";
 import actions from "../../services/actions";
 
@@ -100,7 +100,7 @@ const Checkout = () => {
 
   const handleOnNext = async (e) => {
     e.preventDefault();
-    if (logService.isLogged()) {
+    if (logServices.isLogged()) {
       const info = {
         ...tickets,
         token: localStorage.getItem("token"),

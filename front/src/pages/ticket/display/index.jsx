@@ -1,21 +1,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import ReactToPrint from "react-to-print";
+import { useReactToPrint } from "react-to-print";
 import "./style.scss";
 import QRCode from "qrcode";
 import { AiFillPrinter } from "react-icons/ai";
 import NavBar from "../../../components/navbar";
 import Ticket from "../../../components/ticket";
 import TicketPDF from "../../../components/pdf";
+import { useSelector } from "react-redux";
 
 const DisplayBookingTicket = () => {
   const params = useParams();
+  const lang = useSelector((state) => state.lang);
   const ref = useRef();
   const serverDomainName = "http://localhost:5000";
   const [qr, setQr] = useState("");
   const [tickets, setTickets] = useState([]);
   const [displayTickets, setDisplayTickets] = useState([]);
-  const [onPrint, setOnPrint] = useState(false);
 
   useEffect(() => {
     QRCode.toDataURL(serverDomainName + "/api/staff/showTicket/" + params.id, {
@@ -69,30 +70,37 @@ const DisplayBookingTicket = () => {
     } catch {}
   }, [tickets]);
 
+  const handlePrint = useReactToPrint({
+    content: () => ref.current,
+  });
+
   return (
     <>
       <NavBar />
-      Hello world
       <div className="display-ticket">
-        <div className="display-ticket__header">
-          <Link to="edit">Edit</Link>
-          <h1>Bon Voyage!</h1>
-          <button onClick={() => window.print()}>
-            <AiFillPrinter />
-          </button>
-        </div>
-        <div className="display-ticket__content">
-          <div className="display-ticket__qr">
-            <img src={qr} alt="" />
+        <div className="display-ticket__container">
+          <div className="display-ticket__header">
+            <Link to="edit">{lang === "th" ? "แก้ไข" : "Edit"}</Link>
+            <Link to="/profile"><h1>
+              {lang === "th" ? "ขอให้เดินทางโดยสวัสดิภาพ!" : "Bon Voyage!"}
+            </h1></Link>
+            <button onClick={handlePrint}>
+              <AiFillPrinter />
+            </button>
           </div>
-          <div className="display-ticket__tickets">
-            {displayTickets.map((ticket) => (
-              <Ticket ticket={ticket} />
-            ))}
+          <div className="display-ticket__content">
+            <div className="display-ticket__qr">
+              <img src={qr} alt="" />
+            </div>
+            <div className="display-ticket__tickets">
+              {displayTickets.map((ticket) => (
+                <Ticket ticket={ticket} />
+              ))}
+            </div>
           </div>
         </div>
+        <TicketPDF ref={ref} QR={qr} tickets={displayTickets} />
       </div>
-      <TicketPDF ref={ref} QR={qr} tickets={displayTickets} />
     </>
   );
 };

@@ -1,12 +1,17 @@
 @use "../../../assets/styles/utils" as *;
 
 .display-ticket {
-  display: flex;
-  flex-direction: column;
   width: 100%;
   height: calc(100vh - $navbar-height);
-  align-items: center;
   overflow: hidden;
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
 
   &__header {
     width: 80%;
@@ -15,15 +20,29 @@
     justify-content: space-between;
     align-items: center;
 
-    button,
-    a {
-      bottom: -2.5vh;
+    a:nth-child(2) > h1 {
+      @include themify() {
+        color: t(main-font-color);
+      }
+      @include languify() {
+        font: 200 - l(title-font-bal-ratio) 3rem l(title-font);
+      }
+
+      &:hover {
+        transform: scale(1.01);
+      }
+    }
+
+    > button,
+    > a:not(:nth-child(2)) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       cursor: pointer;
       height: 5vh;
-      line-height: 5vh;
       padding: 0.2rem 0.6rem;
-      border: 0.1rem solid orange;
       border-radius: 0.4rem;
+      border: none;
       transition: all $transition-time ease-in-out;
       @include languify() {
         font: 600 1vw l(subtitle-font);
@@ -32,6 +51,24 @@
         color: t(main-font-color);
         background-color: t(main-bg-color);
       }
+
+      &:hover {
+        transform: scale(1.2);
+      }
+
+      &:active {
+        transform: scale(1.1);
+      }
+    }
+
+    > button {
+      @include languify() {
+        font-size: 2vw;
+      }
+    }
+
+    > a:not(:nth-child(2)) {
+      border: 0.1rem solid orange;
     }
   }
 

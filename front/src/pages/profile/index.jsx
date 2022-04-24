@@ -267,7 +267,7 @@ const Profile = () => {
                 {displayTickets ? (
                   displayTickets.length !== 0 ? (
                     displayTickets.map((ticket) => (
-                      <Link to={`ticket/${ticket._id}`}>
+                      <Link to={`${ticket._id}`}>
                         <div className="profile__booking__ticket">
                           <div className="profile__booking__ticket__container">
                             <div className="profile__booking__ticket__info">
@@ -352,7 +352,7 @@ const Profile = () => {
                             </div>
                             <div className="profile__booking__ticket__logo">
                               <img src={icon} alt="" />
-                              <Link to={`ticket/${ticket._id}/edit`}>Edit</Link>
+                              <Link to={`${ticket._id}/edit`}>Edit</Link>
                             </div>
                           </div>
                         </div>

@@ -1,13 +1,16 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import ChangePassword from "../pages/auth/changePassword";
 import Forgot from "../pages/auth/forgot";
 import Login from "../pages/auth/login";
 import Register from "../pages/auth/register";
 import Booking from "../pages/booking";
 import Home from "../pages/home";
 import Profile from "../pages/profile";
-import Ticket from "../pages/ticket/display";
+import Staff from "../pages/staff";
+import DisplayTicket from "../pages/ticket/display";
+import EditTicket from "../pages/ticket/edit";
 import actions from "../services/actions";
 import classService from "../services/utils/class";
 
@@ -22,10 +25,10 @@ const Router = () => {
     const localTheme = localStorage.getItem("theme");
     const localLanguage = localStorage.getItem("lang");
 
-    if (!!localTheme) {
+    if (!!localTheme && localTheme != theme) {
       dispatch(actions.setTheme(localTheme));
     }
-    if (!!localLanguage) {
+    if (!!localLanguage && localLanguage != lang) {
       dispatch(actions.setLanguage(localLanguage));
     }
 
@@ -43,6 +46,9 @@ const Router = () => {
     dispatch(
       actions.setSeatList(JSON.parse(sessionStorage.getItem("seatList")))
     );
+    dispatch(
+      actions.setSeatList(JSON.parse(sessionStorage.getItem("ticketList")))
+    );
   }, [navigate, location]);
 
   useEffect(() => {
@@ -58,12 +64,13 @@ const Router = () => {
       <Route path="auth/login" element={<Login />} />
       <Route path="auth/register" element={<Register />} />
       <Route path="auth/forgot" element={<Forgot />} />
-      <Route path="auth/reset-password" element={<></>} />
+      <Route path="auth/forgot/:id" element={<ChangePassword/>} />
       <Route path="profile" element={<Profile />} />
-      <Route path="profile/ticket/:id" element={<Ticket />} />
-      <Route path="profile/ticket/:id/edit" element={<Ticket />} />
+      <Route path="profile/:id" element={<DisplayTicket />} />
+      <Route path="profile/:id/edit" element={<EditTicket />} />
       <Route path="booking" element={<Booking />} />
       <Route path="booking/:page" element={<Booking />} />
+      <Route path="staff" element={<Staff />} />
     </Routes>
   );
 };
