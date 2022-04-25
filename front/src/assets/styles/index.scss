@@ -1,0 +1,33 @@
+@use "./utils" as *;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  text-decoration: none;
+}
+
+body {
+  margin: 0;
+  -moz-osx-font-smoothing: grayscale;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  transition: all $transition-time ease-in-out;
+  @include themify() {
+    background-color: t("main-bg-color");
+  }
+
+  &.preload * {
+    $null-transition: none !important;
+
+    -webkit-transition: $null-transition;
+    -moz-transition: $null-transition;
+    -ms-transition: $null-transition;  
+    -o-transition: $null-transition;
+    transition: $null-transition;
+  }
+}

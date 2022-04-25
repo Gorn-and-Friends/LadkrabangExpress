@@ -1,0 +1,20 @@
+{
+  "search": {
+    "header": "Search",
+    "date": "Date",
+    "trainNo": "Train number",
+    "class": "Class",
+    "isOccupied": "Reserved seats only"
+  },
+  "result": {
+    "trainNo": "Train number",
+    "name": "Name",
+    "date": "Date",
+    "origin": "Origin",
+    "destination": "Destination",
+    "class": "Class",
+    "coach": "Coach",
+    "seat": "Seat",
+    "present": "Present"
+  }
+}
