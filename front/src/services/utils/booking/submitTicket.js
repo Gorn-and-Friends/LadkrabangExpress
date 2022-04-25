@@ -15,9 +15,14 @@ const submitTicket = async (info) => {
     reservation_class: info.r_c,
     departureTime: info.d_t,
     arrivalTime: info.a_t,
-    seat_reservation: info.s,
+    seat_reservation: {
+      coach: info.s.coach && info.s.coach != "-" ? Number(info.s.coach) : 0,
+      row: info.s.row && info.s.row != "-" ? Number(info.s.row) : 0,
+      column:
+        info.s.column && info.s.column != "-" ? Number(info.s.column) : "-",
+    },
   });
-    
+
   console.log(res.data);
 };
 

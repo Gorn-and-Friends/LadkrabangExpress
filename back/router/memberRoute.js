@@ -25,7 +25,7 @@ router.route('/addTicket').post(ticketDAO.addTicket)
 router.route('/staff/login').post(staffDAO.login)
 router.route('/staff/register').post(staffDAO.register)
 router.route('/staff/showTicket/:id').get(staffDAO.showTicket)
-router.route('/staff/showReservedTicket').post(staffDAO.showReservTicket)
+router.route('/staff/search').post(staffDAO.showReservTicket)
 
 // Test
 router.route('/user/showUserProfile').post(userDAO.showUserProfile)

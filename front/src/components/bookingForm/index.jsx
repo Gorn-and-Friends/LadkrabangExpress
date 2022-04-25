@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  createSearchParams,
+  useSearchParams,
+} from "react-router-dom";
+import "./style.scss";
 import actions from "../../services/actions";
 import bookingService from "../../services/utils/booking";
-import "./style.scss";
 
 const BookingForm = () => {
   const navigate = useNavigate();
@@ -16,7 +21,9 @@ const BookingForm = () => {
     lang === "th"
       ? require("../../assets/jsons/booking/th.json")
       : require("../../assets/jsons/booking/en.json");
+  const [searchParams, setSearchParams] = useSearchParams();
   const [err, setErr] = useState(false);
+  const [routeErr, setRouteErr] = useState(false);
   const [missingInput, setMissingInput] = useState(false);
   const [earlyReturn, setEarlyReturn] = useState(false);
   const [incorrectStations, setIncorrectStations] = useState(false);
@@ -47,32 +54,40 @@ const BookingForm = () => {
   });
 
   useEffect(() => {
-    let min = new Date().toISOString().split("T")[0];
+    let min = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      .toISOString()
+      .split("T")[0];
     let max = new Date();
     max.setDate(max.getDate() + 30);
     max = max.toISOString().split("T")[0];
     document.getElementById("date").setAttribute("min", min);
     document.getElementById("date").setAttribute("max", max);
-    document.getElementById("returnDate").setAttribute("max", max);
-
-    setOrigin(params.get("from") ? params.get("from") : "");
+    // document.getElementById("returnDate").setAttribute("max", max);
+    setOrigin(searchParams.get("from"));
     setDest(params.get("to") ? params.get("to") : "");
     setPax(params.get("pax") ? params.get("pax") : "");
+    setRouteErr(sessionStorage.getItem("routeError") == 1);
     setCurDate({ value: params.get("date"), onFocus: true });
     setCurTime({ value: params.get("time"), onFocus: true });
-    setCurReturnDate({ value: params.get("date-return"), onFocus: true });
-    setCurReturnTime({ value: params.get("time-return"), onFocus: true });
+    // setCurReturnDate({ value: params.get("date-return"), onFocus: true });
+    // setCurReturnTime({ value: params.get("time-return"), onFocus: true });
+    sessionStorage.setItem("trainList", JSON.stringify([]));
+    sessionStorage.setItem("seatList", JSON.stringify([]));
   }, []);
 
+  // useEffect(() => {
+  //   if (curDate.value !== "") {
+  //     document.getElementById("returnDate").setAttribute("min", curDate.value);
+  //   } else {
+  //     document
+  //       .getElementById("returnDate")
+  //       .setAttribute("min", new Date().toISOString().split("T")[0]);
+  //   }
+  // }, [curDate]);
+
   useEffect(() => {
-    if (curDate.value !== "") {
-      document.getElementById("returnDate").setAttribute("min", curDate.value);
-    } else {
-      document
-        .getElementById("returnDate")
-        .setAttribute("min", new Date().toISOString().split("T")[0]);
-    }
-  }, [curDate.value]);
+    setErr(routeErr);
+  }, [routeErr]);
 
   useEffect(() => {
     if (origin !== "" || dest !== "") {
@@ -102,7 +117,7 @@ const BookingForm = () => {
     e.preventDefault();
     let missing = false;
     let matchedStations = false;
-    let stationsExists = false;
+    let stationsNotExists = false;
     let dtErr = false;
     let originTH = "";
     let destTH = "";
@@ -128,8 +143,8 @@ const BookingForm = () => {
       pax: pax,
       date: curDate.value,
       time: curTime.value,
-      returnDate: returned ? curReturnDate.value : "",
-      returnTime: returned ? curReturnTime.value : "",
+      // returnDate: returned ? curReturnDate.value : "",
+      // returnTime: returned ? curReturnTime.value : "",
     };
     for (const key in info)
       if (returned) {
@@ -144,34 +159,46 @@ const BookingForm = () => {
       }
     if (info.from === info.to) matchedStations = true;
     else matchedStations = false;
-    if (info.from === "NaN" || info.to === "NaN") stationsExists = false;
-    else stationsExists = true;
+    if (info.from === "NaN" || info.to === "NaN") stationsNotExists = true;
+    else stationsNotExists = false;
     if (returned) {
       if (new Date(curReturnDate.value) < new Date(curDate.value)) dtErr = true;
       else if (curReturnTime.value <= curTime.value) dtErr = true;
     }
 
-    if (missing || matchedStations || !stationsExists || dtErr) {
+    if (missing || matchedStations || stationsNotExists || dtErr) {
       setErr(true);
       if (missing) setMissingInput(true);
       else setMissingInput(false);
       if (matchedStations) setMatchedStations(true);
       else setMatchedStations(false);
-      if (!stationsExists) setIncorrectStations(true);
+      if (stationsNotExists) setIncorrectStations(true);
       else setIncorrectStations(false);
       if (dtErr) setEarlyReturn(true);
       else setEarlyReturn(false);
     } else {
       setErr(false);
       try {
-        navigate(
-          `/booking?page=0&from=${info.from}&to=${info.to}&pax=${info.pax}&date=${info.date}&time=${info.time}&date-return=${info.returnDate}&time-return=${info.returnTime}`
-        );
         dispatch(actions.setLoading(true));
-        await bookingService.findTrains(info);
-        navigate(
-          `/booking?page=1&from=${info.from}&to=${info.to}&pax=${info.pax}&date=${info.date}&time=${info.time}&date-return=${info.returnDate}&time-return=${info.returnTime}`
-        );
+        const res = await bookingService.findTrains(info);
+        if (res === 200) {
+          navigate({
+            pathname: "1",
+            search: createSearchParams({
+              from: originTH,
+              to: destTH,
+              date: curDate.value,
+              time: curTime.value,
+              pax: pax,
+              // returnDate: returned ? curReturnDate.value : "",
+              // returnTime: returned ? curReturnTime.value : "",
+            }).toString(),
+          });
+        } else {
+          setErr(true);
+          sessionStorage.setItem("routeError", 1);
+          dispatch(actions.setLoading(false));
+        }
       } catch (er) {
         dispatch(actions.setLoading(false));
         console.log(er);
@@ -194,6 +221,8 @@ const BookingForm = () => {
                 ? content.form.errors.invalidStations
                 : earlyReturn
                 ? content.form.errors.earlyReturn
+                : !!routeErr
+                ? content.form.errors.routeErr
                 : ""}
             </div>
           )}
@@ -241,10 +270,10 @@ const BookingForm = () => {
                 list="destination"
                 value={dest}
                 onInput={({ currentTarget: input }) => {
-                  let opts = document.getElementById("destination").childNodes;
-                  for (let i = 0; i < opts.length; i++) {
-                    if (opts[i].value === input.value) {
-                      setDest(opts[i].value);
+                  let ops = document.getElementById("destination").childNodes;
+                  for (let i = 0; i < ops.length; i++) {
+                    if (ops[i].value === input.value) {
+                      setDest(ops[i].value);
                       break;
                     }
                   }
@@ -273,7 +302,7 @@ const BookingForm = () => {
           </div>
           <div className="booking-form__form__second-row">
             <div className="booking-form__form__second-row__group">
-              <div className="booking-form__form__50">
+              <div className="booking-form__form__100">
                 <input
                   type="text"
                   id="date"
@@ -309,6 +338,8 @@ const BookingForm = () => {
                   {content.form.fields.date} <span>*</span>
                 </label>
               </div>
+            </div>
+            <div className="booking-form__form__second-row__group">
               <div className="booking-form__form__50">
                 <input
                   type="text"
@@ -354,9 +385,7 @@ const BookingForm = () => {
                   {content.form.fields.time} <span>*</span>
                 </label>
               </div>
-            </div>
-            <div className="booking-form__form__second-row__group">
-              <div className="booking-form__form__70">
+              <div className="booking-form__form__50">
                 <input
                   type="number"
                   id="pax"
@@ -372,7 +401,7 @@ const BookingForm = () => {
                   {content.form.fields.passengers} <span>*</span>
                 </label>
               </div>
-              <div className="booking-form__form__checkbox">
+              {/* <div className="booking-form__form__checkbox">
                 <label>
                   <div>{content.form.buttons.round}</div>
                   <input
@@ -385,10 +414,10 @@ const BookingForm = () => {
                   />
                   <span />
                 </label>
-              </div>
+              </div> */}
             </div>
           </div>
-          <div className="booking-form__form__optional-row">
+          {/* <div className="booking-form__form__optional-row">
             <div className="booking-form__form__50">
               <input
                 type="text"
@@ -483,7 +512,7 @@ const BookingForm = () => {
                 {content.form.fields.returnTime}
               </label>
             </div>
-          </div>
+          </div> */}
         </div>
         <input
           type="submit"

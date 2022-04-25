@@ -9,9 +9,6 @@
   -ms-user-select: none;
   user-select: none;
   text-decoration: none;
-  @include themify() {
-    color: t("main-font-color");
-  }
 }
 
 body {

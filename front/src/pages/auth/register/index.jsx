@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./style.scss";
 import register from "../../../services/utils/registry";
 import actions from "../../../services/actions";
+import Loading from "../../../components/loading";
 
 const Register = () => {
   useEffect(() => {
@@ -13,6 +14,7 @@ const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
+  const loading = useSelector((state) => state.loading);
   const content =
     lang === "th"
       ? require("../../../assets/jsons/register/th.json")
@@ -21,21 +23,14 @@ const Register = () => {
   const [missingInput, setMissingInput] = useState(false);
   const [invalidPword, setInvalidPword] = useState(false);
   const [invalidRepwd, setInvalidRepwd] = useState(false);
-  const [invalidEmail, setInvalidEmail] = useState(false);
-  const [invalidUname, setInvalidUname] = useState(false);
+  const [invalidAcc, setInvalidAcc] = useState(false);
   const [repwd, setRepwd] = useState("");
-  const [curDate, setCurDate] = useState({
-    value: "",
-    temp: "",
-    onFocus: false,
-  });
   const [reg, setReg] = useState({
     fname: "",
     lname: "",
     email: "",
     uname: "",
     pword: "",
-    bdate: curDate.value,
   });
 
   const handleOnSubmit = async (e) => {
@@ -44,9 +39,7 @@ const Register = () => {
     let invalidPwd = false;
     for (const i of Object.values(reg)) if (i == "") missing = true;
     if (reg.pword != "") {
-      let regEx = new RegExp(
-        "(?=.*[0-9])(?=.*[!@#$%^&*.,])[a-zA-Z0-9!@#$%^&*.,]{8,}"
-      );
+      let regEx = new RegExp("(?=.*[0-9])[a-zA-Z0-9]{8,}");
       if (regEx.test(reg.pword)) {
         invalidPwd = false;
       } else {
@@ -77,48 +70,25 @@ const Register = () => {
       setErr(false);
       try {
         dispatch(actions.setLoading(true));
-        await register.register(reg);
-        navigate("/login");
+        const res = await register.register(reg);
+        if (res != 409) navigate("/auth/login");
       } catch (er) {
         dispatch(actions.setLoading(false));
-        console.log(er);
+        setInvalidAcc(true);
+        setErr(true);
       }
     }
   };
 
   const handleInputOnChange = ({ currentTarget: input }) => {
     const temp = { ...reg };
-    if (input.id == "bdate") {
-      setCurDate({ value: input.value });
-    }
     temp[input.id] = input.value;
-    console.log(temp);
     setReg(temp);
   };
 
-  const handleDateOnFocus = ({ currentTarget: input }) => {
-    input.type = "date";
-    if (input.value != "") {
-      let valArr = String(input.value).split("-");
-      let val = valArr[1] + "/" + valArr[2] + "/" + valArr[0];
-      input.value = val;
-      setCurDate({ temp: val });
-    }
-    setCurDate({ ...curDate, onFocus: true });
-  };
-
-  const handleDateOnBlur = ({ currentTarget: input }) => {
-    input.type = "text";
-    if (input.value != "") {
-      let valArr = String(input.value).split("-");
-      let val = valArr[1] + "/" + valArr[2] + "/" + valArr[0];
-      input.value = val;
-      setCurDate({ value: val });
-    }
-    setCurDate({ ...curDate, onFocus: false });
-  };
-
-  return (
+  return loading ? (
+    <Loading reduceHeight={0} />
+  ) : (
     <form className="register" onSubmit={handleOnSubmit}>
       <fieldset className="register__container">
         <legend align="center">{content.header}</legend>
@@ -127,10 +97,8 @@ const Register = () => {
             <div className="register__form__errors">
               {missingInput
                 ? content.errors.missingInput
-                : invalidEmail
-                ? content.errors.invalidEmail
-                : invalidUname
-                ? content.errors.invalidUname
+                : invalidAcc
+                ? content.errors.invalidAcc
                 : invalidPword
                 ? content.errors.invalidPword
                 : invalidRepwd
@@ -228,23 +196,6 @@ const Register = () => {
             <a href="/login" className="register__form__last-row__back">
               {content.buttons.back}
             </a>
-            <div className="register__form__date">
-              <input
-                type="text"
-                id="bdate"
-                name="bdate"
-                value={curDate.onFocus ? curDate.value : curDate.temp}
-                onChange={handleInputOnChange}
-                onFocus={handleDateOnFocus}
-                onBlur={handleDateOnBlur}
-                max={new Date().toISOString().split("T")[0]}
-                placeholder=" "
-                autoComplete="off"
-              />
-              <label htmlFor="bdate">
-                {content.fields.bdate} <span>*</span>
-              </label>
-            </div>
             <input
               type="submit"
               className="register__form__last-row__submit"

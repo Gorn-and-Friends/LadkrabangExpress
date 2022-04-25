@@ -4,7 +4,7 @@ const ActionTypes = {
   SET_LOADING: "SET_LOADING",
   SET_TRAINLIST: "SET_TRAINLIST",
   SET_SEATLIST: "SET_SEATLIST",
-  SET_TICKET: "SET_TICKET",
+  SET_TICKETLIST: "SET_TICKETLIST",
 };
 
 export default ActionTypes;

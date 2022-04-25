@@ -1,10 +1,10 @@
 import ActionTypes from "../constants/actionTypes";
 
-const setTicket = (ticket) => {
+const setTicketList = (ticket) => {
   return {
     type: ActionTypes.SET_TICKET,
     payload: ticket,
   };
 };
 
-export default setTicket;
+export default setTicketList;

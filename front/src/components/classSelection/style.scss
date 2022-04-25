@@ -4,6 +4,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  * {
+    @include themify() {
+      color: t("main-font-color");
+    }
+  }
 
   &__container {
     display: flex;
@@ -48,15 +53,14 @@
 
           > div {
             h1,
-            li,
-            span {
+            li {
               @include themify() {
                 color: t(font-color-3);
               }
             }
 
             span {
-              text-decoration: line-through;
+              display: none;
             }
           }
         }

@@ -1,13 +1,13 @@
 import ActionTypes from "../constants/actionTypes";
 import InitialStates from "../constants/initialStates";
 
-const ticketReducer = (state = InitialStates.TICKET, { type, payload }) => {
+const ticketListReducer = (state = InitialStates.TICKETLIST, { type, payload }) => {
   switch (type) {
-    case ActionTypes.SET_TICKET:
+    case ActionTypes.SET_TICKETLIST:
       return (state = payload);
     default:
       return state;
   }
 };
 
-export default ticketReducer;
+export default ticketListReducer;

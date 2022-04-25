@@ -15,9 +15,8 @@
   },
   "errors": {
     "missingInput": "Please enter all required fields.",
-    "invalidPword": "Password must be at least 8 characters and include at least one capitol letter and a symbol. (!@#$%^&*.,)",
+    "invalidPword": "Password must include at least 8 characters, a number and at least one capitol letter",
     "invalidRepwd": "Passwords do not match the password.",
-    "invalidEmail": "This email already exists.",
-    "invalidUname": "This username is already taken."
+    "invalidAcc": "This username or email is already taken."
   }
 }

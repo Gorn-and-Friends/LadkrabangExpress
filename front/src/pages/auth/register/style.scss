@@ -99,9 +99,9 @@
   }
 
   &__container {
-    padding: 2em 5em 5em 5em;
+    padding: 4em 3em 5em 3em;
     border-radius: 1rem;
-    width: 70vw;
+    width: 60vw;
     font-size: 0.9em;
     @include themify() {
       border: 0.2rem solid t(main-color);
@@ -167,6 +167,7 @@
         @include themify() {
           border: 0.08rem solid t(main-color);
           background-color: t(main-bg-color);
+          color: t("main-font-color");
         }
 
         &:hover {

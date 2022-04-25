@@ -8,7 +8,7 @@ const InitialStates = {
   LOADING: false,
   TRAINLIST: [],
   SEATLIST: [],
-  TICKET: {},
+  TICKETLIST: [],
 };
 
 export default InitialStates;
