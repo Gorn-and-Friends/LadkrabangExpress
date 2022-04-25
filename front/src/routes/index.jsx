@@ -49,6 +49,10 @@ const Router = () => {
     dispatch(
       actions.setSeatList(JSON.parse(sessionStorage.getItem("ticketList")))
     );
+
+    setTimeout(() => {
+      classService.classRemove("class", "navbar", "preload");
+    }, 100);
   }, [navigate, location]);
 
   useEffect(() => {
@@ -61,10 +65,10 @@ const Router = () => {
   return (
     <Routes>
       <Route index element={<Home />} />
-      <Route path="auth/login" element={<Login />} />
-      <Route path="auth/register" element={<Register />} />
-      <Route path="auth/forgot" element={<Forgot />} />
-      <Route path="auth/forgot/:id" element={<ChangePassword/>} />
+      <Route path="login" element={<Login />} />
+      <Route path="register" element={<Register />} />
+      <Route path="forgot" element={<Forgot />} />
+      <Route path="forgot/:id" element={<ChangePassword />} />
       <Route path="profile" element={<Profile />} />
       <Route path="profile/:id" element={<DisplayTicket />} />
       <Route path="profile/:id/edit" element={<EditTicket />} />

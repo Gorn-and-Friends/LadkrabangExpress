@@ -21,6 +21,8 @@ const logIn = async (info) => {
       bdate: res.data.birthdate,
     })
   );
+
+  return res.status;
 };
 
 export default logIn;

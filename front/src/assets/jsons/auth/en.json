@@ -1,0 +1,38 @@
+{
+  "register": {
+    "header": "Create your account",
+    "fields": {
+      "fname": "First Name",
+      "lname": "Last Name",
+      "email": "Email",
+      "uname": "Username",
+      "pword": "Password",
+      "repwd": "Confirm Password",
+      "bdate": "Birthdate"
+    },
+    "buttons": {
+      "back": "Back",
+      "submit": "Submit"
+    },
+    "errors": {
+      "missingInput": "Please enter all required fields.",
+      "invalidPword": "Password must include at least 8 characters, a number and at least one capitol letter.",
+      "invalidRepwd": "Passwords do not match the password.",
+      "invalidAcc": "This username or email is already taken."
+    }
+  },
+  "login": {
+    "header": "Log in to continue",
+    "fields": {
+      "username": "Username or email",
+      "password": "Password"
+    },
+    "forgot": "Forgot password",
+    "register": "Create an account",
+    "button": "Log In",
+    "errors": {
+      "missingInput": "Please enter all required fields.",
+      "invalidLogin": "Username or password is/are incorrect."
+    }
+  }
+}

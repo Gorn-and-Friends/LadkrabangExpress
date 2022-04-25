@@ -23,7 +23,7 @@ const SeatPicker = ({
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    let temp = Array(Math.abs(selectedSeats.length - amount)).fill("C-—-x");
+    let temp = Array(Math.abs(selectedSeats.length - amount)).fill("Cx—xx");
     setFinalSeats(selectedSeats.concat(temp));
     setSeatSelected(selectedSeats.length > 0);
     if (selectedSeats.length === amount)

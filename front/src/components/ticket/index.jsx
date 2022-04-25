@@ -45,9 +45,7 @@ const Ticket = ({ ticket }) => {
       setDisplayDate({
         shortened:
           showDate.getDate() +
-          showDate
-            .toLocaleString("default", { month: "short" })
-            .toUpperCase() +
+          showDate.toLocaleString("default", { month: "short" }).toUpperCase() +
           showDate.getFullYear().toString().slice(2),
         full: showDate.toLocaleString(lang, {
           year: "numeric",
@@ -144,11 +142,11 @@ const Ticket = ({ ticket }) => {
             </div>
             <div className="ticket__info__7">
               <span>{content.depTime.shortened}</span>
-              <h1>{showTime("d")}</h1>
+              <h1>{displayTicket ? displayDepTime : ""}</h1>
             </div>
             <div className="ticket__info__7">
               <span>{content.arrTime.shortened}</span>
-              <h1>{showTime("a")}</h1>
+              <h1>{displayTicket ? displayArrTime : ""}</h1>
             </div>
             <div className="ticket__info__7">
               <span>{content.class}</span>
@@ -207,11 +205,11 @@ const Ticket = ({ ticket }) => {
           </li>
           <li>
             <span>{content.depTime.full}&ensp;:</span>&ensp;
-            {showTime("d")}
+            {displayTicket ? displayDepTime : ""}
           </li>
           <li>
             <span>{content.arrTime.full}&ensp;:</span>&ensp;
-            {showTime("a")}
+            {displayTicket ? displayArrTime : ""}
           </li>
           <li>
             <span>{content.duration}&ensp;:</span>&ensp;

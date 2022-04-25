@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./style.scss";
 import icon from "../../../assets/icons/icon.png";
@@ -21,12 +21,12 @@ const Login = () => {
 
   const content =
     lang === "th"
-      ? require("../../../assets/jsons/login/th.json")
-      : require("../../../assets/jsons/login/en.json");
+      ? require("../../../assets/jsons/auth/th.json")
+      : require("../../../assets/jsons/auth/en.json");
   const [searchParams, _] = useSearchParams({});
   const [err, setErr] = useState(false);
-  const [invalidPword, setInvalidPword] = useState(false);
-  const [invalidUname, setInvalidUname] = useState(false);
+  const [missingInput, setMissingInput] = useState(false);
+  const [invalidLogin, setInvalidLogin] = useState(false);
   const [login, setLogin] = useState({
     uname: "",
     pword: "",
@@ -34,13 +34,24 @@ const Login = () => {
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    try {
-      dispatch(actions.setLoading(true));
-      await log.logIn(login);
-      navigate(searchParams.get("q") ? searchParams.get("q") : "/");
-    } catch (er) {
-      dispatch(actions.setLoading(false));
-      console.log(er);
+    let missing = false;
+    for (const i of Object.values(login)) if (i == "") missing = true;
+    if (missing) {
+      setErr(true);
+      if (missing) setMissingInput(true);
+      else setMissingInput(false);
+    } else {
+      setErr(false);
+      try {
+        dispatch(actions.setLoading(true));
+        const res = await log.logIn(login);
+        if (res != 400)
+          navigate(searchParams.get("q") ? searchParams.get("q") : "/");
+      } catch (er) {
+        dispatch(actions.setLoading(false));
+        setInvalidLogin(true);
+        setErr(true);
+      }
     }
   };
 
@@ -57,28 +68,28 @@ const Login = () => {
       <fieldset className="login__container">
         <legend align="center">
           {theme === "light" ? (
-            <a href="/" className="login__logo">
+            <Link to="/" className="login__logo">
               <img src={icon} alt="" className="login__logo__icon" />
               <img src={iconDark} alt="" className="login__logo__icon hide" />
-            </a>
+            </Link>
           ) : (
-            <a href="/" className="login__logo">
+            <Link to="/" className="login__logo">
               <img src={icon} alt="" className="login__logo__icon hide" />
               <img src={iconDark} alt="" className="login__logo__icon" />
-            </a>
+            </Link>
           )}
         </legend>
         <div className="login__form">
+          <h1 className="login__form__header">{content.login.header}</h1>
           {err && (
             <div className="login__form__errors">
-              {invalidUname
-                ? content.errors.invalidUname
-                : invalidPword
-                ? content.errors.invalidPword
+              {invalidLogin
+                ? content.login.errors.invalidLogin
+                : missingInput
+                ? content.login.errors.missingInput
                 : ""}
             </div>
           )}
-          <h1 className="login__form__header">{content.header}</h1>
           <div className="login__form__container">
             <div className="login__form__item">
               <input
@@ -89,10 +100,9 @@ const Login = () => {
                 onChange={handleInputOnChange}
                 autoComplete="off"
                 placeholder=" "
-                required
               />
               <label htmlFor="uname">
-                {content.fields.username} <span>*</span>
+                {content.login.fields.username} <span>*</span>
               </label>
             </div>
             <div className="login__form__group">
@@ -105,22 +115,25 @@ const Login = () => {
                   onChange={handleInputOnChange}
                   autoComplete="off"
                   placeholder=" "
-                  required
                 />
                 <label htmlFor="pword">
-                  {content.fields.password} <span>*</span>
+                  {content.login.fields.password} <span>*</span>
                 </label>
               </div>
               <div className="login__form__group__link">
-                <a href="forgot">{content.forgot} ?</a>
-                <a href="register">
-                  {content.register} {">"}
-                </a>
+                <Link to="/forgot">{content.login.forgot} ?</Link>
+                <Link to="/register">
+                  {content.login.register} {">"}
+                </Link>
               </div>
             </div>
           </div>
         </div>
-        <input type="submit" className="login__btn" value={content.button} />
+        <input
+          type="submit"
+          className="login__btn"
+          value={content.login.button}
+        />
       </fieldset>
     </form>
   );

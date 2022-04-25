@@ -68,8 +68,8 @@ const TrainsDisplay = () => {
             (trainList[choice - 1].seatRemain.class1 > 0 ? "1" : "0") +
             (trainList[choice - 1].seatRemain.class2 > 0 ? "1" : "0") +
             (trainList[choice - 1].seatRemain.class3 > 0 ? "1" : "0"),
-            idt: trainList[choice - 1].train_id,
-            p: trainList[choice - 1].ticketPrice,
+          idt: trainList[choice - 1].train_id,
+          p: trainList[choice - 1].ticketPrice,
         }).toString(),
     });
   };
@@ -100,15 +100,7 @@ const TrainsDisplay = () => {
       if (res === 200) {
         navigate({
           pathname: "",
-          search: createSearchParams({
-            from: searchParams.get("from"),
-            to: searchParams.get("to"),
-            date: searchParams.get("date"),
-            time: searchParams.get("time"),
-            pax: searchParams.get("pax"),
-            // returnDate: searchParams.get("date-return") ,
-            // returnTime: searchParams.get("time-return") ,
-          }).toString(),
+          search: searchParams.toString(),
         });
       } else {
         sessionStorage.setItem("routeError", 1);
@@ -167,21 +159,9 @@ const TrainsDisplay = () => {
                   <div className="train-display__card__info">
                     <div className="train-display__card__info__first-row">
                       <span>
-                        {(info.departureTime.toString().split(":")[0] < 10
-                          ? "0" + info.departureTime.toString().split(":")[0]
-                          : info.departureTime.toString().split(":")[0]) +
-                          ":" +
-                          (info.departureTime.toString().split(":")[1] < 10
-                            ? "0" + info.departureTime.toString().split(":")[1]
-                            : info.departureTime.toString().split(":")[1])}
+                        {info.departureTime}
                         &ensp;-&ensp;
-                        {(info.arrivalTime.toString().split(":")[0] < 10
-                          ? "0" + info.arrivalTime.toString().split(":")[0]
-                          : info.arrivalTime.toString().split(":")[0]) +
-                          ":" +
-                          (info.arrivalTime.toString().split(":")[1] < 10
-                            ? "0" + info.arrivalTime.toString().split(":")[1]
-                            : info.arrivalTime.toString().split(":")[1])}
+                        {info.arrivalTime}
                       </span>
                       <span>
                         {(info.duration.toString().split(":")[0] > 0

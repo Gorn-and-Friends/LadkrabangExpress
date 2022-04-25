@@ -13,6 +13,7 @@ import Ticket from "../ticket";
 import logServices from "../../services/utils/log";
 import bookingService from "../../services/utils/booking";
 import actions from "../../services/actions";
+import userServices from "../../services/utils/user";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -40,6 +41,10 @@ const Checkout = () => {
   }, []);
 
   useEffect(() => {
+    console.log(tickets);
+  }, [tickets]);
+
+  useEffect(() => {
     try {
       let common = {
         trainNumber: tickets.t_n,
@@ -61,8 +66,8 @@ const Checkout = () => {
           eaTicketPrice:
             seats[i].coach === "-" ? Number(tickets.p) : Number(tickets.p) + 10,
           seat_reservation: {
-            coach: seats[i].coach,
-            row: seats[i].row,
+            coach: seats[i].coach === 0 ? "-" : seats[i].coach,
+            row: seats[i].row === 0 ? "-" : seats[i].row,
             column: seats[i].column,
           },
         };
@@ -118,7 +123,7 @@ const Checkout = () => {
       }
     } else
       navigate({
-        pathname: "/auth/login",
+        pathname: "/login",
         search: createSearchParams({
           q: location.pathname + "?" + searchParams.toString(),
         }).toString(),

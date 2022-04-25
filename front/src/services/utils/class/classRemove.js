@@ -4,7 +4,7 @@ const classRemove = (type, element, className) => {
   } else if (type === "id") {
     document.getElementById(element).classList.remove(className);
   } else if (type === "class") {
-    document.getElementsByClassName(element).classList.remove(className);
+    document.getElementsByClassName(element)[0].classList.remove(className);
   }
 };
 

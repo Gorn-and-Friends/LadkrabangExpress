@@ -17,8 +17,8 @@ const Register = () => {
   const loading = useSelector((state) => state.loading);
   const content =
     lang === "th"
-      ? require("../../../assets/jsons/register/th.json")
-      : require("../../../assets/jsons/register/en.json");
+      ? require("../../../assets/jsons/auth/th.json")
+      : require("../../../assets/jsons/auth/en.json");
   const [err, setErr] = useState(false);
   const [missingInput, setMissingInput] = useState(false);
   const [invalidPword, setInvalidPword] = useState(false);
@@ -71,7 +71,7 @@ const Register = () => {
       try {
         dispatch(actions.setLoading(true));
         const res = await register.register(reg);
-        if (res != 409) navigate("/auth/login");
+        if (res != 409) navigate("/login");
       } catch (er) {
         dispatch(actions.setLoading(false));
         setInvalidAcc(true);
@@ -91,18 +91,18 @@ const Register = () => {
   ) : (
     <form className="register" onSubmit={handleOnSubmit}>
       <fieldset className="register__container">
-        <legend align="center">{content.header}</legend>
+        <legend align="center">{content.register.header}</legend>
         <div className="register__form">
           {err && (
             <div className="register__form__errors">
               {missingInput
-                ? content.errors.missingInput
+                ? content.register.errors.missingInput
                 : invalidAcc
-                ? content.errors.invalidAcc
+                ? content.register.errors.invalidAcc
                 : invalidPword
-                ? content.errors.invalidPword
+                ? content.register.errors.invalidPword
                 : invalidRepwd
-                ? content.errors.invalidRepwd
+                ? content.register.errors.invalidRepwd
                 : ""}
             </div>
           )}
@@ -118,7 +118,7 @@ const Register = () => {
                 autoComplete="off"
               />
               <label htmlFor="fname">
-                {content.fields.fname} <span>*</span>
+                {content.register.fields.fname} <span>*</span>
               </label>
             </div>
             <div className="register__form__name">
@@ -132,7 +132,7 @@ const Register = () => {
                 autoComplete="off"
               />
               <label htmlFor="lname">
-                {content.fields.lname} <span>*</span>
+                {content.register.fields.lname} <span>*</span>
               </label>
             </div>
           </div>
@@ -147,7 +147,7 @@ const Register = () => {
               autoComplete="off"
             />
             <label htmlFor="email">
-              {content.fields.email} <span>*</span>
+              {content.register.fields.email} <span>*</span>
             </label>
           </div>
           <div className="register__form__others">
@@ -161,7 +161,7 @@ const Register = () => {
               autoComplete="off"
             />
             <label htmlFor="uname">
-              {content.fields.uname} <span>*</span>
+              {content.register.fields.uname} <span>*</span>
             </label>
           </div>
           <div className="register__form__others">
@@ -175,7 +175,7 @@ const Register = () => {
               autoComplete="off"
             />
             <label htmlFor="pword">
-              {content.fields.pword} <span>*</span>
+              {content.register.fields.pword} <span>*</span>
             </label>
           </div>
           <div className="register__form__others">
@@ -189,17 +189,17 @@ const Register = () => {
               autoComplete="off"
             />
             <label htmlFor="repwd">
-              {content.fields.repwd} <span>*</span>
+              {content.register.fields.repwd} <span>*</span>
             </label>
           </div>
           <div className="register__form__last-row">
             <a href="/login" className="register__form__last-row__back">
-              {content.buttons.back}
+              {content.register.buttons.back}
             </a>
             <input
               type="submit"
               className="register__form__last-row__submit"
-              value={content.buttons.submit}
+              value={content.register.buttons.submit}
             />
           </div>
         </div>

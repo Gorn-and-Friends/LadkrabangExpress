@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import "./style.scss";
 import NavBar from "../../components/navbar";
 import icon from "../../assets/icons/icon.png";
 import { FaRedo } from "react-icons/fa";
+import actions from "../../services/actions";
+import userServices from "../../services/utils/user";
 
 const Profile = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const lang = useSelector((state) => state.lang);
   const stations = require("../../assets/jsons/booking/station.json");
   const profileContent =
@@ -17,18 +21,28 @@ const Profile = () => {
     lang === "th"
       ? require("../../assets/jsons/ticket/th.json")
       : require("../../assets/jsons/ticket/en.json");
+  const [userInfo, setUserInfo] = useState([]);
   const [displayTickets, setDisplayTickets] = useState([]);
   const [edit, setEdit] = useState(false);
 
-  useEffect(() => {
-    try {
-      setDisplayTickets(JSON.parse(sessionStorage.getItem("ticketList")));
-    } catch {}
-  }, []);
+  const fetchProfile = async () => {
+    await userServices.fetchProfile();
+
+    setDisplayTickets(
+      sessionStorage.getItem("ticketList")
+        ? JSON.parse(sessionStorage.getItem("ticketList"))
+        : []
+    );
+  };
 
   useEffect(() => {
-    console.log(displayTickets);
-  }, [displayTickets]);
+    try {
+      fetchProfile();
+      localStorage.getItem("user")
+        ? setUserInfo(JSON.parse(localStorage.getItem("user")))
+        : navigate("/");
+    } catch {}
+  }, []);
 
   const showStation = (data) => {
     let res = "";
@@ -44,6 +58,18 @@ const Profile = () => {
   const handleOnSaveProfile = async (e) => {
     e.preventDefault();
     setEdit(false);
+  };
+
+  const handleOnReload = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(actions.setLoading(true));
+      await userServices.fetchProfile();
+      navigate(0);
+    } catch (er) {
+      dispatch(actions.setLoading(false));
+      console.log(er);
+    }
   };
 
   return (
@@ -68,11 +94,11 @@ const Profile = () => {
                     // value={}
                     // onChange={}
                     autoComplete="off"
-                    placeholder={edit ? "Chanon" : " "}
+                    placeholder={edit ? userInfo.fname : " "}
                     disabled={edit ? "" : "disabled"}
                   />
                   <label htmlFor="fname">{profileContent.info.fname}</label>
-                  {edit ? null : <div>Chanon</div>}
+                  {edit ? null : <div>{userInfo.fname}</div>}
                 </div>
                 <div className="profile__info__100">
                   <input
@@ -81,11 +107,11 @@ const Profile = () => {
                     // value={}
                     // onChange={}
                     autoComplete="off"
-                    placeholder={edit ? "Gulgattimas" : " "}
+                    placeholder={edit ? userInfo.lname : " "}
                     disabled={edit ? "" : "disabled"}
                   />
                   <label htmlFor="lname">{profileContent.info.lname}</label>
-                  {edit ? null : <div>Gulgattimas</div>}
+                  {edit ? null : <div>{userInfo.lname}</div>}
                 </div>
                 <div className="profile__info__100">
                   <input
@@ -94,11 +120,11 @@ const Profile = () => {
                     // value={}
                     // onChange={}
                     autoComplete="off"
-                    placeholder={edit ? "gchax" : " "}
+                    placeholder={edit ? userInfo.uname : " "}
                     disabled={edit ? "" : "disabled"}
                   />
                   <label htmlFor="uname">{profileContent.info.uname}</label>
-                  {edit ? null : <div>gchax</div>}
+                  {edit ? null : <div>{userInfo.uname}</div>}
                 </div>
                 <div className="profile__info__100">
                   <input
@@ -107,11 +133,11 @@ const Profile = () => {
                     // value={}
                     // onChange={}
                     autoComplete="off"
-                    placeholder={edit ? "gchax@outlook.com" : " "}
+                    placeholder={edit ? userInfo.email : " "}
                     disabled={edit ? "" : "disabled"}
                   />
                   <label htmlFor="email">{profileContent.info.email}</label>
-                  {edit ? null : <div>gchax@outlook.asdasdcom</div>}
+                  {edit ? null : <div>{userInfo.email}</div>}
                 </div>
                 {edit ? (
                   <div className="profile__info__btns">
@@ -172,37 +198,11 @@ const Profile = () => {
                                 </div>
                                 <div className="profile__booking__ticket__info__5">
                                   <span>{ticketContent.depTime.shortened}</span>
-                                  <h1>
-                                    {ticket.departureTime
-                                      ? (ticket.departureTime.split(":")[0] < 10
-                                          ? "0" +
-                                            ticket.departureTime.split(":")[0]
-                                          : ticket.departureTime.split(
-                                              ":"
-                                            )[0]) +
-                                        ":" +
-                                        (ticket.departureTime.split(":")[1] < 10
-                                          ? "0" +
-                                            ticket.departureTime.split(":")[1]
-                                          : ticket.departureTime.split(":")[1])
-                                      : ""}
-                                  </h1>
+                                  <h1>{ticket.departureTime}</h1>
                                 </div>
                                 <div className="profile__booking__ticket__info__5">
                                   <span>{ticketContent.arrTime.shortened}</span>
-                                  <h1>
-                                    {ticket.arrivalTime
-                                      ? (ticket.arrivalTime.split(":")[0] < 10
-                                          ? "0" +
-                                            ticket.arrivalTime.split(":")[0]
-                                          : ticket.arrivalTime.split(":")[0]) +
-                                        ":" +
-                                        (ticket.arrivalTime.split(":")[1] < 10
-                                          ? "0" +
-                                            ticket.arrivalTime.split(":")[1]
-                                          : ticket.arrivalTime.split(":")[1])
-                                      : ""}
-                                  </h1>
+                                  <h1>{ticket.arrivalTime}</h1>
                                 </div>
                                 <div className="profile__booking__ticket__info__5">
                                   <span>{ticketContent.class}</span>
@@ -228,11 +228,15 @@ const Profile = () => {
                       </Link>
                     ))
                   ) : (
-                    <div>You haven't reserved any tickets yet</div>
+                    <section>
+                      {lang === "th"
+                        ? "คุณยังไม่มีตั๋วรถไฟที่จองไว้..."
+                        : "You haven't reserved any tickets yet..."}
+                    </section>
                   )
                 ) : (
                   <section>
-                    <FaRedo />
+                    <FaRedo onClick={handleOnReload} />
                     <span>
                       {lang === "th" ? "ลองใหม่อีกครั้ง" : "Try again"}
                     </span>

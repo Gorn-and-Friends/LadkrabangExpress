@@ -75,17 +75,21 @@ const SeatSelection = () => {
       const unselectTemp = [];
       for (let i = 0; i < pax; i++) {
         unselectTemp.push({
-          coach: "-",
+          coach: 0,
           column: "-",
-          row: "",
+          row: 0,
         });
       }
       const temp = [];
       selectedSeats.map((seat) => {
         temp.push({
-          coach: seat.split("—")[0][seat.split("—")[0].length - 1],
-          column: seat.split("—")[1][0],
-          row: seat.split("—")[1][1] !== "x" ? seat.split("—")[1].slice(1) : "",
+          coach:
+            seat.split("—")[0][seat.split("—")[0].length - 1] !== "x"
+              ? seat.split("—")[0][seat.split("—")[0].length - 1]
+              : 0,
+          column: seat.split("—")[1][0] !== "x" ? seat.split("—")[1][0] : "-",
+          row:
+            seat.split("—")[1][1] !== "x" ? seat.split("—")[1].slice(1) : 0,
         });
       });
       setTicket({
@@ -107,6 +111,7 @@ const SeatSelection = () => {
 
   const handleOnNext = (e) => {
     e.preventDefault();
+    console.log(ticket);
     navigate({
       pathname: "/booking/4",
       search:
@@ -118,15 +123,37 @@ const SeatSelection = () => {
 
   const handleOnReload = async (e) => {
     e.preventDefault();
+    if (
+      !searchParams.get("from") &&
+      !searchParams.get("to") &&
+      !searchParams.get("date") &&
+      !searchParams.get("time") &&
+      // !searchParams.get("date-return") &&
+      // !searchParams.get("time-return") &&
+      !searchParams.get("pax")
+    ) {
+      navigate("/booking");
+    } else {
+      dispatch(actions.setLoading(true));
+      var trainRes = await bookingService.findTrains({
+        from: searchParams.get("from"),
+        to: searchParams.get("to"),
+        date: searchParams.get("date"),
+        time: searchParams.get("time"),
+        pax: searchParams.get("pax"),
+        // returnDate: searchParams.get("date-return") ,
+        // returnTime: searchParams.get("time-return") ,
+      });
+    }
     if (!searchParams.get("idt") && !searchParams.get("date")) {
       navigate("/booking");
     } else {
       dispatch(actions.setLoading(true));
-      const res = await bookingService.findSeats({
+      const seatRes = await bookingService.findSeats({
         trainId: searchParams.get("idt"),
         date: searchParams.get("date"),
       });
-      if (res === 200) {
+      if (seatRes === 200 && trainRes === 200) {
         navigate({
           pathname: "",
           search: searchParams.toString(),
@@ -141,7 +168,7 @@ const SeatSelection = () => {
   return (
     <div className="seat-selector">
       <div className="seat-selector__container">
-        {seats && seats.length !== 0 ? (
+        {seats && seats.length > 0 ? (
           <>
             <div className="seat-selector__btn">
               <label>
@@ -173,7 +200,7 @@ const SeatSelection = () => {
           onNext={handleOnNext}
           price={
             Number(searchParams.get("p")) * Number(searchParams.get("pax")) +
-            selectedSeats.filter((f) => f != "C-—-x").length * 10
+            selectedSeats.filter((f) => f != "Cx—xx").length * 10
           }
           disabled={wantSelectSeat ? (seatSelected ? false : true) : false}
           page={3}

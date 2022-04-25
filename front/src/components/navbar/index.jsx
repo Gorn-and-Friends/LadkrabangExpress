@@ -39,7 +39,6 @@ const NavBar = () => {
     e.preventDefault();
     try {
       dispatch(actions.setLoading(true));
-      await userServices.fetchProfile();
       navigate("/profile");
     } catch (er) {
       dispatch(actions.setLoading(false));
@@ -56,7 +55,7 @@ const NavBar = () => {
   };
 
   return (
-    <div className="navbar">
+    <div className="navbar preload">
       <div className="navbar__container">
         {theme === "light" ? (
           <Link to="/" className="navbar__logo">
@@ -75,13 +74,15 @@ const NavBar = () => {
           <li>
             <Link to="/booking">{content.middle.booking.title}</Link>
           </li>
-          {/* <li>
+          <li>
             <Link to="/" className="navbar__list__dropdown">
               {content.middle.information.title}
             </Link>
             <ul className="navbar__list__sublist">
               <li>
-                <Link to="/">{content.middle.information.items.trains.title}</Link>
+                <Link to="/">
+                  {content.middle.information.items.trains.title}
+                </Link>
               </li>
               <li>
                 <Link to="/">
@@ -89,10 +90,12 @@ const NavBar = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/">{content.middle.information.items.routes.title}</Link>
+                <Link to="/">
+                  {content.middle.information.items.routes.title}
+                </Link>
               </li>
             </ul>
-          </li> */}
+          </li>
           <li>
             <Link to="/about" className="navbar__list__dropdown">
               {content.middle.about.title}
@@ -121,8 +124,10 @@ const NavBar = () => {
           ) : (
             <div className="navbar__auth">
               <Link
-                to={`/auth/login?${
-                  location.pathname + "?" + searchParams.toString()
+                to={`/login${
+                  location.pathname !== "/"
+                    ? "?" + location.pathname + "?" + searchParams.toString()
+                    : ""
                 }`}
               >
                 {content.right.notLogged.logIn}
