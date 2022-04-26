@@ -2,10 +2,10 @@ import findSeats from "./findSeats";
 import findTrains from "./findTrains";
 import submitTicket from "./submitTicket";
 
-const bookingService = {
+const bookingServices = {
   findTrains,
   findSeats,
   submitTicket,
 };
 
-export default bookingService;
+export default bookingServices;

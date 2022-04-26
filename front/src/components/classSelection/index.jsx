@@ -10,7 +10,7 @@ import class1 from "../../assets/images/class1.jpg";
 import class2 from "../../assets/images/class2.jpeg";
 import class3 from "../../assets/images/class3.jpg";
 import actions from "../../services/actions";
-import bookingService from "../../services/utils/booking";
+import bookingServices from "../../services/utils/booking";
 import BookingButtons from "../bookingBtns";
 
 const ClassSelection = () => {
@@ -31,7 +31,7 @@ const ClassSelection = () => {
   });
 
   useEffect(() => {
-    setPrice(searchParams.get("p"));
+    setPrice(searchParams.get("tp"));
     setAvailClasses({
       f: searchParams.get("c")[0] == 1 ? true : false,
       s: searchParams.get("c")[1] == 1 ? true : false,
@@ -44,7 +44,7 @@ const ClassSelection = () => {
     e.preventDefault();
     try {
       dispatch(actions.setLoading(true));
-      await bookingService.findSeats({
+      await bookingServices.findSeats({
         trainId: searchParams.get("idt"),
         date: searchParams.get("date"),
       });
@@ -52,7 +52,7 @@ const ClassSelection = () => {
         pathname: "/booking/3",
         search:
           searchParams.toString() +
-          ".00000&" +
+          ".000&" +
           createSearchParams({ cl: choice }).toString(),
       });
     } catch (er) {
@@ -129,14 +129,10 @@ const ClassSelection = () => {
         </div>
         <BookingButtons
           onNext={handleOnNext}
-          price={
-            choice
-              ? Number(searchParams.get("p")) * Number(searchParams.get("pax"))
-              : 0
-          }
+          price={choice ? searchParams.get("_p") : 0}
           disabled={choice === 0 ? true : false}
           page={2}
-          pastUrlParams={searchParams.toString().split(".000")[0]}
+          pastUrlParams={searchParams.toString().split(".00")[0]}
         />
       </div>
     </div>

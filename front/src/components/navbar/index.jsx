@@ -13,7 +13,6 @@ import log from "../../services/utils/log";
 import ThemeToggler from "../themeToggler";
 import LanguageToggler from "../langToggler";
 import actions from "../../services/actions";
-import userServices from "../../services/utils/user";
 
 const NavBar = () => {
   const dispatch = useDispatch();
@@ -22,14 +21,9 @@ const NavBar = () => {
   const lang = useSelector((state) => state.lang);
   const theme = useSelector((state) => state.theme);
   const [searchParams, _] = useSearchParams({});
-  const displayName =
-    lang === "th"
-      ? log.isLogged()
-        ? "คุณ " + log.isLogged().fname
-        : null
-      : log.isLogged()
-      ? "Mx. " + log.isLogged().lname
-      : null;
+  const displayName = log.isLogged()
+    ? log.isLogged().fname + " " + log.isLogged().lname[0] + "."
+    : "";
   const content =
     lang === "th"
       ? require("../../assets/jsons/navbar/th.json")

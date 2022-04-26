@@ -17,6 +17,7 @@ $height: calc(1.8 * $navbar-height);
   }
 
   > button {
+    z-index: 10;
     cursor: pointer;
     margin: 3rem 0;
     height: 2.8em;
@@ -55,6 +56,10 @@ $height: calc(1.8 * $navbar-height);
     right: 15%;
     @include languify() {
       font: 500 1.5rem l(subtitle-font);
+    }
+
+    &.food {
+      display: none;
     }
   }
 }

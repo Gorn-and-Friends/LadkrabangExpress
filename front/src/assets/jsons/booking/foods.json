@@ -1,0 +1,747 @@
+{
+  "tag": [
+    {
+      "value": "อาหารจานหลัก",
+      "name": {
+        "en": "Entrée",
+        "th": "อาหารจานหลัก"
+      }
+    },
+    {
+      "value": "อาหารทานเล่น",
+      "name": {
+        "en": "Appetizer",
+        "th": "อาหารทานเล่น"
+      }
+    },
+    {
+      "value": "ของหวาน",
+      "name": {
+        "en": "Dessert",
+        "th": "ของหวาน"
+      }
+    },
+    {
+      "value": "เครื่องดื่ม",
+      "name": {
+        "en": "Beverage",
+        "th": "เครื่องดื่ม"
+      }
+    },
+    {
+      "value": "แอลกอฮอล์",
+      "name": {
+        "en": "Alcohol",
+        "th": "แอลกอฮอล์"
+      }
+    },
+    {
+      "value": "ข้าว",
+      "name": {
+        "en": "Rice",
+        "th": "ข้าว"
+      }
+    },
+    {
+      "value": "เส้น",
+      "name": {
+        "en": "Pasta",
+        "th": "เส้น"
+      }
+    },
+    {
+      "value": "สเต็ก",
+      "name": {
+        "en": "Steak",
+        "th": "สเต็ก"
+      }
+    },
+    {
+      "value": "อาหารเผ็ด",
+      "name": {
+        "en": "Spicy",
+        "th": "อาหารเผ็ด"
+      }
+    },
+    {
+      "value": "อาหารไทย",
+      "name": {
+        "en": "Thai",
+        "th": "อาหารไทย"
+      }
+    },
+    {
+      "value": "อาหารอเมริกาเหนือ",
+      "name": {
+        "en": "North American",
+        "th": "อาหารอเมริกาเหนือ"
+      }
+    },
+    {
+      "value": "อาหารยุโรป",
+      "name": {
+        "en": "European",
+        "th": "อาหารยุโรป"
+      }
+    },
+    {
+      "value": "อาหารตะวันออกกลาง",
+      "name": {
+        "en": "Middle Eastern",
+        "th": "อาหารตะวันออกกลาง"
+      }
+    },
+    {
+      "value": "อาหารเอเชีย",
+      "name": {
+        "en": "Asian",
+        "th": "อาหารเอเชีย"
+      }
+    }
+  ],
+  "item": [
+    {
+      "value": "ข้าวผัดกะเพรา",
+      "name": {
+        "en": "",
+        "th": "ข้าวผัดกะเพรา"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968378427134599208/unknown.png",
+      "description": "",
+      "price": 45,
+      "tag": ["อาหารจานหลัก", "อาหารไทย", "อาหารเอเชีย", "ข้าว", "อาหารเผ็ด"],
+      "option": ["thaiMeat", "size", "egg", "pungency"]
+    },
+    {
+      "value": "ข้าวผัด",
+      "name": {
+        "en": "",
+        "th": "ข้าวผัด"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968378329583476766/unknown.png",
+      "description": "",
+      "price": 45,
+      "tag": ["อาหารจานหลัก", "อาหารไทย", "อาหารเอเชีย", "ข้าว"],
+      "option": ["thaiMeat", "size", "egg"]
+    },
+    {
+      "value": "ข้าวไข่เจียว",
+      "name": {
+        "en": "",
+        "th": "ข้าวไข่เจียว"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968286321183445022/unknown.png",
+      "description": "",
+      "price": 40,
+      "tag": ["อาหารจานหลัก", "อาหารไทย", "อาหารเอเชีย", "ข้าว"],
+      "option": ["thaiMeat", "size"]
+    },
+    {
+      "value": "ยำ",
+      "name": {
+        "en": "",
+        "th": "ยำ"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968286785740353647/unknown.png",
+      "description": "",
+      "price": 30,
+      "tag": ["อาหารทานเล่น", "อาหารไทย", "อาหารเอเชีย", "อาหารเผ็ด"],
+      "option": ["thaiMeat", "size"]
+    },
+    {
+      "value": "ก๋วยเตี๋ยว",
+      "name": {
+        "en": "",
+        "th": "ก๋วยเตี๋ยว"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968286947741151303/unknown.png",
+      "description": "",
+      "price": 40,
+      "tag": ["อาหารจานหลัก", "อาหารไทย", "อาหารเอเชีย", "เส้น", "อาหารเผ็ด"],
+      "option": ["thaiNoodle", "thaiMeat", "size", "pungency"]
+    },
+    {
+      "value": "ข้าวมันไก่",
+      "name": {
+        "en": "",
+        "th": "ข้าวมันไก่"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968287244710453358/unknown.png",
+      "description": "",
+      "price": 45,
+      "tag": ["อาหารจานหลัก", "อาหารไทย", "อาหารเอเชีย", "ข้าว"],
+      "option": ["size"]
+    },
+    {
+      "value": "ข้าว",
+      "name": {
+        "en": "",
+        "th": "ข้าว"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968287479008489493/unknown.png",
+      "description": "",
+      "price": 10,
+      "tag": ["อาหารทานเล่น", "อาหารเอเชีย", "ข้าว"],
+      "option": ["size"]
+    },
+    {
+      "value": "เค้ก",
+      "name": {
+        "en": "",
+        "th": "เค้ก"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968287625536495676/unknown.png",
+      "description": "",
+      "price": 40,
+      "tag": ["ของหวาน"],
+      "option": ["flavor"]
+    },
+    {
+      "value": "ไอศกรีม",
+      "name": {
+        "en": "",
+        "th": "ไอศกรีม"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968287874304847933/unknown.png",
+      "description": "",
+      "price": 20,
+      "tag": ["ของหวาน"],
+      "option": ["flavor"]
+    },
+    {
+      "value": "น้ำเปล่า",
+      "name": {
+        "en": "",
+        "th": "น้ำเปล่า"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968288185203458138/unknown.png",
+      "description": "",
+      "price": 10,
+      "tag": ["เครื่องดื่ม"],
+      "option": ["volume"]
+    },
+    {
+      "value": "น้ำอัดลม",
+      "name": {
+        "en": "",
+        "th": "น้ำอัดลม"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968288346747072512/unknown.png",
+      "description": "",
+      "price": 15,
+      "tag": ["เครื่องดื่ม"],
+      "option": ["soda", "volume"]
+    },
+    {
+      "value": "กาแฟ",
+      "name": {
+        "en": "",
+        "th": "กาแฟ"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968288530210111528/unknown.png",
+      "description": "",
+      "price": 40,
+      "tag": ["เครื่องดื่ม"],
+      "option": ["volume", "warmth"]
+    },
+    {
+      "value": "นม",
+      "name": {
+        "en": "",
+        "th": "นม"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968288615924908057/unknown.png",
+      "description": "",
+      "price": 12,
+      "tag": ["เครื่องดื่ม"],
+      "option": ["volume", "warmth"]
+    },
+    {
+      "value": "น้ำผลไม้",
+      "name": {
+        "en": "",
+        "th": "น้ำผลไม้"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968288863820853258/unknown.png",
+      "description": "",
+      "price": 20,
+      "tag": ["เครื่องดื่ม"],
+      "option": ["volume", "warmth"]
+    },
+    {
+      "value": "ชา",
+      "name": {
+        "en": "",
+        "th": "ชา"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968289061590671421/unknown.png",
+      "description": "",
+      "price": 40,
+      "tag": ["เครื่องดื่ม"],
+      "option": ["volume", "warmth", "boba"]
+    },
+    {
+      "value": "ไวน์",
+      "name": {
+        "en": "",
+        "th": "ไวน์"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968289171116556288/unknown.png",
+      "description": "",
+      "price": 180,
+      "tag": ["เครื่องดื่ม", "แอลกอฮอล์"],
+      "option": []
+    },
+    {
+      "value": "วิสกี้",
+      "name": {
+        "en": "",
+        "th": "วิสกี้"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968289321612378192/unknown.png",
+      "description": "",
+      "price": 140,
+      "tag": ["เครื่องดื่ม", "แอลกอฮอล์"],
+      "option": []
+    },
+    {
+      "value": "จิน",
+      "name": {
+        "en": "",
+        "th": "จิน"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968289623740674059/unknown.png",
+      "description": "",
+      "price": 120,
+      "tag": ["เครื่องดื่ม", "แอลกอฮอล์"],
+      "option": []
+    },
+    {
+      "value": "วอดก้า",
+      "name": {
+        "en": "",
+        "th": "วอดก้า"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968289623979720794/unknown.png",
+      "description": "",
+      "price": 130,
+      "tag": ["เครื่องดื่ม", "แอลกอฮอล์"],
+      "option": []
+    },
+    {
+      "value": "มันบด",
+      "name": {
+        "en": "",
+        "th": "มันบด"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968289983251230780/unknown.png",
+      "description": "",
+      "price": 45,
+      "tag": ["อาหารทานเล่น", "อาหารอเมริกาเหนือ", "อาหารยุโรป"],
+      "option": []
+    },
+    {
+      "value": "กะบับ",
+      "name": {
+        "en": "",
+        "th": "กะบับ"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968290199601836172/unknown.png",
+      "description": "",
+      "price": 60,
+      "tag": ["อาหารจานหลัก", "อาหารทานเล่น", "อาหารตะวันออกกลาง"],
+      "option": []
+    },
+    {
+      "value": "บูริโต้",
+      "name": {
+        "en": "",
+        "th": "บูริโต้"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968290348801617940/unknown.png",
+      "description": "",
+      "price": 60,
+      "tag": ["อาหารจานหลัก", "อาหารทานเล่น", "อาหารอเมริกาเหนือ"],
+      "option": []
+    },
+    {
+      "value": "ขนมปังกระเทียม",
+      "name": {
+        "en": "",
+        "th": "ขนมปังกระเทียม"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968290599172190219/unknown.png",
+      "description": "",
+      "price": 25,
+      "tag": ["อาหารทานเล่น", "อาหารอเมริกาเหนือ", "อาหารยุโรป"],
+      "option": []
+    },
+    {
+      "value": "สเต็ก",
+      "name": {
+        "en": "",
+        "th": "สเต็ก"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968290685398695976/unknown.png",
+      "description": "",
+      "price": 70,
+      "tag": ["อาหารจานหลัก", "อาหารอเมริกาเหนือ", "อาหารยุโรป"],
+      "option": []
+    },
+    {
+      "value": "เบอร์เกอร์",
+      "name": {
+        "en": "",
+        "th": "เบอร์เกอร์"
+      },
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/968290899392098344/unknown.png",
+      "description": "",
+      "price": 60,
+      "tag": [
+        "อาหารจานหลัก",
+        "อาหารทานเล่น",
+        "อาหารอเมริกาเหนือ",
+        "อาหารยุโรป"
+      ],
+      "option": []
+    }
+  ],
+  "option": {
+    "thaiNoodle": [
+      {
+        "value": "เส้นเล็ก",
+        "option": {
+          "en": "",
+          "th": "เส้นเล็ก"
+        },
+        "price": 0
+      }
+    ],
+    "thaiMeat": [
+      {
+        "value": "หมูสับ",
+        "option": {
+          "en": "",
+          "th": "หมูสับ"
+        },
+        "price": 0
+      },
+      {
+        "value": "หมูชิ้น",
+        "option": {
+          "en": "",
+          "th": "หมูชิ้น"
+        },
+        "price": 0
+      },
+      {
+        "value": "หมูกรอบ",
+        "option": {
+          "en": "",
+          "th": "หมูกรอบ"
+        },
+        "price": 5
+      },
+      {
+        "value": "หมูสามชั้น",
+        "option": {
+          "en": "",
+          "th": "หมูสามชั้น"
+        },
+        "price": 5
+      },
+      {
+        "value": "เบค่อน",
+        "option": {
+          "en": "",
+          "th": "เบค่อน"
+        },
+        "price": 0
+      },
+      {
+        "value": "ไก่ต้ม",
+        "option": {
+          "en": "",
+          "th": "ไก่ต้ม"
+        },
+        "price": 0
+      },
+      {
+        "value": "ไก่ทอด",
+        "option": {
+          "en": "",
+          "th": "ไก่ทอด"
+        },
+        "price": 5
+      },
+      {
+        "value": "ไก่ย่าง",
+        "option": {
+          "en": "",
+          "th": "ไก่ย่าง"
+        },
+        "price": 5
+      },
+      {
+        "value": "เนื้อชิ้น",
+        "option": {
+          "en": "",
+          "th": "เนื้อชิ้น"
+        },
+        "price": 5
+      },
+      {
+        "value": "เนื้อสับ",
+        "option": {
+          "en": "",
+          "th": "เนื้อสับ"
+        },
+        "price": 5
+      },
+      {
+        "value": "ทะเล",
+        "option": {
+          "en": "",
+          "th": "ทะเล"
+        },
+        "price": 10
+      },
+      {
+        "value": "กุ้ง",
+        "option": {
+          "en": "",
+          "th": "กุ้ง"
+        },
+        "price": 10
+      },
+      {
+        "value": "ปู",
+        "option": {
+          "en": "",
+          "th": "ปู"
+        },
+        "price": 10
+      },
+      {
+        "value": "หมึก",
+        "option": {
+          "en": "",
+          "th": "หมึก"
+        },
+        "price": 10
+      },
+      {
+        "value": "ปลา",
+        "option": {
+          "en": "",
+          "th": "ปลา"
+        },
+        "price": 5
+      }
+    ],
+    "size": [
+      {
+        "value": "",
+        "option": {
+          "en": "M",
+          "th": "ปกติ"
+        },
+        "price": 0
+      },
+      {
+        "value": "พิเศษ",
+        "option": {
+          "en": "L",
+          "th": "พิเศษ"
+        },
+        "price": 10
+      },
+      {
+        "value": "พิเศษสัสๆ",
+        "option": {
+          "en": "XL",
+          "th": "พิเศษสัสๆ"
+        },
+        "price": 15
+      },
+      {
+        "value": "พิเศษเกิ้นไอสัสแดกไม่หมด",
+        "option": {
+          "en": "XL",
+          "th": "พิเศษเกิ้นไอสัสแดกไม่หมด"
+        },
+        "price": 20
+      }
+    ],
+    "pungency": [
+      {
+        "value": "",
+        "option": {
+          "en": "Normal",
+          "th": "เผ็ดปกติ"
+        },
+        "price": 0
+      },
+      {
+        "value": "ไม่ใส่พริก",
+        "option": {
+          "en": "",
+          "th": "ไม่ใส่พริก"
+        },
+        "price": 0
+      },
+      {
+        "value": "ไม่เผ็ด",
+        "option": {
+          "en": "",
+          "th": "ไม่เผ็ด"
+        },
+        "price": 0
+      },
+      {
+        "value": "เผ็ดน้อย",
+        "option": {
+          "en": "",
+          "th": "เผ็ดน้อย"
+        },
+        "price": 0
+      },
+      {
+        "value": "เผ็ดมาก",
+        "option": {
+          "en": "",
+          "th": "เผ็ดมาก"
+        },
+        "price": 0
+      },
+      {
+        "value": "เผ็ดสัสๆเลยไอเหี้ยแบบขี้แตกอะ",
+        "option": {
+          "en": "",
+          "th": "เผ็ดสัสๆเลยไอเหี้ยแบบขี้แตกอะ"
+        },
+        "price": 0
+      }
+    ],
+    "egg": [
+      {
+        "value": "",
+        "option": {
+          "en": "No egg",
+          "th": "ไม่ใส่ไข่"
+        },
+        "price": 0
+      },
+      {
+        "value": "ไข่เจียว",
+        "option": {
+          "en": "",
+          "th": "ไข่เจียว"
+        },
+        "price": 7
+      },
+      {
+        "value": "ไข่ดาว",
+        "option": {
+          "en": "",
+          "th": "ไข่ดาว"
+        },
+        "price": 5
+      },
+      {
+        "value": "ไข่ข้น",
+        "option": {
+          "en": "",
+          "th": "ไข่ข้น"
+        },
+        "price": 10
+      },
+      {
+        "value": "ไข่ออนเซ็น",
+        "option": {
+          "en": "",
+          "th": "ไข่ออนเซ็น"
+        },
+        "price": 10
+      }
+    ],
+    "flavor": [
+      {
+        "value": "วานิลลา",
+        "option": {
+          "en": "",
+          "th": "วานิลลา"
+        },
+        "price": 0
+      }
+    ],
+    "fruit": [
+      {
+        "value": "สตรอว์เบอรี่",
+        "option": {
+          "en": "",
+          "th": "สตรอว์เบอรี่"
+        },
+        "price": 0
+      }
+    ],
+    "soda": [
+      {
+        "value": "โค้ก",
+        "option": {
+          "en": "",
+          "th": "โค้ก"
+        },
+        "price": 0
+      }
+    ],
+    "volume": [
+      {
+        "value": "12 oz.",
+        "option": {
+          "en": "",
+          "th": "12 oz."
+        },
+        "price": 0
+      }
+    ],
+    "warmth": [
+      {
+        "value": "ร้อน",
+        "option": {
+          "en": "",
+          "th": "ร้อน"
+        },
+        "price": 0
+      }
+    ],
+    "boba": [
+      {
+        "value": "",
+        "option": {
+          "en": "",
+          "th": "ไม่ใส่ไข่มุก"
+        },
+        "price": 0
+      },
+      {
+        "value": "ใส่ไข่มุก",
+        "option": {
+          "en": "",
+          "th": "ใส่ไข่มุก"
+        },
+        "price": 10
+      }
+    ],
+    "meat": [
+      {
+        "value": "หมู",
+        "option": {
+          "en": "",
+          "th": "หมู"
+        },
+        "price": 0
+      }
+    ]
+  }
+}

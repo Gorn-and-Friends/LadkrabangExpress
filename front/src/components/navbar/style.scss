@@ -96,7 +96,7 @@
         }
 
         > ul {
-          display: block;
+          height: 240%;
         }
       }
     }
@@ -108,12 +108,10 @@
     }
 
     &__sublist {
-      display: none;
+      height: 0;
+      overflow: hidden;
       position: absolute;
       box-sizing: content-box;
-      @include themify() {
-        border-bottom: 1px solid t(font-color-2);
-      }
       @include languify() {
         font: 300 0.8em l(subtitle-font);
       }
@@ -126,6 +124,7 @@
         @include themify() {
           background-color: t(bg-color-2);
         }
+
         &:hover {
           @include themify() {
             background-color: t(bg-color-3);
@@ -162,7 +161,7 @@
       }
 
       > ul {
-        display: block;
+        height: 160%;
       }
     }
 
@@ -175,7 +174,8 @@
     }
 
     &__list {
-      display: none;
+      height: 0;
+      overflow: hidden;
       position: absolute;
       width: 12rem;
       @include languify() {
@@ -183,7 +183,6 @@
       }
       @include themify() {
         background-color: t(bg-color-2);
-        border-bottom: 1px solid t(font-color-2);
       }
 
       li div {
@@ -192,7 +191,7 @@
 
       li,
       li a {
-        line-height: 3rem;
+        line-height: calc(0.8 * $navbar-height);
         transition: all calc($transition-time / 2) ease-in;
 
         &:hover {

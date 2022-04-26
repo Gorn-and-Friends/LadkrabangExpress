@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import About from "../pages/about";
 import ChangePassword from "../pages/auth/changePassword";
 import Forgot from "../pages/auth/forgot";
 import Login from "../pages/auth/login";
@@ -11,8 +12,9 @@ import Profile from "../pages/profile";
 import Staff from "../pages/staff";
 import DisplayTicket from "../pages/ticket/display";
 import EditTicket from "../pages/ticket/edit";
+import Refund from "../pages/ticket/refund";
 import actions from "../services/actions";
-import classService from "../services/utils/class";
+import classServices from "../services/utils/class";
 
 const Router = () => {
   const dispatch = useDispatch();
@@ -33,7 +35,7 @@ const Router = () => {
     }
 
     setTimeout(() => {
-      classService.classRemove("tag", "body", "preload");
+      classServices.classRemove("tag", "body", "preload");
     }, 100);
   }, []);
 
@@ -47,11 +49,11 @@ const Router = () => {
       actions.setSeatList(JSON.parse(sessionStorage.getItem("seatList")))
     );
     dispatch(
-      actions.setSeatList(JSON.parse(sessionStorage.getItem("ticketList")))
+      actions.setTicketList(JSON.parse(sessionStorage.getItem("ticketList")))
     );
 
     setTimeout(() => {
-      classService.classRemove("class", "navbar", "preload");
+      classServices.classRemove("class", "navbar", "preload");
     }, 100);
   }, [navigate, location]);
 
@@ -65,16 +67,20 @@ const Router = () => {
   return (
     <Routes>
       <Route index element={<Home />} />
+      <Route path="about" element={<About />} />
+      <Route path="staff" element={<Staff />} />
       <Route path="login" element={<Login />} />
+      <Route path="login/:staff" element={<Login />} />
       <Route path="register" element={<Register />} />
+      <Route path="register/:staff" element={<Register />} />
       <Route path="forgot" element={<Forgot />} />
       <Route path="forgot/:id" element={<ChangePassword />} />
       <Route path="profile" element={<Profile />} />
       <Route path="profile/:id" element={<DisplayTicket />} />
-      <Route path="profile/:id/edit" element={<EditTicket />} />
+      {/* <Route path="profile/:id/" element={<EditTicket />} /> */}
+      <Route path="profile/:id/refund" element={<Refund />} />
       <Route path="booking" element={<Booking />} />
-      <Route path="booking/:page" element={<Booking />} />
-      <Route path="staff" element={<Staff />} />
+      <Route path="booking/:step" element={<Booking />} />
     </Routes>
   );
 };

@@ -16,8 +16,8 @@
     },
     "errors": {
       "missingInput": "Please enter all required fields.",
-      "invalidPword": "Password must include at least 8 characters, a number and at least one capitol letter.",
-      "invalidRepwd": "Passwords do not match the password.",
+      "invalidPword": "Password must include at least 8 characters, a number and at least one capital letter.",
+      "invalidRepwd": "Passwords do not match.",
       "invalidAcc": "This username or email is already taken."
     }
   },
@@ -33,6 +33,36 @@
     "errors": {
       "missingInput": "Please enter all required fields.",
       "invalidLogin": "Username or password is/are incorrect."
+    }
+  },
+  "changePword": {
+    "header": "Change Password",
+    "new": "New Password",
+    "reNew": "Comfirm New Password",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "err": {
+      "missingInput": "Please enter all required fields.",
+      "invalid": "Password must include at least 8 characters, a number and at least one capital letter.",
+      "noMatch": "Passwords do not match."
+    }
+  },
+  "forgot": {
+    "legend": "Forgot Password",
+    "header": "Enter an email to continue",
+    "email": "Email",
+    "submit": "Submit",
+    "cancel": "Cancel"
+  },
+  "confirmPword": {
+    "header": "Confirm password to continue",
+    "pword": "Password",
+    "submit": "Submit",
+    "back": "Back",
+    "forgot": "Forgot password ?",
+    "err": {
+      "missingInput": "Please enter all required fields.",
+      "incorrect": "Password incorrect."
     }
   }
 }

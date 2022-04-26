@@ -2,7 +2,7 @@ import ActionTypes from "../constants/actionTypes";
 
 const setTicketList = (ticket) => {
   return {
-    type: ActionTypes.SET_TICKET,
+    type: ActionTypes.SET_TICKETLIST,
     payload: ticket,
   };
 };

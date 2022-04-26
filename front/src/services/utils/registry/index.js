@@ -1,9 +1,9 @@
 import register from "./register";
 import forgot from "./forgot";
 
-const registryService = {
+const registryServices = {
     register,
     forgot
 };
 
-export default registryService
+export default registryServices

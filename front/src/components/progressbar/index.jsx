@@ -39,6 +39,12 @@ const ProgressBar = ({ step }) => {
           <div className="progressbar__checkpoint__container">
             <div className="progressbar__checkpoint__item" />
             <label className="progressbar__checkpoint__label">
+              {content.progressbar.foods}
+            </label>
+          </div>
+          <div className="progressbar__checkpoint__container">
+            <div className="progressbar__checkpoint__item" />
+            <label className="progressbar__checkpoint__label">
               {content.progressbar.checkout}
             </label>
           </div>

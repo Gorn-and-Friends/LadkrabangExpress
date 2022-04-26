@@ -39,9 +39,9 @@ $height: calc(1.2 * $navbar-height);
       background-color: t(main-color);
     }
 
-    @for $i from 1 through 4 {
+    @for $i from 1 through 5 {
       &.cur-#{$i} {
-        $percent: calc(100% / 3 * ($i - 1));
+        $percent: calc(100% / 4 * ($i - 1));
         width: $percent;
       }
     }
@@ -78,11 +78,11 @@ $height: calc(1.2 * $navbar-height);
     }
 
     div:nth-child(2) {
-      left: calc($height / -6);
+      left: calc($height / -4);
     }
 
     div:nth-last-child(2) {
-      right: calc($height / -6);
+      right: calc($height / -4);
     }
 
     div:last-child {

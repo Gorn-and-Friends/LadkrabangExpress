@@ -11,7 +11,7 @@ import icon from "../../assets/icons/icon.png";
 
 const Ticket = ({ ticket }) => {
   const lang = useSelector((state) => state.lang);
-  const stations = require("../../assets/jsons/booking/station.json");
+  const stations = require("../../assets/jsons/booking/stations.json");
   const content =
     lang === "th"
       ? require("../../assets/jsons/ticket/th.json")
@@ -71,32 +71,6 @@ const Ticket = ({ ticket }) => {
           for (const i of stations)
             if (displayDestination === i["th"]) res = i["en"];
         }
-      }
-    } catch {}
-    return res;
-  };
-
-  const showTime = (DA) => {
-    var res = "";
-    try {
-      if (DA == "d") {
-        res =
-          (displayDepTime.split(":")[0] < 10
-            ? "0" + displayDepTime.split(":")[0]
-            : displayDepTime.split(":")[0]) +
-          ":" +
-          (displayDepTime.split(":")[1] < 10
-            ? "0" + displayDepTime.split(":")[1]
-            : displayDepTime.split(":")[1]);
-      } else {
-        res =
-          (displayArrTime.split(":")[0] < 10
-            ? "0" + displayArrTime.split(":")[0]
-            : displayArrTime.split(":")[0]) +
-          ":" +
-          (displayArrTime.split(":")[1] < 10
-            ? "0" + displayArrTime.split(":")[1]
-            : displayArrTime.split(":")[1]);
       }
     } catch {}
     return res;
@@ -175,10 +149,10 @@ const Ticket = ({ ticket }) => {
             </div>
           </div>
         </div>
-        <div className="ticket__ticket-touch">
-          <div className="ticket__ticket-touch__top" />
-          <div className="ticket__ticket-touch__middle" />
-          <div className="ticket__ticket-touch__bottom" />
+        <div className="ticket__perforated-line">
+          <div className="ticket__perforated-line__top" />
+          <div className="ticket__perforated-line__middle" />
+          <div className="ticket__perforated-line__bottom" />
         </div>
         <div className="ticket__logo">
           <img src={icon} alt="" />

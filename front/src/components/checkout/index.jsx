@@ -7,13 +7,12 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import "./style.scss";
-import visaMastercard from "../../assets/images/visa-mastercard.png";
+import visaMastercard from "../../assets/icons/visa-mastercard.png";
 import BookingButtons from "../bookingBtns";
 import Ticket from "../ticket";
 import logServices from "../../services/utils/log";
-import bookingService from "../../services/utils/booking";
+import bookingServices from "../../services/utils/booking";
 import actions from "../../services/actions";
-import userServices from "../../services/utils/user";
 
 const Checkout = () => {
   const navigate = useNavigate();
@@ -41,10 +40,6 @@ const Checkout = () => {
   }, []);
 
   useEffect(() => {
-    console.log(tickets);
-  }, [tickets]);
-
-  useEffect(() => {
     try {
       let common = {
         trainNumber: tickets.t_n,
@@ -56,7 +51,7 @@ const Checkout = () => {
         departureTime: tickets.d_t,
         arrivalTime: tickets.a_t,
         duration: tickets.d,
-        ticketPrice: totalPrice > 0 ? totalPrice : tickets.p,
+        ticketPrice: totalPrice > 0 ? totalPrice : tickets.tp,
       };
       let seats = [...tickets.s];
       let newTickets = new Array();
@@ -64,7 +59,7 @@ const Checkout = () => {
         newTickets[i] = {
           ...common,
           eaTicketPrice:
-            seats[i].coach === "-" ? Number(tickets.p) : Number(tickets.p) + 10,
+            seats[i].coach === "-" ? Number(tickets.tp) : Number(tickets.tp) + 10,
           seat_reservation: {
             coach: seats[i].coach === 0 ? "-" : seats[i].coach,
             row: seats[i].row === 0 ? "-" : seats[i].row,
@@ -115,7 +110,7 @@ const Checkout = () => {
       console.log(info);
       try {
         dispatch(actions.setLoading(true));
-        await bookingService.submitTicket(info);
+        await bookingServices.submitTicket(info);
         navigate("/profile");
       } catch (er) {
         dispatch(actions.setLoading(false));
@@ -232,7 +227,7 @@ const Checkout = () => {
           price={totalPrice}
           disabled={err}
           page={4}
-          pastUrlParams={searchParams.toString().split("%3E")[0]}
+          pastUrlParams={searchParams.toString().split(".00000")[0]}
         />
       </div>
     </div>

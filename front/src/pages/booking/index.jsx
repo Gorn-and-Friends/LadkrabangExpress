@@ -7,28 +7,28 @@ import ProgressBar from "../../components/progressbar";
 import TrainsDisplay from "../../components/trainsDisplay";
 import ClassSelection from "../../components/classSelection";
 import SeatSelection from "../../components/seatSelection";
-import FoodCatalog from "../../components/foodCatalog";
+import FoodCatalogue from "../../components/foodCatalogue";
 import Checkout from "../../components/checkout";
 import Loading from "../../components/loading";
 
 const Booking = () => {
   const loading = useSelector((state) => state.loading);
-  const page = Number(useParams().page);
+  const step = Number(useParams().step);
 
   return (
     <>
       <NavBar />
-      {page ? <ProgressBar step={page} /> : null}
+      {step ? <ProgressBar step={step} /> : null}
       {loading ? (
         <Loading reduceHeight={22} />
       ) : (
         <>
-          {!page ? <Form /> : null}
-          {page === 1 ? <TrainsDisplay step={page} /> : null}
-          {page === 2 ? <ClassSelection /> : null}
-          {page === 3 ? <SeatSelection /> : null}
-          {/* {page === 4 ? <FoodCatalog  /> : null} */}
-          {page === 4 ? <Checkout /> : null}
+          {!step ? <Form /> : null}
+          {step === 1 ? <TrainsDisplay /> : null}
+          {step === 2 ? <ClassSelection /> : null}
+          {step === 3 ? <SeatSelection /> : null}
+          {step === 4 ? <FoodCatalogue /> : null}
+          {step === 5 ? <Checkout /> : null}
         </>
       )}
     </>

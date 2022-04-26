@@ -18,7 +18,7 @@ const HomeForm = () => {
           dest: "Destination",
           pax: "Passengers",
         };
-  const stations = require("../../assets/jsons/booking/station.json");
+  const stations = require("../../assets/jsons/booking/stations.json");
   const [origin, setOrigin] = useState("");
   const [dest, setDest] = useState("");
   const [pax, setPax] = useState("");

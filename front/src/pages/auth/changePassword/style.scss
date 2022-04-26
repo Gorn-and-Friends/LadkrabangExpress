@@ -86,7 +86,7 @@
   }
 }
 
-.login {
+.change-pword {
   @include centered-flex;
   height: 100vh;
   @include languify() {
@@ -99,7 +99,7 @@
 
   &__container {
     @include centered-flex;
-    padding: 3rem 0rem 5rem 0rem;
+    padding-bottom: 1.2rem;
     flex-direction: column;
     position: relative;
     font-size: 0.9em;
@@ -112,45 +112,18 @@
   legend {
     padding: 0 0.8em;
     transition: tranform $transition-time ease-in-out;
-
-    &:hover {
-      transform: scale(1.03);
-    }
-  }
-
-  &__logo {
-    @include centered-flex;
-    position: relative;
-    width: 8rem;
-    height: 5rem;
-
-    &__icon {
-      position: absolute;
-      opacity: 1;
-      width: 8rem;
-      pointer-events: none;
-
-      &.hide {
-        opacity: 0;
-      }
+    @include languify() {
+      font: 1000 2.5rem l(navigation-font);
     }
   }
 
   &__form {
     @include centered-flex;
-    width: 26vw;
-    height: 45vh;
+    width: 38vw;
     flex-direction: column;
-    padding: 0 3rem;
+    padding: 4rem 2rem;
     gap: 2rem;
     position: relative;
-
-    h1 {
-      @include languify() {
-        font-weight: 500;
-        font-family: l(title-font);
-      }
-    }
 
     &__container {
       @include centered-flex;
@@ -161,31 +134,6 @@
 
     &__item {
       @include text-input-animation(100%);
-    }
-
-    &__group {
-      @include centered-flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      width: 100%;
-
-      &__link {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-
-        a {
-          font-size: 0.8em;
-          @include themify() {
-            color: t("main-font-color");
-          }
-
-          &:hover {
-            text-decoration: underline;
-          }
-        }
-      }
     }
 
     &__errors {
@@ -204,29 +152,36 @@
   }
 
   &__btn {
-    cursor: pointer;
     position: absolute;
-    height: 2.8em;
     bottom: -1.4em;
-    padding: 0.5em 1em;
-    border: 0.1rem solid orange;
-    border-radius: 0.4rem;
-    transition: all $transition-time ease-in-out;
-    @include languify() {
-      font: 600 1.2em l(subtitle-font);
-    }
-    @include themify() {
-      background-color: t(main-bg-color);
-      color: t("main-font-color");
-    }
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
 
-    &:hover {
-      transform: scale(1.05);
-    }
-
-    &:active {
+    button,
+    input {
+      cursor: pointer;
+      height: 2.8em;
+      padding: 0.5em 1em;
+      border: 0.1rem solid orange;
+      border-radius: 0.4rem;
+      transition: all $transition-time ease-in-out;
+      @include languify() {
+        font: 600 1.2em l(subtitle-font);
+      }
       @include themify() {
-        background-color: t(color-3);
+        background-color: t(main-bg-color);
+        color: t("main-font-color");
+      }
+
+      &:hover {
+        transform: scale(1.05);
+      }
+
+      &:active {
+        @include themify() {
+          background-color: t(color-3);
+        }
       }
     }
   }

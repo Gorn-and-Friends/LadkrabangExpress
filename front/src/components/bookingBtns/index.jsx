@@ -21,11 +21,13 @@ const BookingButtons = ({ onNext, price, disabled, page, pastUrlParams }) => {
         {lang === "th" ? "กลับ" : "Back"}
       </button>
       {price > 0 ? (
-        lang === "th" ? (
-          <span>ราคารวม&ensp;🛈&ensp;&ensp;&ensp;&#3647;{price}</span>
-        ) : (
-          <span>Total&ensp;🛈&ensp;&ensp;&ensp;&#3647;{price}</span>
-        )
+        <span className={page === 4 ? "food" : ""}>
+          {lang === "th" ? (
+            <>ราคารวม&ensp;🛈&ensp;&ensp;&ensp;&#3647;{price}</>
+          ) : (
+            <>Total&ensp;🛈&ensp;&ensp;&ensp;&#3647;{price}</>
+          )}
+        </span>
       ) : null}
       <button onClick={onNext} disabled={disabled ? "disabled" : ""}>
         {lang === "th" ? "ต่อไป" : "Next"}

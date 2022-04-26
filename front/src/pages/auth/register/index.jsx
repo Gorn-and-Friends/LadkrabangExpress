@@ -6,7 +6,7 @@ import register from "../../../services/utils/registry";
 import actions from "../../../services/actions";
 import Loading from "../../../components/loading";
 
-const Register = () => {
+const Register = ({ type }) => {
   useEffect(() => {
     document.title = "Sign up - LKBX";
   }, []);

@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import "./style.scss";
 import Loading from "../../../components/loading";
 
-const ChangePassword = () => {
+const Refund = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme);
@@ -35,12 +35,12 @@ const ChangePassword = () => {
   return loading ? (
     <Loading reduceHeigh={0} />
   ) : (
-    <form className="change-pword" onSubmit={handleOnSubmit}>
-      <fieldset className="change-pword__container">
+    <form className="refund" onSubmit={handleOnSubmit}>
+      <fieldset className="refund__container">
         <legend align="center">{content.changePword.header}</legend>
-        <div className="change-pword__form">
+        <div className="refund__form">
           {err && (
-            <div className="change-pword__form__errors">
+            <div className="refund__form__errors">
               {missingInput
                 ? content.changePword.err.missingInput
                 : invalid
@@ -48,8 +48,8 @@ const ChangePassword = () => {
                 : ""}
             </div>
           )}
-          <div className="change-pword__form__container">
-            <div className="change-pword__form__item">
+          <div className="refund__form__container">
+            <div className="refund__form__item">
               <input
                 type="password"
                 id="new"
@@ -62,7 +62,7 @@ const ChangePassword = () => {
                 {content.changePword.new} <span>*</span>
               </label>
             </div>
-            <div className="change-pword__form__item">
+            <div className="refund__form__item">
               <input
                 type="password"
                 id="reNew"
@@ -77,7 +77,7 @@ const ChangePassword = () => {
             </div>
           </div>
         </div>
-        <div className="change-pword__btn">
+        <div className="refund__btn">
           <button>{content.changePword.cancel}</button>
           <input type="submit" value={content.changePword.submit} />
         </div>
@@ -86,4 +86,4 @@ const ChangePassword = () => {
   );
 };
 
-export default ChangePassword;
+export default Refund;

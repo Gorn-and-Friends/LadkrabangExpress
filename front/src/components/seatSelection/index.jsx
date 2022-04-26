@@ -10,7 +10,7 @@ import actions from "../../services/actions";
 import BookingButtons from "../bookingBtns";
 import SeatPicker from "../seatPicker";
 import { FaRedo } from "react-icons/fa";
-import bookingService from "../../services/utils/booking";
+import bookingServices from "../../services/utils/booking";
 
 const SeatSelection = () => {
   const navigate = useNavigate();
@@ -32,6 +32,7 @@ const SeatSelection = () => {
   const [wantSelectSeat, setWantSelectSeat] = useState(false);
   const [seatSelected, setSeatSelected] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState([]);
+  const [finalSeats, setFinalSeats] = useState([]);
 
   useEffect(() => {
     setTrainId(searchParams.get("idt") ? searchParams.get("idt") : "");
@@ -50,11 +51,8 @@ const SeatSelection = () => {
   useEffect(() => {
     var temp = [];
     try {
-      if (
-        JSON.parse(sessionStorage.getItem("seatList")) &&
-        JSON.parse(sessionStorage.getItem("seatList")).length > 0
-      )
-        JSON.parse(sessionStorage.getItem("seatList")).map((data) => {
+      if (seatList && seatList.length > 0)
+        seatList.map((data) => {
           temp.push({
             coach: data.coach,
             seat: data.seat,
@@ -62,7 +60,7 @@ const SeatSelection = () => {
         });
       setSeats(temp);
     } catch {}
-  }, []);
+  }, [seatList]);
 
   useEffect(() => {
     setTrain(
@@ -88,10 +86,10 @@ const SeatSelection = () => {
               ? seat.split("—")[0][seat.split("—")[0].length - 1]
               : 0,
           column: seat.split("—")[1][0] !== "x" ? seat.split("—")[1][0] : "-",
-          row:
-            seat.split("—")[1][1] !== "x" ? seat.split("—")[1].slice(1) : 0,
+          row: seat.split("—")[1][1] !== "x" ? seat.split("—")[1].slice(1) : 0,
         });
       });
+      setFinalSeats(wantSelectSeat ? temp : unselectTemp);
       setTicket({
         t_id: trainId,
         t_n: train.trainNumber,
@@ -103,7 +101,7 @@ const SeatSelection = () => {
         d_t: train.departureTime,
         a_t: train.arrivalTime,
         d: train.duration,
-        p: train.ticketPrice,
+        tp: train.ticketPrice,
         s: wantSelectSeat ? temp : unselectTemp,
       });
     } catch {}
@@ -116,8 +114,13 @@ const SeatSelection = () => {
       pathname: "/booking/4",
       search:
         searchParams.toString() +
-        ">&" +
-        createSearchParams({ tkt: JSON.stringify(ticket) }).toString(),
+        ".0000&" +
+        createSearchParams({
+          s: JSON.stringify(finalSeats),
+          _p:
+            Number(searchParams.get("tp")) * Number(searchParams.get("pax")) +
+            selectedSeats.filter((f) => f != "Cx—xx").length * 10,
+        }).toString(),
     });
   };
 
@@ -128,28 +131,24 @@ const SeatSelection = () => {
       !searchParams.get("to") &&
       !searchParams.get("date") &&
       !searchParams.get("time") &&
-      // !searchParams.get("date-return") &&
-      // !searchParams.get("time-return") &&
       !searchParams.get("pax")
     ) {
       navigate("/booking");
     } else {
       dispatch(actions.setLoading(true));
-      var trainRes = await bookingService.findTrains({
+      var trainRes = await bookingServices.findTrains({
         from: searchParams.get("from"),
         to: searchParams.get("to"),
         date: searchParams.get("date"),
         time: searchParams.get("time"),
         pax: searchParams.get("pax"),
-        // returnDate: searchParams.get("date-return") ,
-        // returnTime: searchParams.get("time-return") ,
       });
     }
     if (!searchParams.get("idt") && !searchParams.get("date")) {
       navigate("/booking");
     } else {
       dispatch(actions.setLoading(true));
-      const seatRes = await bookingService.findSeats({
+      const seatRes = await bookingServices.findSeats({
         trainId: searchParams.get("idt"),
         date: searchParams.get("date"),
       });
@@ -199,12 +198,12 @@ const SeatSelection = () => {
         <BookingButtons
           onNext={handleOnNext}
           price={
-            Number(searchParams.get("p")) * Number(searchParams.get("pax")) +
+            Number(searchParams.get("tp")) * Number(searchParams.get("pax")) +
             selectedSeats.filter((f) => f != "Cx—xx").length * 10
           }
           disabled={wantSelectSeat ? (seatSelected ? false : true) : false}
           page={3}
-          pastUrlParams={searchParams.toString().split(".00000")[0]}
+          pastUrlParams={searchParams.toString().split(".000")[0]}
         />
       </div>
     </div>

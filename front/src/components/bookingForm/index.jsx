@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import "./style.scss";
 import actions from "../../services/actions";
-import bookingService from "../../services/utils/booking";
+import bookingServices from "../../services/utils/booking";
 
 const BookingForm = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const BookingForm = () => {
   const location = useLocation();
   const lang = useSelector((state) => state.lang);
   const params = new URLSearchParams(location.search);
-  const stations = require("../../assets/jsons/booking/station.json");
+  const stations = require("../../assets/jsons/booking/stations.json");
   const content =
     lang === "th"
       ? require("../../assets/jsons/booking/th.json")
@@ -59,10 +59,6 @@ const BookingForm = () => {
     setCurTime({ value: params.get("time"), onFocus: true });
     sessionStorage.setItem("trainList", JSON.stringify([]));
     sessionStorage.setItem("seatList", JSON.stringify([]));
-  }, []);
-
-  useEffect(() => {
-    // console.log(new Date());
   }, []);
 
   useEffect(() => {
@@ -121,8 +117,16 @@ const BookingForm = () => {
     }
     if (originTH === "") originTH = "NaN";
     if (destTH === "") destTH = "NaN";
-    if (dt !== "" && dt < new Date()) {
+    if (dt !== "") {
+      if (
+        dt < new Date() ||
+        dt > new Date(new Date().valueOf() + 1000 * 60 * 60 * 24 * 30)
+      )
+        dtErr = true;
+      else dtErr = false;
+    } else {
       dtErr = true;
+      missing = true;
     }
     const info = {
       from: originTH,
@@ -152,7 +156,7 @@ const BookingForm = () => {
       setErr(false);
       try {
         dispatch(actions.setLoading(true));
-        const res = await bookingService.findTrains(info);
+        const res = await bookingServices.findTrains(info);
         if (res === 200) {
           navigate({
             pathname: "1",

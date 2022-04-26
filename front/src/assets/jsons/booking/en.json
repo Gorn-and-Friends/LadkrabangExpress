@@ -23,7 +23,7 @@
     },
     "errors": {
       "missingInput": "Please enter all required fields.",
-      "earlyReturn": "The return date and time must be in the future of the outward journey.",
+      "earlyReturn": "The return date and time must be in the future of the outward journey and not more than the next 30 days.",
       "invalidStations": "Please check your origin and destination stations.",
       "routeErr": "There's currently no trains on this route yet."
     }

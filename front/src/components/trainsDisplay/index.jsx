@@ -15,7 +15,7 @@ import {
 } from "react-icons/fa";
 import actions from "../../services/actions";
 import BookingButtons from "../bookingBtns";
-import bookingService from "../../services/utils/booking";
+import bookingServices from "../../services/utils/booking";
 
 const TrainsDisplay = () => {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ const TrainsDisplay = () => {
   const [searchParams, _] = useSearchParams({});
   const lang = useSelector((state) => state.lang);
   const trainList = useSelector((state) => state.trains);
-  const stations = require("../../assets/jsons/booking/station.json");
+  const stations = require("../../assets/jsons/booking/stations.json");
   const content =
     lang === "th"
       ? require("../../assets/jsons/booking/th.json")
@@ -62,14 +62,14 @@ const TrainsDisplay = () => {
       pathname: "/booking/2",
       search:
         searchParams.toString() +
-        ".000&" +
+        ".00&" +
         createSearchParams({
           c:
             (trainList[choice - 1].seatRemain.class1 > 0 ? "1" : "0") +
             (trainList[choice - 1].seatRemain.class2 > 0 ? "1" : "0") +
             (trainList[choice - 1].seatRemain.class3 > 0 ? "1" : "0"),
           idt: trainList[choice - 1].train_id,
-          p: trainList[choice - 1].ticketPrice,
+          tp: trainList[choice - 1].ticketPrice,
         }).toString(),
     });
   };
@@ -81,21 +81,17 @@ const TrainsDisplay = () => {
       !searchParams.get("to") &&
       !searchParams.get("date") &&
       !searchParams.get("time") &&
-      // !searchParams.get("date-return") &&
-      // !searchParams.get("time-return") &&
       !searchParams.get("pax")
     ) {
       navigate("/booking");
     } else {
       dispatch(actions.setLoading(true));
-      const res = await bookingService.findTrains({
+      const res = await bookingServices.findTrains({
         from: searchParams.get("from"),
         to: searchParams.get("to"),
         date: searchParams.get("date"),
         time: searchParams.get("time"),
         pax: searchParams.get("pax"),
-        // returnDate: searchParams.get("date-return") ,
-        // returnTime: searchParams.get("time-return") ,
       });
       if (res === 200) {
         navigate({

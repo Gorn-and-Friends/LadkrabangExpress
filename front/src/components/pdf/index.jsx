@@ -6,7 +6,7 @@ import { MdMyLocation, MdLocationOn, MdAccessTime } from "react-icons/md";
 
 const TicketPDF = React.forwardRef(({ QR, tickets, disabled }, ref) => {
   const lang = useSelector((state) => state.lang);
-  const stations = require("../../assets/jsons/booking/station.json");
+  const stations = require("../../assets/jsons/booking/stations.json");
   const content =
     lang === "th"
       ? require("../../assets/jsons/ticket/th.json")
