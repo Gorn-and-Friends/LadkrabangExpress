@@ -41,8 +41,9 @@ class User {
 
       user.token = token;
       user.save();
-
-      res.status(201).json(user);
+      const result = user.toObject()
+      result.isStaff = false
+      res.status(201).json(result);
     } catch (err) {
       console.log(err);
     }
@@ -50,7 +51,6 @@ class User {
 
   static async login(req, res) {
     try {
-      // console.log(req.body)
       const { username, password } = req.body;
 
       if (!(username && password)) {
@@ -71,7 +71,6 @@ class User {
       }
 
       const email = user.email;
-      // console.log("cat : " + email)
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jsonwebtoken.sign(
           { user_id: user._id, email },
@@ -80,8 +79,9 @@ class User {
             expiresIn: "2d",
           }
         );
-        user.token = token;
-        res.status(200).json(user);
+        const result = user.toObject()
+        result.isStaff = false
+        res.status(201).json(result);
         // res.status(200).send(token)
       } else {
         res.status(400).send("Invalid login");
@@ -107,8 +107,6 @@ class User {
     try {
       // front ส่ง token เราเอา token มาหา id
       const userID = await User.verifyTokenGetUserID(req.body.token);
-      // console.log(typeof(userID))
-      // console.log(userID)
       const objUserID = mongoose.Types.ObjectId(userID);
 
       // foundTicket => array of document ทุก documenyt ที่มี id ตรงกับ ที่ login เข้ามา

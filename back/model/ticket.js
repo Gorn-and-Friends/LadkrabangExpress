@@ -20,6 +20,7 @@ const ticketSchema = new mongoose.Schema(
         food_reservation: {type:Array, default:[]},
         ticketPrice: {type:Number, default:0},
         reservation_price: {type:Number, default:0},
+        food_price: {type:Number, default:0},
         total_price: {type:Number, default:0},
 
     }
