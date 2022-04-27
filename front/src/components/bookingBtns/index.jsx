@@ -8,7 +8,7 @@ const BookingButtons = ({ onNext, price, disabled, page, pastUrlParams }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="booking-btns">
+    <div className={`booking-btns${page === 4 ? " food" : ""}`}>
       <button
         onClick={() =>
           navigate(
@@ -21,7 +21,7 @@ const BookingButtons = ({ onNext, price, disabled, page, pastUrlParams }) => {
         {lang === "th" ? "กลับ" : "Back"}
       </button>
       {price > 0 ? (
-        <span className={page === 4 ? "food" : ""}>
+        <span>
           {lang === "th" ? (
             <>ราคารวม&ensp;🛈&ensp;&ensp;&ensp;&#3647;{price}</>
           ) : (

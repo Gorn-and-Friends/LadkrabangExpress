@@ -26,6 +26,8 @@ const Profile = () => {
   const [displayTickets, setDisplayTickets] = useState([]);
   const [edit, setEdit] = useState(false);
   const [confirmPwordShown, setConfirmPwordShown] = useState(false);
+  const [pword, setPword] = useState("");
+  const [res, setRes] = useState("");
   const [input, setInput] = useState({
     fname: "",
     lname: "",
@@ -35,7 +37,6 @@ const Profile = () => {
 
   const fetchProfile = async () => {
     await userServices.fetchProfile();
-
     setDisplayTickets(
       sessionStorage.getItem("ticketList")
         ? JSON.parse(sessionStorage.getItem("ticketList"))
@@ -82,7 +83,14 @@ const Profile = () => {
 
   const handleOnSaveProfile = async (e) => {
     e.preventDefault();
-    setEdit(false);
+    try {
+      dispatch(actions.setLoading(true));
+      const res = await userServices.editProfile({});
+      if (res == 200) setEdit(false);
+    } catch (er) {
+      dispatch(actions.setLoading(false));
+      console.log(er);
+    }
   };
 
   const handleOnReload = async (e) => {
@@ -99,14 +107,27 @@ const Profile = () => {
 
   const handleOnConfirmPword = async (e) => {
     e.preventDefault();
-    navigate(`/forgot/${userInfo.id}`);
+    try {
+      dispatch(actions.setLoading(true));
+      setRes(
+        await userServices.changePassword({
+          token: JSON.parse(localStorage.getItem("user")).token,
+          pword: pword,
+        })
+      );
+      if (res == 200) navigate(`/forgot/${userInfo.id}`);
+    } catch (er) {
+      dispatch(actions.setLoading(false));
+      console.log(er);
+    }
   };
 
   return (
     <>
       {confirmPwordShown ? (
         <ConfirmPassword
-          shown={confirmPwordShown}
+          status={res}
+          setConfirmPword={setPword}
           handleOnConfirmPword={handleOnConfirmPword}
           handleOnBack={() => setConfirmPwordShown(false)}
         />
@@ -268,8 +289,8 @@ const Profile = () => {
                               </div>
                               <div className="profile__booking__ticket__logo">
                                 <img src={icon} alt="" />
-                                <Link to={`${ticket._id}/edit`}>
-                                  {lang === "th" ? "แก้ไข" : "Edit"}
+                                <Link to={`${ticket._id}/refund`}>
+                                  {lang === "th" ? "ยกเลิก" : "Cancel"}
                                 </Link>
                               </div>
                             </div>

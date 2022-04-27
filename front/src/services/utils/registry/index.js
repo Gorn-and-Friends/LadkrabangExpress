@@ -1,5 +1,5 @@
 import register from "./register";
-import forgot from "./forgot";
+import forgot from "../user/forgot";
 
 const registryServices = {
     register,

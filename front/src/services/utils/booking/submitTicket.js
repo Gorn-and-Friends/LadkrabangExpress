@@ -16,6 +16,7 @@ const submitTicket = async (info) => {
     departureTime: info.d_t,
     arrivalTime: info.a_t,
     seat_reservation: info.s,
+    food_reservation: info.f_r
   });
 
   console.log(res.data);

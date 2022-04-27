@@ -160,11 +160,11 @@
         background-color: t(main-bg-color);
       }
     }
-    
+
     &__top {
       border-radius: 0 0 0.7rem 0.7rem;
     }
-    
+
     &__middle {
       width: 10%;
       height: 100%;
@@ -213,20 +213,24 @@
 
   &__detail {
     width: 24vw;
+    overflow: auto;
     padding-left: 1.2rem;
     margin-left: auto;
     margin-right: auto;
     left: 0;
     right: 0;
-    overflow: hidden;
     transition: all $transition-time ease-in-out;
     border-radius: 0 0 0.2rem 0.2rem;
     background-color: rgb(242, 233, 218);
+    
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     h3 {
       margin: 0.8rem 0;
     }
-    
+
     ul {
       margin: 1rem 0;
       list-style: none;

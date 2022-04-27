@@ -1,28 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "./style.scss";
 import Loading from "../../../components/loading";
+import actions from "../../../services/actions";
+import userServices from "../../../services/utils/user";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const theme = useSelector((state) => state.theme);
+  const params = useParams();
   const lang = useSelector((state) => state.lang);
   const loading = useSelector((state) => state.loading);
   const content =
     lang === "th"
       ? require("../../../assets/jsons/auth/th.json")
       : require("../../../assets/jsons/auth/en.json");
-  const [searchParams, _] = useSearchParams({});
   const [err, setErr] = useState(false);
   const [missingInput, setMissingInput] = useState(false);
   const [invalid, setInvalid] = useState(false);
+  const [token, setToken] = useState("");
   const [pword, setPword] = useState({
-    old: "",
     new: "",
     reNew: "",
   });
+
+  useEffect(() => {
+    setToken(params.token);
+    console.log(params.token);
+  }, []);
 
   const handleInputOnChange = ({ currentTarget: input }) => {
     const temp = { ...pword };
@@ -30,10 +36,57 @@ const ChangePassword = () => {
     setPword(temp);
   };
 
-  const handleOnSubmit = () => {};
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    let invalidPwd = false;
+    let missing = false;
+    for (const i of Object.values(pword)) if (i == "") missing = true;
+    if (pword.new != "") {
+      let regEx = new RegExp("(?=.*[0-9])[a-zA-Z0-9]{8,}");
+      if (regEx.test(pword.new)) {
+        invalidPwd = false;
+      } else {
+        invalidPwd = true;
+      }
+    } else {
+      invalidPwd = true;
+    }
+
+    if (missing || invalidPwd || pword.new != pword.reNew) {
+      setErr(true);
+      if (missing) {
+        setMissingInput(true);
+      } else {
+        setMissingInput(false);
+      }
+      if (invalidPwd) {
+        setInvalid(true);
+      } else {
+        setInvalid(false);
+      }
+      if (pword.new != pword.reNew) {
+        setInvalid(true);
+      } else {
+        setInvalid(false);
+      }
+    } else {
+      setErr(false);
+      try {
+        dispatch(actions.setLoading(true));
+        const res = await userServices.changePassword({
+          token: token,
+          pword: pword.new,
+        });
+        if (res == 200) navigate("/profile");
+      } catch (er) {
+        dispatch(actions.setLoading(false));
+        setErr(true);
+      }
+    }
+  };
 
   return loading ? (
-    <Loading reduceHeigh={0} />
+    <Loading reduceHeight={0} />
   ) : (
     <form className="change-pword" onSubmit={handleOnSubmit}>
       <fieldset className="change-pword__container">
@@ -78,7 +131,7 @@ const ChangePassword = () => {
           </div>
         </div>
         <div className="change-pword__btn">
-          <button>{content.changePword.cancel}</button>
+          <Link to="/profile">{content.changePword.cancel}</Link>
           <input type="submit" value={content.changePword.submit} />
         </div>
       </fieldset>

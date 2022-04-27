@@ -41,6 +41,7 @@ const Checkout = () => {
 
   useEffect(() => {
     try {
+      console.log(tickets);
       let common = {
         trainNumber: tickets.t_n,
         date: tickets.dt,
@@ -59,7 +60,9 @@ const Checkout = () => {
         newTickets[i] = {
           ...common,
           eaTicketPrice:
-            seats[i].coach === "-" ? Number(tickets.tp) : Number(tickets.tp) + 10,
+            seats[i].coach === "-"
+              ? Number(tickets.tp)
+              : Number(tickets.tp) + 10,
           seat_reservation: {
             coach: seats[i].coach === 0 ? "-" : seats[i].coach,
             row: seats[i].row === 0 ? "-" : seats[i].row,
@@ -67,6 +70,8 @@ const Checkout = () => {
           },
         };
       });
+      newTickets[0] = { ...newTickets[0], food_reservation: tickets.f_r };
+      console.log(newTickets);
       setDisplayTickets(newTickets);
     } catch {}
   }, [tickets, totalPrice]);
@@ -224,9 +229,9 @@ const Checkout = () => {
         </div>
         <BookingButtons
           onNext={handleOnNext}
-          price={totalPrice}
+          price={searchParams.get("_price")}
           disabled={err}
-          page={4}
+          page={5}
           pastUrlParams={searchParams.toString().split(".00000")[0]}
         />
       </div>

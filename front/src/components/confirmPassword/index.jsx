@@ -1,24 +1,28 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import Loading from "../loading";
 import "./style.scss";
 
-const ConfirmPassword = ({ shown, handleOnConfirmPword, handleOnBack }) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const theme = useSelector((state) => state.theme);
+const ConfirmPassword = ({
+  status,
+  setConfirmPword,
+  handleOnConfirmPword,
+  handleOnBack,
+}) => {
   const lang = useSelector((state) => state.lang);
   const loading = useSelector((state) => state.loading);
   const content =
     lang === "th"
       ? require("../../assets/jsons/auth/th.json")
       : require("../../assets/jsons/auth/en.json");
-  const [searchParams, _] = useSearchParams({});
   const [pword, setPword] = useState("");
   const [err, setErr] = useState(false);
-  const [missingInput, setMissingInput] = useState(false);
   const [incorrect, setIncorrect] = useState(false);
+
+  useEffect(() => setIncorrect(status != 200), []);
+  useEffect(() => setErr(incorrect), [incorrect]);
+  useEffect(() => setConfirmPword(pword), [pword]);
 
   return loading ? (
     <Loading reduceHeigh={0} />
@@ -27,16 +31,12 @@ const ConfirmPassword = ({ shown, handleOnConfirmPword, handleOnBack }) => {
       <div className="confirm-pword__dim" />
       <div className="confirm-pword__container">
         <div className="confirm-pword__form">
-          <h1>{content.confirmPword.header}</h1>
-          {shown && err ? (
+          {err && (
             <div className="change-pword__form__errors">
-              {missingInput
-                ? content.confirmPword.err.missingInput
-                : incorrect
-                ? content.confirmPword.err.incorrect
-                : ""}
+              {incorrect ? content.confirmPword.err.incorrect : ""}
             </div>
-          ) : null}
+          )}
+          <h1>{content.confirmPword.header}</h1>
           <div className="confirm-pword__form__container">
             <div className="confirm-pword__form__item">
               <input

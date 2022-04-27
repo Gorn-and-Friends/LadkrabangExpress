@@ -158,8 +158,11 @@
     justify-content: space-evenly;
     width: 100%;
 
-    button,
+    a,
     input {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       cursor: pointer;
       height: 2.8em;
       padding: 0.5em 1em;

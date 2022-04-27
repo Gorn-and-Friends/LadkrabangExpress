@@ -29,17 +29,6 @@ const NavBar = () => {
       ? require("../../assets/jsons/navbar/th.json")
       : require("../../assets/jsons/navbar/en.json");
 
-  const handleOnProfile = async (e) => {
-    e.preventDefault();
-    try {
-      dispatch(actions.setLoading(true));
-      navigate("/profile");
-    } catch (er) {
-      dispatch(actions.setLoading(false));
-      console.log(er);
-    }
-  };
-
   const handleOnLogout = (e) => {
     e.preventDefault();
     dispatch(actions.setLoading(true));
@@ -104,9 +93,7 @@ const NavBar = () => {
               <div className="navbar__auth__dropdown">{displayName}</div>
               <ul className="navbar__auth__list">
                 <li>
-                  <div onClick={handleOnProfile}>
-                    {content.right.logged.profile}
-                  </div>
+                  <Link to="/profile">{content.right.logged.profile}</Link>
                 </li>
                 <li>
                   <div onClick={handleOnLogout}>

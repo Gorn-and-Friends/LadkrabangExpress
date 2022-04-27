@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import {
+  createSearchParams,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import "./style.scss";
 import BookingButtons from "../bookingBtns";
 import { AiOutlinePlusCircle, AiOutlineMinusCircle } from "react-icons/ai";
+import actions from "../../services/actions";
+import useHorizontalScroll from "../../hooks/useHorizontalScroll";
 
 const FoodCatalogue = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const hScroll = useHorizontalScroll();
+  const h2Scroll = useHorizontalScroll();
   const lang = useSelector((state) => state.lang);
+  const trainList = useSelector((state) => state.trains);
   const foods = require("../../assets/jsons/booking/foods.json");
   const [searchParams, _] = useSearchParams();
   const [category, setCategory] = useState(0);
@@ -23,12 +34,47 @@ const FoodCatalogue = () => {
   const [optionNamesEN, setOptionNamesEN] = useState({});
   const [foodCart, setFoodCart] = useState([]);
   const [displayFoodCart, setDisplayFoodCart] = useState([]);
+  const [totalFoodPrice, setTotalFoodPrice] = useState(0);
+  const [train, setTrain] = useState({});
+  const [ticket, setTicket] = useState({});
 
   useEffect(() => {
     setFoodList(foods.item);
     setFoodCategories(foods.tag);
     setFoodOptions(foods.option);
+    dispatch(
+      actions.setTrainList(JSON.parse(sessionStorage.getItem("trainList")))
+    );
   }, []);
+
+  useEffect(() => {
+    setTrain(
+      trainList
+        ? trainList.filter((obj) => obj.train_id == searchParams.get("idt"))[0]
+        : {}
+    );
+  }, [trainList]);
+
+  useEffect(() => {
+    try {
+      console.log(train);
+      setTicket({
+        t_id: searchParams.get("idt"),
+        t_n: train.trainNumber,
+        dt: train.date,
+        or: train.origin,
+        des: train.destination,
+        pax: train.passenger,
+        r_c: Number(searchParams.get("cl")),
+        d_t: train.departureTime,
+        a_t: train.arrivalTime,
+        d: train.duration,
+        tp: train.ticketPrice,
+        f_r: Object.values(displayFoodCart),
+        s: JSON.parse(searchParams.get("s")),
+      });
+    } catch {}
+  }, [train, displayFoodCart]);
 
   useEffect(() => {
     try {
@@ -85,7 +131,9 @@ const FoodCatalogue = () => {
   useEffect(() => {
     try {
       let temp = {};
+      let p = 0;
       foodCart.map((cartItem) => {
+        p += cartItem.price;
         if (Object.keys(temp).includes(cartItem.th)) {
           temp[cartItem.th].amount += 1;
         } else {
@@ -98,19 +146,37 @@ const FoodCatalogue = () => {
         }
       });
       setDisplayFoodCart(temp);
+      setTotalFoodPrice(p);
     } catch {}
   }, [foodCart]);
 
   useEffect(() => {
-    console.log(displayFoodCart, Object.keys(displayFoodCart).length !== 0);
+    console.log(displayFoodCart, foodCart);
   }, [displayFoodCart]);
 
-  const handleOnNext = async (e) => {};
+  useEffect(() => {
+    console.log(totalFoodPrice);
+  }, [totalFoodPrice]);
+
+  const handleOnNext = (e) => {
+    e.preventDefault();
+    console.log(ticket);
+    navigate({
+      pathname: "/booking/5",
+      search:
+        searchParams.toString() +
+        ".00000&" +
+        createSearchParams({
+          tkt: JSON.stringify(ticket),
+          _price: Number(searchParams.get("_p")) + totalFoodPrice,
+        }).toString(),
+    });
+  };
 
   return (
     <div className="food-catalogue">
       <div className="food-catalogue__catalogue">
-        <div className="food-catalogue__catalogue__radio">
+        <div ref={hScroll} className="food-catalogue__catalogue__radio">
           <div className="food-catalogue__catalogue__radio__inner">
             <input
               checked={category === 0}
@@ -175,7 +241,10 @@ const FoodCatalogue = () => {
                     </button>
                     <div className="food-catalogue__catalogue__card__option">
                       {food.option.map((optName, j) => (
-                        <div className="food-catalogue__catalogue__card__option__container">
+                        <div
+                          ref={h2Scroll}
+                          className="food-catalogue__catalogue__card__option__container"
+                        >
                           <div className="food-catalogue__catalogue__card__option__inner">
                             {foodOptions[optName].map((opt, k) => (
                               <>
@@ -228,45 +297,64 @@ const FoodCatalogue = () => {
           <div className="food-catalogue__cart__inner">
             {Object.keys(displayFoodCart).length !== 0
               ? Object.keys(displayFoodCart).map((item) => (
-                  <>
-                    <div className="food-catalogue__cart__name">{item}</div>
-                    <div className="food-catalogue__cart__amount">
-                      <button
-                        onClick={() => {
-                          let temp = { ...displayFoodCart };
-                          temp[item].amount <= 0
-                            ? (temp[item].amount = 0)
-                            : (temp[item].amount -= 1);
-                          setDisplayFoodCart(temp);
-                        }}
-                      >
-                        <AiOutlineMinusCircle />
-                      </button>
-                      <span>{displayFoodCart[item].amount}</span>
-                      <button
-                        onClick={() => {
-                          let temp = { ...displayFoodCart };
-                          temp[item].amount >= 10
-                            ? (temp[item].amount = 10)
-                            : (temp[item].amount += 1);
-                          setDisplayFoodCart(temp);
-                        }}
-                      >
-                        <AiOutlinePlusCircle />
-                      </button>
-                      <span>
-                        {displayFoodCart[item].price *
-                          displayFoodCart[item].amount}
-                      </span>
-                    </div>
-                  </>
+                  <div className="food-catalogue__cart__group">
+                    <section>
+                      <div className="food-catalogue__cart__name">
+                        {lang === "th" ? item : displayFoodCart[item].en}
+                      </div>
+                      <div className="food-catalogue__cart__amount">
+                        <button
+                          onClick={() => {
+                            let temp = { ...displayFoodCart };
+                            let fcTemp = [...foodCart];
+                            let res = "";
+                            if (temp[item].amount <= 0) {
+                              delete temp[item];
+                            } else temp[item].amount -= 1;
+                            foodCart.map((fc, i) =>
+                              fc.th === item ? (res = i) : null
+                            );
+                            fcTemp.splice(res, 1);
+                            setFoodCart(fcTemp);
+                            setDisplayFoodCart(temp);
+                          }}
+                        >
+                          <AiOutlineMinusCircle />
+                        </button>
+                        <span>{displayFoodCart[item].amount}</span>
+                        <button
+                          onClick={() => {
+                            let temp = { ...displayFoodCart };
+                            let fcTemp = [...foodCart];
+                            temp[item].amount >= 10
+                              ? (temp[item].amount = 10)
+                              : (temp[item].amount += 1);
+                            fcTemp.push({
+                              th: item,
+                              en: temp[item].en,
+                              price: temp[item].price,
+                            });
+                            setFoodCart(fcTemp);
+                            setDisplayFoodCart(temp);
+                          }}
+                        >
+                          <AiOutlinePlusCircle />
+                        </button>
+                      </div>
+                    </section>
+                    <span>
+                      &#3647;
+                      {displayFoodCart[item].price *
+                        displayFoodCart[item].amount}
+                    </span>
+                  </div>
                 ))
               : null}
           </div>
         </div>
         <BookingButtons
           onNext={handleOnNext}
-          price={Number(searchParams.get("_p"))}
+          price={Number(searchParams.get("_p")) + totalFoodPrice}
           disabled={false}
           page={4}
           pastUrlParams={searchParams.toString().split(".0000")[0]}

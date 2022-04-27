@@ -8,7 +8,7 @@ import log from "../../../services/utils/log";
 import actions from "../../../services/actions";
 import Loading from "../../../components/loading";
 
-const Login = () => {
+const Login = ({ type }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme);

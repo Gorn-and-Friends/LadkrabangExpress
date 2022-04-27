@@ -32,6 +32,7 @@ const Ticket = ({ ticket }) => {
   }, [ticket]);
 
   useEffect(() => {
+    console.log(displayTicket);
     setDisplayOrigin(displayTicket.origin);
     setDisplayDestination(displayTicket.destination);
     setDisplayDepTime(displayTicket.departureTime);
@@ -162,56 +163,78 @@ const Ticket = ({ ticket }) => {
         </div>
       </div>
       <div className="ticket__detail">
-        <h3>
-          <MdMyLocation />
-          &ensp;{showStation("o")}&ensp;
-          <MdLocationOn />
-          &ensp;{showStation("d")}&ensp;
-        </h3>
-        <ul>
-          <li>
-            <span>{content.trainNo}&ensp;:</span>&ensp;
-            {displayTicket ? displayTicket.trainNumber : ""}
-          </li>
-          <li>
-            <span>{content.date}&ensp;:</span>&ensp;
-            {displayDate != {} ? displayDate.full : ""}
-          </li>
-          <li>
-            <span>{content.depTime.full}&ensp;:</span>&ensp;
-            {displayTicket ? displayDepTime : ""}
-          </li>
-          <li>
-            <span>{content.arrTime.full}&ensp;:</span>&ensp;
-            {displayTicket ? displayArrTime : ""}
-          </li>
-          <li>
-            <span>{content.duration}&ensp;:</span>&ensp;
-            {showDuration()}
-          </li>
-          <li>
-            <span>{content.class}&ensp;:</span>&ensp;
-            {displayTicket ? displayTicket.reservation_class : ""}
-          </li>
-          <li>
-            <span>{content.coach}&ensp;:</span>&ensp;
-            {displayTicket && displayTicket.seat_reservation
-              ? displayTicket.seat_reservation.coach
-              : ""}
-          </li>
-          <li>
-            <span>{content.seat}&ensp;:</span>&ensp;
-            {displayTicket && displayTicket.seat_reservation
-              ? displayTicket.seat_reservation.column +
-                displayTicket.seat_reservation.row
-              : ""}
-          </li>
-          {/* <li>+&ensp;Food&ensp;x1</li> */}
-          <li>
-            <span>{content.price}&ensp;:</span>&ensp;&#3647;
-            {displayTicket ? displayTicket.eaTicketPrice : ""}
-          </li>
-        </ul>
+        <div className="ticket__detail__inner">
+          <h3>
+            <MdMyLocation />
+            &ensp;{showStation("o")}&ensp;
+            <MdLocationOn />
+            &ensp;{showStation("d")}&ensp;
+          </h3>
+          <ul>
+            <li>
+              <span>{content.trainNo}&ensp;:</span>&ensp;
+              {displayTicket ? displayTicket.trainNumber : ""}
+            </li>
+            <li>
+              <span>{content.date}&ensp;:</span>&ensp;
+              {displayDate != {} ? displayDate.full : ""}
+            </li>
+            <li>
+              <span>{content.depTime.full}&ensp;:</span>&ensp;
+              {displayTicket ? displayDepTime : ""}
+            </li>
+            <li>
+              <span>{content.arrTime.full}&ensp;:</span>&ensp;
+              {displayTicket ? displayArrTime : ""}
+            </li>
+            <li>
+              <span>{content.duration}&ensp;:</span>&ensp;
+              {showDuration()}
+            </li>
+            <li>
+              <span>{content.class}&ensp;:</span>&ensp;
+              {displayTicket ? displayTicket.reservation_class : ""}
+            </li>
+            <li>
+              <span>{content.coach}&ensp;:</span>&ensp;
+              {displayTicket && displayTicket.seat_reservation
+                ? displayTicket.seat_reservation.coach
+                : ""}
+            </li>
+            <li>
+              <span>{content.seat}&ensp;:</span>&ensp;
+              {displayTicket && displayTicket.seat_reservation
+                ? displayTicket.seat_reservation.column +
+                  displayTicket.seat_reservation.row
+                : ""}
+            </li>
+            <li>
+              {displayTicket &&
+              displayTicket.food_reservation &&
+              displayTicket.food_reservation.length > 0 ? (
+                <>
+                  <span>{content.food}&ensp;:</span>
+                  <br />
+                  {displayTicket.food_reservation.length > 0
+                    ? displayTicket.food_reservation.map((fr) => (
+                        <>
+                          &ensp;&ensp;{lang === "th" ? fr.foodName : fr.en}
+                          &ensp;&ensp;&#3647;{fr.price + " x " + fr.amount}
+                          <br />
+                        </>
+                      ))
+                    : ""}
+                </>
+              ) : (
+                <></>
+              )}
+            </li>
+            <li>
+              <span>{content.price}&ensp;:</span>&ensp;&#3647;
+              {displayTicket ? displayTicket.eaTicketPrice : ""}
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );

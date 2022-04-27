@@ -109,7 +109,6 @@ const SeatSelection = () => {
 
   const handleOnNext = (e) => {
     e.preventDefault();
-    console.log(ticket);
     navigate({
       pathname: "/booking/4",
       search:

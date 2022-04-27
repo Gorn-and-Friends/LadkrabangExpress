@@ -63,5 +63,13 @@
     "num": "Card Number",
     "exp": "Expiraion Date",
     "cvc": "CVV/CVC"
+  },
+  "refund": {
+    "header": "Refund Request",
+    "name": "Name",
+    "email": "Email",
+    "reason": "Please state the reason",
+    "submit": "Submit",
+    "cancel": "Cancel"
   }
 }

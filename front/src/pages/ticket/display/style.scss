@@ -14,60 +14,74 @@
   }
 
   &__header {
-    width: 80%;
+    width: 80vw;
     height: calc(2 * $navbar-height);
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 
-    a:nth-child(2) > h1 {
-      @include themify() {
-        color: t(main-font-color);
-      }
-      @include languify() {
-        font: 200 - l(title-font-bal-ratio) 3rem l(title-font);
-      }
+    > a {
+      display: flex;
+      flex: 2;
+      justify-content: center;
+      align-items: center;
 
-      &:hover {
-        transform: scale(1.01);
+      > h1 {
+        @include themify() {
+          color: t(main-font-color);
+        }
+        @include languify() {
+          font: 200 - l(title-font-bal-ratio) 3rem l(title-font);
+        }
+
+        &:hover {
+          transform: scale(1.01);
+        }
       }
     }
 
-    > button,
-    > a:not(:nth-child(2)) {
+    > div {
       display: flex;
       justify-content: center;
       align-items: center;
-      cursor: pointer;
-      height: 5vh;
-      padding: 0.2rem 0.6rem;
-      border-radius: 0.4rem;
-      border: none;
-      transition: all $transition-time ease-in-out;
-      @include languify() {
-        font: 600 1vw l(subtitle-font);
-      }
-      @include themify() {
-        color: t(main-font-color);
-        background-color: t(main-bg-color);
-      }
+      flex: 1;
 
-      &:hover {
-        transform: scale(1.2);
-      }
+      button,
+      a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 5vh;
+        cursor: pointer;
+        padding: 0.2rem 0.6rem;
+        border-radius: 0.4rem;
+        border: none;
+        transition: all $transition-time ease-in-out;
+        @include languify() {
+          font: 600 1vw l(subtitle-font);
+        }
+        @include themify() {
+          color: t(main-font-color);
+          background-color: t(main-bg-color);
+        }
 
-      &:active {
-        transform: scale(1.1);
+        &:hover {
+          transform: scale(1.2);
+        }
+
+        &:active {
+          transform: scale(1.1);
+        }
+      }
+      
+      button {
+        @include languify() {
+          font-size: 2vw;
+        }
       }
     }
 
-    > button {
-      @include languify() {
-        font-size: 2vw;
-      }
-    }
-
-    > a:not(:nth-child(2)) {
+    a:not(:nth-child(2)) {
       border: 0.1rem solid orange;
     }
   }

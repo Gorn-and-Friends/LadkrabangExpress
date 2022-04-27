@@ -17,6 +17,7 @@
   "seat": "Seat",
   "row": "Row",
   "column": "Column",
+  "food": "Food",
   "price": "Price",
   "passenger": "Passenger"
 }

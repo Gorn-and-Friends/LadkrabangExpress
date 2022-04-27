@@ -196,5 +196,89 @@
 
   &__cart {
     width: 20%;
+    height: calc(100vh - 2.2 * $navbar-height);
+    padding: 0 2vw;
+    padding-top: 3vh;
+
+    &__container {
+      width: 100%;
+      height: calc(100% - 2.4 * $navbar-height);
+      margin-bottom: calc(0.6 * $navbar-height);
+      overflow: auto;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    &__inner {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-top: 6rem;
+    }
+
+    &__group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      @include languify() {
+        font: 400 1.2vw l(subtitle-font);
+      }
+      @include themify() {
+        background-color: t(main-bg-color);
+        color: t(main-font-color);
+      }
+
+      section {
+        display: flex;
+        flex-direction: column;
+        gap: 1vw;
+
+        button {
+          cursor: pointer;
+          width: 1.5rem;
+          height: 1.5rem;
+          border: none;
+
+          svg {
+            font-size: 1.4vw;
+          }
+
+          @include themify() {
+            background-color: t(main-bg-color);
+            color: t(main-font-color);
+          }
+        }
+
+        span {
+          padding: 0 0.5vw;
+        }
+      }
+
+      span {
+        @include themify() {
+          color: t(color-2);
+        }
+      }
+
+      svg {
+        @include themify() {
+          color: t(main-color);
+        }
+      }
+
+      > span {
+        font-size: 1.6vw;
+        font-weight: 500;
+        padding-left: 0.5vw;
+      }
+    }
+
+    &__amount {
+      display: flex;
+      align-items: center;
+    }
   }
 }

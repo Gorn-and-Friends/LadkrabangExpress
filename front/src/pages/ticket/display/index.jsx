@@ -66,6 +66,7 @@ const DisplayBookingTicket = () => {
           },
         };
       });
+      newTickets[0] = { ...newTickets[0], food_reservation: tickets.food_reservation };
       setDisplayTickets(newTickets);
     } catch {}
   }, [tickets]);
@@ -80,15 +81,17 @@ const DisplayBookingTicket = () => {
       <div className="display-ticket">
         <div className="display-ticket__container">
           <div className="display-ticket__header">
-            <Link to="edit">{lang === "th" ? "แก้ไข" : "Edit"}</Link>
+            <div><Link to="refund">{lang === "th" ? "ยกเลิกการจอง" : "Request refund"}</Link></div>
             <Link to="/profile">
               <h1>
                 {lang === "th" ? "ขอให้เดินทางโดยสวัสดิภาพ!" : "Bon Voyage!"}
               </h1>
             </Link>
-            <button onClick={handlePrint}>
-              <AiFillPrinter />
-            </button>
+            <div>
+              <button onClick={handlePrint}>
+                <AiFillPrinter />
+              </button>
+            </div>
           </div>
           <div className="display-ticket__content">
             <div className="display-ticket__qr">
