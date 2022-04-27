@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const ticketSchema = new mongoose.Schema(
     {
         user_id: {type:Object}, //,required:true
+        username: {type:String},
         train_id: {type:Object}, //,required:true
         train_number: {type:String},
         origin: {type:String}, //,required:true
@@ -20,7 +21,9 @@ const ticketSchema = new mongoose.Schema(
         food_reservation: {type:Array, default:[]},
         ticketPrice: {type:Number, default:0},
         reservation_price: {type:Number, default:0},
+        food_price: {type:Number, default:0},
         total_price: {type:Number, default:0},
+        timestamp: {type:Object}
 
     }
 )

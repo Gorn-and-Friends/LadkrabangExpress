@@ -1,5 +1,6 @@
 const userModel = require("../model/user.js");
 const ticketModel = require("../model/ticket.js");
+const refundModel = require("../model/refund.js")
 const bcrypt = require("bcryptjs");
 const jsonwebtoken = require("jsonwebtoken");
 const auth = require("../middleware/auth");
@@ -41,8 +42,9 @@ class User {
 
       user.token = token;
       user.save();
-
-      res.status(201).json(user);
+      const result = user.toObject()
+      result.isStaff = false
+      res.status(201).json(result);
     } catch (err) {
       console.log(err);
     }
@@ -50,7 +52,6 @@ class User {
 
   static async login(req, res) {
     try {
-      // console.log(req.body)
       const { username, password } = req.body;
 
       if (!(username && password)) {
@@ -71,7 +72,6 @@ class User {
       }
 
       const email = user.email;
-      // console.log("cat : " + email)
       if (user && (await bcrypt.compare(password, user.password))) {
         const token = jsonwebtoken.sign(
           { user_id: user._id, email },
@@ -80,9 +80,13 @@ class User {
             expiresIn: "2d",
           }
         );
-        user.token = token;
-        res.status(200).json(user);
-        // res.status(200).send(token)
+        user.token = token
+        user.save()
+
+        const result = user.toObject()
+        delete result.password
+        result.isStaff = false
+        res.status(201).json(result);
       } else {
         res.status(400).send("Invalid login");
       }
@@ -95,19 +99,18 @@ class User {
   static verifyTokenGetUserID(token) {
     try {
       const decoded = jsonwebtoken.verify(token, process.env.TOKEN_KEY);
-      // console.log(decoded)
       return decoded.user_id;
     } catch (err) {
       return false;
-      console.log(err);
     }
   }
+
+  
 
   static async showUserProfile(req, res) {
     try {
       // front ส่ง token เราเอา token มาหา id
       const userID = await User.verifyTokenGetUserID(req.body.token);
-      // console.log(typeof(userID))
       // console.log(userID)
       const objUserID = mongoose.Types.ObjectId(userID);
 
@@ -130,12 +133,163 @@ class User {
         result.push(temp);
       }
 
-      res.send(result);
+      res.send(result.reverse());
     } catch (err) {
       console.log(err);
       res.send("Error from back");
     }
   }
+
+  static async refund(req,res){
+    try{
+      const { token , ticketID , reason} = req.body
+
+      const userID = User.verifyTokenGetUserID(token)
+      if(userID === false){
+          return res.send("Token expired").status(401)
+        }
+      const foundTicket = await ticketModel.findById(mongoose.Types.ObjectId(ticketID))
+      if(!foundTicket){
+        return res.send("Ticket not found").status(404)
+      }
+      
+      const localTime = new Date()
+
+      const refundAdded = new refundModel({
+        ticketID: foundTicket._id,
+        userID: userID,
+        ticketInfo: foundTicket.toObject(),
+        reason: reason,
+        timestamp: localTime.toLocaleString("th-TH")
+      })
+
+      refundAdded.save()
+      
+      res.send(refundAdded).status(200)
+    }catch(err){
+      console.log(err)
+      res.send("Error in back")
+    }
+
+  }
+
+  static async editProfile(req,res){
+    try{
+      const { token, firstname, lastname, username, email} = req.body
+      const userID = await User.verifyTokenGetUserID(token)
+      console.log(userID)
+      if(userID === false){
+        return res.send("Expired token").status(201)
+      }
+
+      //check is username and email exit
+      const foundEmail = await userModel.findOne({"email":email})
+      const foundUsername = await userModel.findOne({"username": username})
+
+      if(foundEmail){
+        if(foundEmail._id != userID){
+          return res.send("This email has been taken")
+        }
+      }
+      if(foundUsername){
+        if(foundUsername._id != userID){
+          return res.send("This username has been taken")
+        }
+      }  
+      
+      const foundUser = await userModel.findById(mongoose.Types.ObjectId(userID))
+      console.log(foundUser)
+      foundUser.firstname = firstname
+      foundUser.lastname = lastname
+      foundUser.username = username
+      foundUser.email = email
+
+      foundUser.save()
+      const result = foundUser.toObject()
+      delete result.password
+      res.send(result).status(200)
+    }catch(err){
+      console.log(err)
+      res.send("Error in back").status(500)
+    }
+  }
+
+  static async confirmOldPassword(req,res){
+    try{
+      const { token , password} = req.body
+      const userID = await User.verifyTokenGetUserID(token)
+      if(userID === false){
+        return res.send("Token expired").status(400)
+      }
+      const user = await userModel.findById(mongoose.Types.ObjectId(userID))
+      if (user && (await bcrypt.compare(password, user.password))) {
+
+        res.status(200).json("Password correct");
+      } else {
+        res.status(400).send("Password incorrect");
+      }
+    }catch(err){
+      console.log(err)
+      res.send("Error in back")
+    }
+  }
+
+  static async changePassword(req,res){
+    try{
+      const { token , password} = req.body
+      const userID = await User.verifyTokenGetUserID(token)
+      if(userID === false){
+        return res.send("Token expired").status(400)
+      }
+      const user = await userModel.findById(mongoose.Types.ObjectId(userID))
+      
+      user.password = await bcrypt.hash(password, 10);
+      user.save()
+      const result = user.toObject()
+      delete result.password
+      result.isStaff = false
+      res.status(200).send("Password has changed");
+    }catch(err){
+      console.log(err)
+      res.send("Error in back").status(500)
+    }
+  }
+
+  static async verifyEmailResetPassword(req,res){
+    try{
+      const { email } = req.body
+      const foundUser = await userModel.findOne({"email": email})
+      if(!foundUser){
+        return res.send("Email not found").status(404)
+      }
+      const result = {
+        "userID": foundUser.userID
+      }
+      res.send(result).status(200)
+    }catch(err){
+      console.log(err)
+      res.send("Error in back").status(500)
+    }
+  }
+
+  static async forgot(req,res){
+    try{
+      const {userID, password } = req.body
+      const foundUser = await userModel.findById(mongoose.Types.ObjectId(userID))
+      if(!foundUser){
+        return res.send("User not found").status(400)
+      }
+      foundUser.password = await bcrypt.hash(password, 10)
+      foundUser.save()
+
+      res.send("Change password complet, Please login")
+    }catch(err){
+      console.log(err)
+      res.send("Error in back")
+    }
+  }
+
+  
 }
 
 module.exports = User;

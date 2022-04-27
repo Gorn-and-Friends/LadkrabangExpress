@@ -1,6 +1,7 @@
 const ticketModel = require("../model/ticket.js");
 const userModel = require("../model/user.js");
 const staffModel = require("../model/staff.js");
+const refundModel = require("../model/refund.js")
 const mongoose = require("mongoose");
 const Ticket = require("./ticketDAO.js");
 const bcrypt = require("bcryptjs");
@@ -10,8 +11,12 @@ class Staff {
   static async showReservTicket(req, res) {
     try {
       //ใช้กับหน้า staff เพื่อแสดงตั๋วที่ทำการจองที่นั่งทั้งหมดในขบวนนั้น
-      const { trainNumber, date, trainClass } = req.body;
-
+      const { trainNumber, date, trainClass, token } = req.body;
+      const staffVerify = await Staff.verifyTokenGetStaffID(token)
+      if(staffVerify == false){
+        res.send("token expired").status(201);
+        return;
+      }
       const d = new Date(date);
 
       const foundTicket = await ticketModel.find({
@@ -24,9 +29,9 @@ class Staff {
         const foundUser = await userModel.findById(userID);
         let isAddedFood = false;
         for (let j = 0; j < foundTicket[i].seat_reservation.length; j++) {
-          console.log(foundTicket[i].train_number);
+          // console.log(foundTicket[i].train_number);
           let isReservSeat = true;
-          console.log(foundTicket[i].seat_reservation);
+          // console.log(foundTicket[i].seat_reservation);
           if (
             foundTicket[i].seat_reservation[j].coach === null &&
             foundTicket[i].seat_reservation[j].row === null &&
@@ -130,7 +135,10 @@ class Staff {
       staff.token = token;
       staff.save();
 
-      res.status(201).json(staff);
+      const result = staff.toObject()
+      delete result.password
+      result.isStaff = true
+      res.status(201).json(result);
     } catch (err) {
       console.log(err);
     }
@@ -156,7 +164,6 @@ class Staff {
         res.status(400).send("username not found");
         return;
       }
-      console.log(staff);
       const email = staff.email;
 
       if (staff && (await bcrypt.compare(password, staff.password))) {
@@ -168,7 +175,12 @@ class Staff {
           }
         );
         staff.token = token;
-        res.status(200).json(staff);
+        staff.save()
+        
+        const result = staff.toObject()
+        delete result.password
+        result.isStaff = true
+        res.status(201).json(result);
       } else {
         res.status(400).send("Invalid login");
       }
@@ -178,15 +190,47 @@ class Staff {
     }
   }
 
-  static verifyTokenGetUserID(token) {
+  static verifyTokenGetStaffID(token) {
     try {
       const decoded = jsonwebtoken.verify(token, process.env.TOKEN_KEY);
-      // console.log(decoded)
       return decoded.staff_id;
     } catch (err) {
       return false;
       console.log(err);
     }
+  }
+
+  static async viewRefund(req,res){
+    try{
+      const staffVerify = await Staff.verifyTokenGetStaffID(req.body.token)
+      if(staffVerify === false){
+        res.send("token expired").send(201)
+      }
+      
+      let foundRefund = await refundModel.find()
+      
+      res.send(foundRefund).status(200)
+    
+    }catch(err){
+      console.log(err)
+      res.send("Error in back")
+    }
+  }
+
+  static async acceptRefun(req,res){
+    try{
+      const { token , refundID } = req.body
+
+      await refundModel.findByIdAndDelete(mongoose.Types.ObjectId(refundID))
+      const updateDB = refundModel.find()
+      console.log(updateDB)
+      res.send(updateDB).status(200)
+    }catch(err){
+      console.log(err)
+      res.send("Error in back").status(500)
+    }
+    
+
   }
 }
 

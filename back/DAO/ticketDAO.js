@@ -6,14 +6,12 @@ const User = require("./userDAO.js");
 const Train = require("./trainDAO");
 const fs = require("fs");
 const user = require("../model/user.js");
-const { verifyTokenGetUserID } = require("./userDAO.js");
 
 class Ticket {
   static async addTicket(req, res) {
     try {
       let {
         token,
-        // user_id,
         train_id,
         date,
         origin,
@@ -23,9 +21,10 @@ class Ticket {
         departureTime,
         arrivalTime,
         seat_reservation,
+        food_reservation
       } = req.body;
       console.log(req.body);
-      let user_id = User.verifyTokenGetUserID(token);
+      let user_id = User.verifyTokenGetUserID(token)
       if (user_id === false) {
         res.send("token expired").status(201);
         return;
@@ -35,28 +34,29 @@ class Ticket {
       user_id = mongoose.Types.ObjectId(user_id);
       const d = new Date(date);
       const userAddTicket = await userModel.findById(user_id);
-      // console.log(userAddTicket)
 
       let ticketPrice = 0;
       let reservationPrice = 0;
       let seatLayout = Object;
       if (seat_reservation.length > 0) {
-        reservationPrice = 15;
-        // seatLayout = Train.makeSeatLayout(train_id, d)
+        reservationPrice = 10;
       }
       ticketPrice = await Train.calculatePriceClass(
         reservation_class,
         origin,
         destination
       );
-      let totalPrice = passenger * ticketPrice + reservationPrice;
+      const foodPrice = Ticket.calculateFoodPrice(food_reservation)
+      let totalPrice = (passenger * ticketPrice) + reservationPrice + foodPrice
       const trainNumber = await trainModel.findById(
         mongoose.Types.ObjectId(train_id)
       );
       //สร้าง doc ลง database
+        const localTime = new Date()
 
       const ticketAdded = new ticketModel({
         user_id: user_id, //,required:true
+        username: userAddTicket.username,
         train_id: train_id, //,required:true
         train_number: trainNumber.train_number,
         origin: origin, //,required:true
@@ -66,20 +66,20 @@ class Ticket {
         date: d,
         passenger: passenger, //,required:true
         reservation_class: reservation_class,
-
         seat_reservation: seat_reservation,
-
         ticketPrice: ticketPrice,
         reservation_price: reservationPrice,
+        food_reservation: food_reservation,
+        food_price: foodPrice,
         total_price: totalPrice,
+        timestamp: localTime.toLocaleString("th-TH")
       });
 
       ticketAdded.save();
-      userAddTicket.ticket.push(ticketAdded._id);
-      userAddTicket.save();
+      // userAddTicket.ticket.push(ticketAdded._id);
+      // userAddTicket.save();
 
       res.send(ticketAdded);
-      // res.send("cat")
     } catch (err) {
       console.log(err);
       res.send("Error in backend");
@@ -96,7 +96,6 @@ class Ticket {
 
       const exitTicket = await Ticket.findReservedSeat(trainID, date);
       let reservedSeat = Ticket.filterOnlySeat(exitTicket);
-      console.log(reservedSeat);
 
       const rawdata = fs.readFileSync("./doc/seatLayout.json");
       let jsonTemp = JSON.parse(rawdata);
@@ -182,6 +181,15 @@ class Ticket {
     }
     return result;
   }
+
+  static calculateFoodPrice(food){
+    let resultPrice = 0
+    for(let i = 0 ; i < food.length ; i++){
+      resultPrice += Number(food[i].amount) * Number(food[i].price)
+    }
+    return resultPrice
+  }
+
 }
 
 module.exports = Ticket;
