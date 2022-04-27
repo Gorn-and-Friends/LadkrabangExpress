@@ -6,7 +6,6 @@ const User = require("./userDAO.js");
 const Train = require("./trainDAO");
 const fs = require("fs");
 const user = require("../model/user.js");
-const { verifyTokenGetUserID } = require("./userDAO.js");
 
 class Ticket {
   static async addTicket(req, res) {
@@ -25,7 +24,7 @@ class Ticket {
         food_reservation
       } = req.body;
       console.log(req.body);
-      let user_id = User.verifyTokenGetUserID(token);
+      let user_id = User.verifyTokenGetUserID(token)
       if (user_id === false) {
         res.send("token expired").status(201);
         return;
@@ -53,10 +52,11 @@ class Ticket {
         mongoose.Types.ObjectId(train_id)
       );
       //สร้าง doc ลง database
-      
+        const localTime = new Date()
 
       const ticketAdded = new ticketModel({
         user_id: user_id, //,required:true
+        username: userAddTicket.username,
         train_id: train_id, //,required:true
         train_number: trainNumber.train_number,
         origin: origin, //,required:true
@@ -72,11 +72,12 @@ class Ticket {
         food_reservation: food_reservation,
         food_price: foodPrice,
         total_price: totalPrice,
+        timestamp: localTime.toLocaleString("th-TH")
       });
 
       ticketAdded.save();
-      userAddTicket.ticket.push(ticketAdded._id);
-      userAddTicket.save();
+      // userAddTicket.ticket.push(ticketAdded._id);
+      // userAddTicket.save();
 
       res.send(ticketAdded);
     } catch (err) {
@@ -188,6 +189,7 @@ class Ticket {
     }
     return resultPrice
   }
+
 }
 
 module.exports = Ticket;

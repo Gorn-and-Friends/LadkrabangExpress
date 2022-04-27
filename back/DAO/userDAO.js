@@ -1,5 +1,6 @@
 const userModel = require("../model/user.js");
 const ticketModel = require("../model/ticket.js");
+const refundModel = require("../model/refund.js")
 const bcrypt = require("bcryptjs");
 const jsonwebtoken = require("jsonwebtoken");
 const auth = require("../middleware/auth");
@@ -79,10 +80,13 @@ class User {
             expiresIn: "2d",
           }
         );
+        user.token = token
+        user.save()
+
         const result = user.toObject()
+        delete result.password
         result.isStaff = false
         res.status(201).json(result);
-        // res.status(200).send(token)
       } else {
         res.status(400).send("Invalid login");
       }
@@ -95,18 +99,19 @@ class User {
   static verifyTokenGetUserID(token) {
     try {
       const decoded = jsonwebtoken.verify(token, process.env.TOKEN_KEY);
-      // console.log(decoded)
       return decoded.user_id;
     } catch (err) {
       return false;
-      console.log(err);
     }
   }
+
+  
 
   static async showUserProfile(req, res) {
     try {
       // front ส่ง token เราเอา token มาหา id
       const userID = await User.verifyTokenGetUserID(req.body.token);
+      // console.log(userID)
       const objUserID = mongoose.Types.ObjectId(userID);
 
       // foundTicket => array of document ทุก documenyt ที่มี id ตรงกับ ที่ login เข้ามา
@@ -128,12 +133,122 @@ class User {
         result.push(temp);
       }
 
-      res.send(result);
+      res.send(result.reverse());
     } catch (err) {
       console.log(err);
       res.send("Error from back");
     }
   }
+
+  static async refund(req,res){
+    try{
+      const { token , ticketID , reason} = req.body
+
+      const userID = User.verifyTokenGetUserID(token)
+      if(userID === false){
+          return res.send("Token expired").status(401)
+        }
+      const foundTicket = await ticketModel.findById(mongoose.Types.ObjectId(ticketID))
+      if(!foundTicket){
+        return res.send("Ticket not found").status(404)
+      }
+      
+      const localTime = new Date()
+
+      const refundAdded = new refundModel({
+        ticketID: foundTicket._id,
+        userID: userID,
+        ticketInfo: foundTicket.toObject(),
+        reason: reason,
+        timestamp: localTime.toLocaleString("th-TH")
+      })
+
+      refundAdded.save()
+      
+      res.send(refundAdded).status(200)
+    }catch(err){
+      console.log(err)
+      res.send("Error in back")
+    }
+
+  }
+
+  static async editProfile(req,res){
+    try{
+      const { token, firstname, lastname, username, email} = req.body
+      const userID = await User.verifyTokenGetUserID(token)
+      console.log(userID)
+      if(userID === false){
+        return res.send("Expired token").status(201)
+      }
+
+      //check is username and email exit
+      const foundEmail = await userModel.findOne({"email":email})
+      const foundUsername = await userModel.findOne({"username": username})
+
+      if(foundEmail){
+        if(foundEmail._id != userID){
+          return res.send("This email has been taken")
+        }
+      }
+      if(foundUsername){
+        if(foundUsername._id != userID){
+          return res.send("This username has been taken")
+        }
+      }  
+      
+      const foundUser = await userModel.findById(mongoose.Types.ObjectId(userID))
+      console.log(foundUser)
+      foundUser.firstname = firstname
+      foundUser.lastname = lastname
+      foundUser.username = username
+      foundUser.email = email
+
+      foundUser.save()
+      const result = foundUser.toObject()
+      delete result.password
+      res.send(result).status(200)
+    }catch(err){
+      console.log(err)
+      res.send("Error in back").status(500)
+    }
+  }
+
+  static async changePassword(req,res){
+    try{
+      const { token , oldPassword, newPassword} = req.body
+      const userID = await User.verifyTokenGetUserID(token)
+      if(userID === false){
+        return res.send("Token expired").status(400)
+      }
+      const user = await userModel.findById(mongoose.Types.ObjectId(userID))
+      if (user && (await bcrypt.compare(oldPassword, user.password))) {
+        const email = user.email
+        const token = jsonwebtoken.sign(
+          { user_id: user._id, email },
+          process.env.TOKEN_KEY,
+          {
+            expiresIn: "2d",
+          }
+        );
+        
+        user.password = await bcrypt.hash(newPassword, 10);
+        user.token = token
+        user.save()
+        const result = user.toObject()
+        delete result.password
+        result.isStaff = false
+        res.status(201).json(result);
+      } else {
+        res.status(400).send("Password incorrect");
+      }
+    }catch(err){
+      console.log(err)
+      res.send("Error in back").status(500)
+    }
+  }
+
+  
 }
 
 module.exports = User;

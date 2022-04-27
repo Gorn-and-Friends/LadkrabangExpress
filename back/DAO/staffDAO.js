@@ -1,6 +1,7 @@
 const ticketModel = require("../model/ticket.js");
 const userModel = require("../model/user.js");
 const staffModel = require("../model/staff.js");
+const refundModel = require("../model/refund.js")
 const mongoose = require("mongoose");
 const Ticket = require("./ticketDAO.js");
 const bcrypt = require("bcryptjs");
@@ -11,7 +12,7 @@ class Staff {
     try {
       //ใช้กับหน้า staff เพื่อแสดงตั๋วที่ทำการจองที่นั่งทั้งหมดในขบวนนั้น
       const { trainNumber, date, trainClass, token } = req.body;
-      const staffVerify = await Staff.verifyTokenGetUserID(token)
+      const staffVerify = await Staff.verifyTokenGetStaffID(token)
       if(staffVerify == false){
         res.send("token expired").status(201);
         return;
@@ -135,6 +136,7 @@ class Staff {
       staff.save();
 
       const result = staff.toObject()
+      delete result.password
       result.isStaff = true
       res.status(201).json(result);
     } catch (err) {
@@ -173,9 +175,10 @@ class Staff {
           }
         );
         staff.token = token;
-
+        staff.save()
         
         const result = staff.toObject()
+        delete result.password
         result.isStaff = true
         res.status(201).json(result);
       } else {
@@ -187,7 +190,7 @@ class Staff {
     }
   }
 
-  static verifyTokenGetUserID(token) {
+  static verifyTokenGetStaffID(token) {
     try {
       const decoded = jsonwebtoken.verify(token, process.env.TOKEN_KEY);
       return decoded.staff_id;
@@ -195,6 +198,39 @@ class Staff {
       return false;
       console.log(err);
     }
+  }
+
+  static async viewRefund(req,res){
+    try{
+      const staffVerify = await Staff.verifyTokenGetStaffID(req.body.token)
+      if(staffVerify === false){
+        res.send("token expired").send(201)
+      }
+      
+      let foundRefund = await refundModel.find()
+      
+      res.send(foundRefund).status(200)
+    
+    }catch(err){
+      console.log(err)
+      res.send("Error in back")
+    }
+  }
+
+  static async acceptRefun(req,res){
+    try{
+      const { token , refundID } = req.body
+
+      await refundModel.findByIdAndDelete(mongoose.Types.ObjectId(refundID))
+      const updateDB = refundModel.find()
+      console.log(updateDB)
+      res.send(updateDB).status(200)
+    }catch(err){
+      console.log(err)
+      res.send("Error in back").status(500)
+    }
+    
+
   }
 }
 
