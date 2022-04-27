@@ -214,37 +214,78 @@ class User {
     }
   }
 
-  static async changePassword(req,res){
+  static async confirmOldPassword(req,res){
     try{
-      const { token , oldPassword, newPassword} = req.body
+      const { token , password} = req.body
       const userID = await User.verifyTokenGetUserID(token)
       if(userID === false){
         return res.send("Token expired").status(400)
       }
       const user = await userModel.findById(mongoose.Types.ObjectId(userID))
-      if (user && (await bcrypt.compare(oldPassword, user.password))) {
-        const email = user.email
-        const token = jsonwebtoken.sign(
-          { user_id: user._id, email },
-          process.env.TOKEN_KEY,
-          {
-            expiresIn: "2d",
-          }
-        );
-        
-        user.password = await bcrypt.hash(newPassword, 10);
-        user.token = token
-        user.save()
-        const result = user.toObject()
-        delete result.password
-        result.isStaff = false
-        res.status(201).json(result);
+      if (user && (await bcrypt.compare(password, user.password))) {
+
+        res.status(200).json("Password correct");
       } else {
         res.status(400).send("Password incorrect");
       }
     }catch(err){
       console.log(err)
+      res.send("Error in back")
+    }
+  }
+
+  static async changePassword(req,res){
+    try{
+      const { token , password} = req.body
+      const userID = await User.verifyTokenGetUserID(token)
+      if(userID === false){
+        return res.send("Token expired").status(400)
+      }
+      const user = await userModel.findById(mongoose.Types.ObjectId(userID))
+      
+      user.password = await bcrypt.hash(password, 10);
+      user.save()
+      const result = user.toObject()
+      delete result.password
+      result.isStaff = false
+      res.status(200).send("Password has changed");
+    }catch(err){
+      console.log(err)
       res.send("Error in back").status(500)
+    }
+  }
+
+  static async verifyEmailResetPassword(req,res){
+    try{
+      const { email } = req.body
+      const foundUser = await userModel.findOne({"email": email})
+      if(!foundUser){
+        return res.send("Email not found").status(404)
+      }
+      const result = {
+        "userID": foundUser.userID
+      }
+      res.send(result).status(200)
+    }catch(err){
+      console.log(err)
+      res.send("Error in back").status(500)
+    }
+  }
+
+  static async forgot(req,res){
+    try{
+      const {userID, password } = req.body
+      const foundUser = await userModel.findById(mongoose.Types.ObjectId(userID))
+      if(!foundUser){
+        return res.send("User not found").status(400)
+      }
+      foundUser.password = await bcrypt.hash(password, 10)
+      foundUser.save()
+
+      res.send("Change password complet, Please login")
+    }catch(err){
+      console.log(err)
+      res.send("Error in back")
     }
   }
 

@@ -20,6 +20,7 @@ router.route('/login').post(userDAO.login)
 router.route('/refund').post(userDAO.refund)
 router.route('/user/showUserProfile').post(userDAO.showUserProfile)
 router.route('/user/edit').post(userDAO.editProfile)
+router.route('/user/confirmPassword').post(userDAO.confirmOldPassword)
 router.route('/user/changePassword').post(userDAO.changePassword)
 
 router.route('/booking').post(trainDAO.customerFindTrain)
