@@ -56,7 +56,7 @@
   "forgot": {
     "legend": "Forgot Password",
     "header": "Enter an email to continue",
-    "email": "Email",
+    "user": "Username or Email",
     "submit": "Submit",
     "cancel": "Cancel"
   },

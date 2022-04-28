@@ -1,5 +1,23 @@
 @use "../../assets/styles/utils" as *;
 
+@keyframes arrow {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-1rem);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-1rem);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 .about {
   width: 100%;
   display: flex;
@@ -47,6 +65,21 @@
       }
       @include themify() {
         color: t(font-color-3);
+      }
+    }
+
+    > svg {
+      position: absolute;
+      cursor: pointer;
+      bottom: 1.5rem;
+      font-size: 3rem;
+      transition: all $transition-time ease-in-out;
+      @include themify() {
+        color: t(font-color-2);
+      }
+
+      &:hover {
+        animation: arrow 2s ease-in-out forwards 0s;
       }
     }
   }

@@ -17,7 +17,7 @@ const Forgot = () => {
       ? require("../../../assets/jsons/auth/th.json")
       : require("../../../assets/jsons/auth/en.json");
   const [token, setToken] = useState();
-  const [email, setEmail] = useState("");
+  const [user, setUser] = useState("");
 
   // useEffect(() => setToken(JSON.parse(localStorage.getItem("user")).id), []);
 
@@ -83,19 +83,35 @@ const Forgot = () => {
           <div className="forgot__form__container">
             <div className="forgot__form__item">
               <input
-                type="email"
+                type="test"
                 id="email"
                 name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
                 autoComplete="off"
                 placeholder=" "
                 required
               />
               <label htmlFor="email">
-                {content.forgot.email} <span>*</span>
+                {content.forgot.user} <span>*</span>
               </label>
             </div>
+            <input
+              type="text"
+              name="token"
+              value={token ? token : ""}
+              autoComplete="off"
+              placeholder=" "
+              style={{ display: "none" }}
+            />
+            <input
+              type="text"
+              name="token"
+              value={token ? token : ""}
+              autoComplete="off"
+              placeholder=" "
+              style={{ display: "none" }}
+            />
             <input
               type="text"
               name="token"
