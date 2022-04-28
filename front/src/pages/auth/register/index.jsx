@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./style.scss";
-import register from "../../../services/utils/registry";
+import user from "../../../services/utils/registry";
 import actions from "../../../services/actions";
 import Loading from "../../../components/loading";
+import staff from "../../../services/utils/staff";
 
 const Register = ({ type }) => {
   useEffect(() => {
@@ -19,6 +20,7 @@ const Register = ({ type }) => {
     lang === "th"
       ? require("../../../assets/jsons/auth/th.json")
       : require("../../../assets/jsons/auth/en.json");
+  const [searchParams, _] = useSearchParams({});
   const [err, setErr] = useState(false);
   const [missingInput, setMissingInput] = useState(false);
   const [invalidPword, setInvalidPword] = useState(false);
@@ -39,7 +41,7 @@ const Register = ({ type }) => {
     let invalidPwd = false;
     for (const i of Object.values(reg)) if (i == "") missing = true;
     if (reg.pword != "") {
-      let regEx = new RegExp("(?=.*[0-9])[a-zA-Z0-9]{8,}");
+      let regEx = new RegExp("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}");
       if (regEx.test(reg.pword)) {
         invalidPwd = false;
       } else {
@@ -70,7 +72,10 @@ const Register = ({ type }) => {
       setErr(false);
       try {
         dispatch(actions.setLoading(true));
-        const res = await register.register(reg);
+        const res =
+          type === "user"
+            ? await user.register(reg)
+            : await staff.register(reg);
         if (res != 409) navigate("/login");
       } catch (er) {
         dispatch(actions.setLoading(false));
@@ -91,7 +96,11 @@ const Register = ({ type }) => {
   ) : (
     <form className="register" onSubmit={handleOnSubmit}>
       <fieldset className="register__container">
-        <legend align="center">{content.register.header}</legend>
+        <legend align="center">
+          {type === "user"
+            ? content.register.header
+            : content.register.staff.header}
+        </legend>
         <div className="register__form">
           {err && (
             <div className="register__form__errors">
@@ -193,9 +202,24 @@ const Register = ({ type }) => {
             </label>
           </div>
           <div className="register__form__last-row">
-            <a href="/login" className="register__form__last-row__back">
+            <Link
+              to={
+                type === "user"
+                  ? `/login?q=${
+                      searchParams.get("q")
+                        ? searchParams.get("q").replace("/", "%2F")
+                        : "/"
+                    }`
+                  : `/login/staff?q=${
+                      searchParams.get("q")
+                        ? searchParams.get("q").replace("/", "%2F")
+                        : "/"
+                    }`
+              }
+              className="register__form__last-row__back"
+            >
               {content.register.buttons.back}
-            </a>
+            </Link>
             <input
               type="submit"
               className="register__form__last-row__submit"

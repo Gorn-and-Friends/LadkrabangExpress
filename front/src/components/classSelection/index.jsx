@@ -6,9 +6,9 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import "./style.scss";
-import class1 from "../../assets/images/class1.jpg";
-import class2 from "../../assets/images/class2.jpeg";
-import class3 from "../../assets/images/class3.jpg";
+import class1 from "../../assets/images/classes/class1.jpg";
+import class2 from "../../assets/images/classes/class2.jpeg";
+import class3 from "../../assets/images/classes/class3.jpg";
 import actions from "../../services/actions";
 import bookingServices from "../../services/utils/booking";
 import BookingButtons from "../bookingBtns";

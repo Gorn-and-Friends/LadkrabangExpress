@@ -19,6 +19,7 @@ const ChangePassword = () => {
   const [err, setErr] = useState(false);
   const [missingInput, setMissingInput] = useState(false);
   const [invalid, setInvalid] = useState(false);
+  const [unmatched, setUnmatched] = useState(false);
   const [token, setToken] = useState("");
   const [pword, setPword] = useState({
     new: "",
@@ -29,6 +30,11 @@ const ChangePassword = () => {
     setToken(params.token);
     console.log(params.token);
   }, []);
+
+  useEffect(() => {
+    console.log(missingInput, invalid, unmatched);
+    setErr(invalid || missingInput || unmatched);
+  }, [invalid, missingInput, unmatched]);
 
   const handleInputOnChange = ({ currentTarget: input }) => {
     const temp = { ...pword };
@@ -42,16 +48,13 @@ const ChangePassword = () => {
     let missing = false;
     for (const i of Object.values(pword)) if (i == "") missing = true;
     if (pword.new != "") {
-      let regEx = new RegExp("(?=.*[0-9])[a-zA-Z0-9]{8,}");
-      if (regEx.test(pword.new)) {
+      let regEx = new RegExp("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}");
+      if (regEx.test(pword.new.toString())) {
         invalidPwd = false;
       } else {
         invalidPwd = true;
       }
-    } else {
-      invalidPwd = true;
     }
-
     if (missing || invalidPwd || pword.new != pword.reNew) {
       setErr(true);
       if (missing) {
@@ -65,9 +68,9 @@ const ChangePassword = () => {
         setInvalid(false);
       }
       if (pword.new != pword.reNew) {
-        setInvalid(true);
+        setUnmatched(true);
       } else {
-        setInvalid(false);
+        setUnmatched(false);
       }
     } else {
       setErr(false);
@@ -77,7 +80,10 @@ const ChangePassword = () => {
           token: token,
           pword: pword.new,
         });
-        if (res == 200) navigate("/profile");
+        if (res == 200) {
+          alert("Password modified | เปลี่ยนรหัสผ่านแล้ว")
+          navigate("/profile");
+        }
       } catch (er) {
         dispatch(actions.setLoading(false));
         setErr(true);
@@ -98,6 +104,8 @@ const ChangePassword = () => {
                 ? content.changePword.err.missingInput
                 : invalid
                 ? content.changePword.err.invalid
+                : unmatched
+                ? content.changePword.err.noMatch
                 : ""}
             </div>
           )}

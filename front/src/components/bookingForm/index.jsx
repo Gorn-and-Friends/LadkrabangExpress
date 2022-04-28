@@ -57,8 +57,8 @@ const BookingForm = () => {
     setRouteErr(sessionStorage.getItem("routeError") == 1);
     setCurDate({ value: params.get("date"), onFocus: true });
     setCurTime({ value: params.get("time"), onFocus: true });
-    sessionStorage.setItem("trainList", JSON.stringify([]));
-    sessionStorage.setItem("seatList", JSON.stringify([]));
+    sessionStorage.removeItem("trainList");
+    sessionStorage.removeItem("seatList");
   }, []);
 
   useEffect(() => {

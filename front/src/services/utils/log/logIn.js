@@ -18,7 +18,7 @@ const logIn = async (info) => {
       lname: res.data.lastname,
       email: res.data.email,
       uname: res.data.username,
-      bdate: res.data.birthdate,
+      isStaff: false,
     })
   );
 

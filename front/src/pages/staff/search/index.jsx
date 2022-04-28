@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import "./style.scss";
-import NavBar from "../../components/navbar";
-import staffServices from "../../services/utils/staff";
-import actions from "../../services/actions";
+import { useSelector } from "react-redux";
+import "../style.scss";
+import NavBar from "../../../components/navbar";
+import staffServices from "../../../services/utils/staff";
 
-const Staff = () => {
-  const dispatch = useDispatch();
+const StaffSearch = () => {
   const lang = useSelector((state) => state.lang);
   const content =
     lang === "th"
-      ? require("../../assets/jsons/staff/th.json")
-      : require("../../assets/jsons/staff/en.json");
+      ? require("../../../assets/jsons/staff/th.json")
+      : require("../../../assets/jsons/staff/en.json");
   const [filtered, setFiltered] = useState(false);
+  const [filteredResList, setFilteredResList] = useState([]);
   const [resList, setResList] = useState([]);
   const [choice, setChoice] = useState(0);
   const [input, setInput] = useState({
@@ -21,8 +20,14 @@ const Staff = () => {
   });
 
   useEffect(() => {
-    console.log(resList);
-  }, [resList]);
+    filtered
+      ? setFilteredResList(resList.filter((rl) => rl.coach))
+      : setFilteredResList(resList);
+  }, [filtered, resList]);
+
+  useEffect(() => {
+    console.log(filtered);
+  }, [filtered]);
 
   const handleInputOnChange = (e) => {
     const temp = { ...input };
@@ -37,7 +42,8 @@ const Staff = () => {
       class: choice,
     };
     try {
-      const res = await staffServices.search(query);
+      let res = await staffServices.search(query);
+      console.log(res);
       if (res === 204) {
         alert("Double check you queries | กรุณาตรวจสอบข้อมูลที่กรอกอีกครั้ง");
       } else setResList(res);
@@ -134,17 +140,19 @@ const Staff = () => {
                 <th>{content.result.trainNo}</th>
                 <th>{content.result.name}</th>
                 <th>{content.result.date}</th>
+                <th>{content.result.depTime}</th>
+                <th>{content.result.arrTime}</th>
                 <th>{content.result.origin}</th>
                 <th>{content.result.destination}</th>
+                <th>{content.result.food}</th>
                 <th>{content.result.class}</th>
                 <th>{content.result.coach}</th>
                 <th>{content.result.seat}</th>
-                <th>{content.result.present}</th>
               </tr>
             </thead>
             <tbody>
-              {resList && resList.length > 0
-                ? resList.map((res) => (
+              {filteredResList != undefined && filteredResList.length > 0
+                ? filteredResList.map((res) => (
                     <tr>
                       <td>{res.trainNumber}</td>
                       <td>{res.firstname + " " + res.lastname}</td>
@@ -155,14 +163,28 @@ const Staff = () => {
                           day: "numeric",
                         })}
                       </td>
+                      <td>{res.departureTime}</td>
+                      <td>{res.arrivalTime}</td>
                       <td>{res.origin}</td>
                       <td>{res.destination}</td>
+                      <td>
+                        {res.food.length > 0 ? (
+                          <ul>
+                            {res.food.map((f) => (
+                              <li style={{ listStyleType: "none" }}>
+                                {lang === "th" ? f.foodName : f.en}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          "-"
+                        )}
+                      </td>
                       <td>{res.class}</td>
                       <td>{res.coach ? res.coach : "-"}</td>
                       <td>
                         {res.row && res.column ? res.row + res.column : "-"}
                       </td>
-                      <td></td>
                     </tr>
                   ))
                 : null}
@@ -174,4 +196,4 @@ const Staff = () => {
   );
 };
 
-export default Staff;
+export default StaffSearch;

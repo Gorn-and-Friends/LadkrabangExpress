@@ -125,7 +125,7 @@ const Checkout = () => {
       navigate({
         pathname: "/login",
         search: createSearchParams({
-          q: location.pathname + "?" + searchParams.toString(),
+          q: location.pathname + "?q=" + searchParams.toString(),
         }).toString(),
       });
   };

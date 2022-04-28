@@ -8,7 +8,6 @@ const forgot = async (info) => {
     email: info,
   });
 
-  console.log(res.data);
   return res.data;
 };
 

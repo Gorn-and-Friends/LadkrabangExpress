@@ -7,8 +7,7 @@
       "email": "Email",
       "uname": "Username",
       "pword": "Password",
-      "repwd": "Confirm Password",
-      "bdate": "Birthdate"
+      "repwd": "Confirm Password"
     },
     "buttons": {
       "back": "Back",
@@ -19,6 +18,9 @@
       "invalidPword": "Password must include at least 8 characters, a number and at least one capital letter.",
       "invalidRepwd": "Passwords do not match.",
       "invalidAcc": "This username or email is already taken."
+    },
+    "staff": {
+      "header": "Create a staff account"
     }
   },
   "login": {
@@ -27,12 +29,16 @@
       "username": "Username or email",
       "password": "Password"
     },
-    "forgot": "Forgot password",
+    "forgot": "Forgot password ?",
     "register": "Create an account",
     "button": "Log In",
     "errors": {
       "missingInput": "Please enter all required fields.",
       "invalidLogin": "Username or password is/are incorrect."
+    },
+    "staff": {
+      "header": "Log into staff section",
+      "forgot": ""
     }
   },
   "changePword": {

@@ -9,6 +9,7 @@ const fetchProfile = async () => {
   });
 
   sessionStorage.setItem("ticketList", JSON.stringify(res.data));
+  return res.data;
 };
 
 export default fetchProfile;

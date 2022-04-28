@@ -19,6 +19,10 @@
     },
     "about": {
       "title": "About"
+    },
+    "staff": {
+      "search": "Search",
+      "refund": "Refund"
     }
   },
   "right": {

@@ -4,6 +4,7 @@ import Hero from "../../components/hero";
 import HomeForm from "../../components/homeForm";
 import Loading from "../../components/loading";
 import NavBar from "../../components/navbar";
+import logServices from "../../services/utils/log";
 
 const Home = () => {
   const loading = useSelector((state) => state.loading);
@@ -14,7 +15,7 @@ const Home = () => {
     <>
       <NavBar />
       <Hero />
-      <HomeForm />
+      {logServices.isLogged() && logServices.isLogged().isStaff ? null : <HomeForm />}
     </>
   );
 };

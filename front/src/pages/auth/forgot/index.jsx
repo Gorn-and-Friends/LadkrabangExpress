@@ -5,7 +5,6 @@ import emailjs from "emailjs-com";
 import "./style.scss";
 import Loading from "../../../components/loading";
 import actions from "../../../services/actions";
-import userServices from "../../../services/utils/user";
 
 const Forgot = () => {
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ const Forgot = () => {
   const [token, setToken] = useState();
   const [email, setEmail] = useState("");
 
-  useEffect(() => {}, []);
+  // useEffect(() => setToken(JSON.parse(localStorage.getItem("user")).id), []);
 
   const sendEmail = async () => {
     if (lang === "th") {
@@ -66,7 +65,6 @@ const Forgot = () => {
     e.preventDefault();
     try {
       dispatch(actions.setLoading(true));
-      setToken(await userServices.forgot({ email: email }));
       await sendEmail();
     } catch (er) {
       dispatch(actions.setLoading(false));

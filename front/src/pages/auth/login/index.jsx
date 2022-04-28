@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import "./style.scss";
 import icon from "../../../assets/icons/icon.png";
 import iconDark from "../../../assets/icons/icon-dark.png";
-import log from "../../../services/utils/log";
+import user from "../../../services/utils/log";
 import actions from "../../../services/actions";
 import Loading from "../../../components/loading";
+import staff from "../../../services/utils/staff";
 
 const Login = ({ type }) => {
   const navigate = useNavigate();
@@ -44,7 +45,8 @@ const Login = ({ type }) => {
       setErr(false);
       try {
         dispatch(actions.setLoading(true));
-        const res = await log.logIn(login);
+        const res =
+          type === "user" ? await user.logIn(login) : await staff.logIn(login);
         if (res != 400)
           navigate(searchParams.get("q") ? searchParams.get("q") : "/");
       } catch (er) {
@@ -80,7 +82,11 @@ const Login = ({ type }) => {
           )}
         </legend>
         <div className="login__form">
-          <h1 className="login__form__header">{content.login.header}</h1>
+          <h1 className="login__form__header">
+            {type === "user"
+              ? content.login.header
+              : content.login.staff.header}
+          </h1>
           {err && (
             <div className="login__form__errors">
               {invalidLogin
@@ -121,8 +127,26 @@ const Login = ({ type }) => {
                 </label>
               </div>
               <div className="login__form__group__link">
-                <Link to="/forgot">{content.login.forgot} ?</Link>
-                <Link to="/register">
+                {/* <Link to="/forgot">
+                  {type === "user"
+                    ? content.login.forgot
+                    : content.login.staff.forgot}
+                </Link> */}
+                <Link
+                  to={
+                    type === "user"
+                      ? `/register?q=${
+                          searchParams.get("q")
+                            ? searchParams.get("q").replace("/", "%2F")
+                            : "/"
+                        }`
+                      : `/register/staff?q=${
+                          searchParams.get("q")
+                            ? searchParams.get("q").replace("/", "%2F")
+                            : "/"
+                        }`
+                  }
+                >
                   {content.login.register} {">"}
                 </Link>
               </div>

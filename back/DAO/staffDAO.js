@@ -1,7 +1,7 @@
 const ticketModel = require("../model/ticket.js");
 const userModel = require("../model/user.js");
 const staffModel = require("../model/staff.js");
-const refundModel = require("../model/refund.js")
+const refundModel = require("../model/refund.js");
 const mongoose = require("mongoose");
 const Ticket = require("./ticketDAO.js");
 const bcrypt = require("bcryptjs");
@@ -12,8 +12,8 @@ class Staff {
     try {
       //ใช้กับหน้า staff เพื่อแสดงตั๋วที่ทำการจองที่นั่งทั้งหมดในขบวนนั้น
       const { trainNumber, date, trainClass, token } = req.body;
-      const staffVerify = await Staff.verifyTokenGetStaffID(token)
-      if(staffVerify == false){
+      const staffVerify = await Staff.verifyTokenGetStaffID(token);
+      if (staffVerify == false) {
         res.send("token expired").status(201);
         return;
       }
@@ -56,6 +56,9 @@ class Staff {
             lastname: foundUser.lastname,
             origin: foundTicket[i].origin,
             destination: foundTicket[i].destination,
+            date: foundTicket[i].date,
+            departureTime: foundTicket[i].departureTime,
+            arrivalTime: foundTicket[i].arrivalTime,
             date: foundTicket[i].date,
             class: foundTicket[i].reservation_class,
             coach: foundTicket[i].seat_reservation[j].coach,
@@ -135,9 +138,9 @@ class Staff {
       staff.token = token;
       staff.save();
 
-      const result = staff.toObject()
-      delete result.password
-      result.isStaff = true
+      const result = staff.toObject();
+      delete result.password;
+      result.isStaff = true;
       res.status(201).json(result);
     } catch (err) {
       console.log(err);
@@ -175,11 +178,11 @@ class Staff {
           }
         );
         staff.token = token;
-        staff.save()
-        
-        const result = staff.toObject()
-        delete result.password
-        result.isStaff = true
+        staff.save();
+
+        const result = staff.toObject();
+        delete result.password;
+        result.isStaff = true;
         res.status(201).json(result);
       } else {
         res.status(400).send("Invalid login");
@@ -200,37 +203,35 @@ class Staff {
     }
   }
 
-  static async viewRefund(req,res){
-    try{
-      const staffVerify = await Staff.verifyTokenGetStaffID(req.body.token)
-      if(staffVerify === false){
-        res.send("token expired").send(201)
+  static async viewRefund(req, res) {
+    try {
+      const staffVerify = await Staff.verifyTokenGetStaffID(req.body.token);
+      if (staffVerify === false) {
+        res.send("token expired").send(201);
       }
-      
-      let foundRefund = await refundModel.find()
-      
-      res.send(foundRefund).status(200)
-    
-    }catch(err){
-      console.log(err)
-      res.send("Error in back")
+
+      let foundRefund = await refundModel.find();
+
+      res.send(foundRefund).status(200);
+    } catch (err) {
+      console.log(err);
+      res.send("Error in back");
     }
   }
 
-  static async acceptRefun(req,res){
-    try{
-      const { token , refundID } = req.body
-
-      await refundModel.findByIdAndDelete(mongoose.Types.ObjectId(refundID))
-      const updateDB = refundModel.find()
-      console.log(updateDB)
-      res.send(updateDB).status(200)
-    }catch(err){
-      console.log(err)
-      res.send("Error in back").status(500)
+  static async acceptRefun(req, res) {
+    try {
+      const { token, refundID } = req.body;
+      console.log(req.body);
+      // await refundModel.findByIdAndDelete(mongoose.Types.ObjectId(refundID));
+      await refundModel.findByIdAndDelete(refundID);
+      const updateDB = await refundModel.find({});
+      console.log(updateDB);
+      res.send(updateDB).status(200);
+    } catch (err) {
+      console.log(err);
+      res.send("Error in back").status(500);
     }
-    
-
   }
 }
 

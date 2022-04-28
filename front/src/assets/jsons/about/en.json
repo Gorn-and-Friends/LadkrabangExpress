@@ -1,0 +1,40 @@
+{
+  "title": "Ladkrabang Express!",
+  "subtitle": "Train Booking Project",
+  "subsubtitle": "We are sophomores of Computer Engineering from King Mongkut's Institute of Technology Ladkrabang. This group project is for educational purpose and represents 01076008 Software Development Processes only, which are mainly about project design, planning and management, i.e., we do not wish to pursue in any commercial action. If you have any questions or problems, please contact the information down below. We thank you from the bottom of our hearts.",
+  "copyright": "© 2022 Ladkrabang Express Team • All rights reserved",
+  "email": "6301XXXX@kmitl.ac.th",
+  "location": "Ladkrabang, Bangkok, Thailand",
+  "members": [
+    {
+      "name": "Chanon Gulgattimas",
+      "position": "Head of front-end development",
+      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/969008937900867584/chanon.jpg"
+    },
+    {
+      "name": "Kittiphon Singchom",
+      "position": "Front-end developer",
+      "pic": "https://cdn.discordapp.com/attachments/913281704351924247/968880879902539796/8E571D5F-8E17-46C6-885F-7F0B560A3443.jpg"
+    },
+    {
+      "name": "Napong Keha",
+      "position": "Front-end developer",
+      "pic": "https://cdn.discordapp.com/attachments/750022851150479520/969062349661147187/IMG_20210706_124113.jpg"
+    },
+    {
+      "name": "Chinakit Pinclay",
+      "position": "Head of back-end development",
+      "pic": "https://cdn.discordapp.com/attachments/727177779401195670/969055877472612412/unknown.png"
+    },
+    {
+      "name": "Napat Moonpinij",
+      "position": "Back-end developer",
+      "pic": "https://cdn.discordapp.com/attachments/768362612622098454/969081790289551380/unknown.png"
+    },
+    {
+      "name": "Jirakan Koollasing",
+      "position": "Back-end developer",
+      "pic": "https://cdn.discordapp.com/attachments/913281704351924247/968881244500820058/7CB7A5C0-B3E1-4AE0-9FD3-7C8AE5918938.jpg"
+    }
+  ]
+}

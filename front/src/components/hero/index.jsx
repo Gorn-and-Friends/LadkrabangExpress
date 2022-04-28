@@ -1,6 +1,6 @@
 import React from "react";
 import "./style.scss";
-import bg from "../../assets/images/hero.jpg";
+import bg from "../../assets/images/heroes/hero.jpg";
 import { useSelector } from "react-redux";
 
 const Hero = () => {

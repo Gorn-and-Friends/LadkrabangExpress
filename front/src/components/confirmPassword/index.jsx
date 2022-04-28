@@ -20,23 +20,21 @@ const ConfirmPassword = ({
   const [err, setErr] = useState(false);
   const [incorrect, setIncorrect] = useState(false);
 
-  useEffect(() => setIncorrect(status != 200), []);
+  useEffect(() => setIncorrect(status != 200), [handleOnConfirmPword]);
   useEffect(() => setErr(incorrect), [incorrect]);
   useEffect(() => setConfirmPword(pword), [pword]);
 
-  return loading ? (
-    <Loading reduceHeigh={0} />
-  ) : (
+  return (
     <form className="confirm-pword" onSubmit={handleOnConfirmPword}>
       <div className="confirm-pword__dim" />
       <div className="confirm-pword__container">
         <div className="confirm-pword__form">
+          <h1>{content.confirmPword.header}</h1>
           {err && (
             <div className="change-pword__form__errors">
               {incorrect ? content.confirmPword.err.incorrect : ""}
             </div>
           )}
-          <h1>{content.confirmPword.header}</h1>
           <div className="confirm-pword__form__container">
             <div className="confirm-pword__form__item">
               <input
@@ -52,7 +50,7 @@ const ConfirmPassword = ({
                 {content.confirmPword.pword} <span>*</span>
               </label>
             </div>
-            <Link to="/forgot">{content.confirmPword.forgot}</Link>
+            {/* <Link to="/forgot">{content.confirmPword.forgot}</Link> */}
           </div>
           <div className="confirm-pword__btn">
             <button onClick={handleOnBack}>{content.confirmPword.back}</button>

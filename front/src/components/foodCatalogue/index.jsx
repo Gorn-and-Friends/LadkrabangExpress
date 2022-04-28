@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   createSearchParams,
   useNavigate,
@@ -14,11 +14,10 @@ import useHorizontalScroll from "../../hooks/useHorizontalScroll";
 const FoodCatalogue = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const hScroll = useHorizontalScroll();
-  const h2Scroll = useHorizontalScroll();
   const lang = useSelector((state) => state.lang);
   const trainList = useSelector((state) => state.trains);
   const foods = require("../../assets/jsons/booking/foods.json");
+  const hScroll = useHorizontalScroll();
   const [searchParams, _] = useSearchParams();
   const [category, setCategory] = useState(0);
   const [foodList, setFoodList] = useState([]);
@@ -121,7 +120,7 @@ const FoodCatalogue = () => {
       Object.keys(optionVals)
         .filter((opt) => opt.includes(i))
         .map((data) => {
-          res += optionVals[data];
+          res += Number(optionVals[data]);
         });
       temp[i] = res;
     });
@@ -133,7 +132,7 @@ const FoodCatalogue = () => {
       let temp = {};
       let p = 0;
       foodCart.map((cartItem) => {
-        p += cartItem.price;
+        p += Number(cartItem.price);
         if (Object.keys(temp).includes(cartItem.th)) {
           temp[cartItem.th].amount += 1;
         } else {
@@ -241,10 +240,7 @@ const FoodCatalogue = () => {
                     </button>
                     <div className="food-catalogue__catalogue__card__option">
                       {food.option.map((optName, j) => (
-                        <div
-                          ref={h2Scroll}
-                          className="food-catalogue__catalogue__card__option__container"
-                        >
+                        <div className="food-catalogue__catalogue__card__option__container">
                           <div className="food-catalogue__catalogue__card__option__inner">
                             {foodOptions[optName].map((opt, k) => (
                               <>
@@ -252,13 +248,15 @@ const FoodCatalogue = () => {
                                   type="radio"
                                   id={i + "-" + j + "-" + k}
                                   name={optName + "-" + i + "-" + j}
-                                  value={k}
+                                  value={i + j + k}
                                   onChange={() => {
                                     let optTemp = { ...optionVals };
                                     let idTemp = { ...optionIds };
                                     let nameTempTH = { ...optionNamesTH };
                                     let nameTempEN = { ...optionNamesEN };
-                                    optTemp[i + "-" + optName] = opt.price;
+                                    optTemp[i + "-" + optName] = Number(
+                                      opt.price
+                                    );
                                     idTemp[optName + "-" + i + "-" + j] =
                                       i + "-" + j + "-" + k;
                                     nameTempTH[i + "-" + optName] = opt.value;
@@ -354,7 +352,7 @@ const FoodCatalogue = () => {
         </div>
         <BookingButtons
           onNext={handleOnNext}
-          price={Number(searchParams.get("_p")) + totalFoodPrice}
+          price={Number(searchParams.get("_p")) + Number(totalFoodPrice)}
           disabled={false}
           page={4}
           pastUrlParams={searchParams.toString().split(".0000")[0]}

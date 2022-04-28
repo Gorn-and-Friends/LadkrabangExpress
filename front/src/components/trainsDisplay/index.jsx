@@ -139,65 +139,67 @@ const TrainsDisplay = () => {
         </div>
         {trainList && trainList.length !== 0 ? (
           <div className="train-display__card__container">
-            {trainList.map((info, index) => (
-              <>
-                <input
-                  type="radio"
-                  value={index + 1}
-                  checked={choice == index + 1}
-                  onChange={({ currentTarget: input }) =>
-                    setChoice(input.value)
-                  }
-                  id={index + 1}
-                  name="train"
-                />
-                <label htmlFor={index + 1} className="train-display__card">
-                  <div className="train-display__card__info">
-                    <div className="train-display__card__info__first-row">
-                      <span>
-                        {info.departureTime}
-                        &ensp;-&ensp;
-                        {info.arrivalTime}
-                      </span>
-                      <span>
-                        {(info.duration.toString().split(":")[0] > 0
-                          ? info.duration.toString().split(":")[0] +
-                            (lang === "th" ? " ชั่วโมง " : " hours ")
-                          : "") +
-                          info.duration.toString().split(":")[1] +
-                          (lang === "th" ? " นาที" : " minutes")}
-                      </span>
-                    </div>
-                    <div className="train-display__card__info__second-row">
-                      <span>
-                        {content.train.trainNo}&ensp;:&ensp;
-                        <span>{info.trainNumber}</span>
-                      </span>
-                      <span>
-                        {content.train.seatsAvail}&ensp;:&ensp;
+            <div className="train-display__card__inner">
+              {trainList.map((info, index) => (
+                <>
+                  <input
+                    type="radio"
+                    value={index + 1}
+                    checked={choice == index + 1}
+                    onChange={({ currentTarget: input }) =>
+                      setChoice(input.value)
+                    }
+                    id={index + 1}
+                    name="train"
+                  />
+                  <label htmlFor={index + 1} className="train-display__card">
+                    <div className="train-display__card__info">
+                      <div className="train-display__card__info__first-row">
                         <span>
-                          {"1st: " +
-                            info.seatRemain.class1 +
-                            ", 2nd: " +
-                            info.seatRemain.class2 +
-                            ", 3rd: " +
-                            info.seatRemain.class3}
+                          {info.departureTime}
+                          &ensp;-&ensp;
+                          {info.arrivalTime}
                         </span>
-                      </span>
+                        <span>
+                          {(Number(info.duration.toString().split(":")[0]) > 0
+                            ? Number(info.duration.toString().split(":")[0]) +
+                              (lang === "th" ? " ชั่วโมง " : " hours ")
+                            : "") +
+                            Number(info.duration.toString().split(":")[1]) +
+                            (lang === "th" ? " นาที" : " minutes")}
+                        </span>
+                      </div>
+                      <div className="train-display__card__info__second-row">
+                        <span>
+                          {content.train.trainNo}&ensp;:&ensp;
+                          <span>{info.trainNumber}</span>
+                        </span>
+                        <span>
+                          {content.train.seatsAvail}&ensp;:&ensp;
+                          <span>
+                            {"1st: " +
+                              info.seatRemain.class1 +
+                              ", 2nd: " +
+                              info.seatRemain.class2 +
+                              ", 3rd: " +
+                              info.seatRemain.class3}
+                          </span>
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="train-display__card__ticket-touch">
-                    <div className="train-display__card__ticket-touch__top" />
-                    <div className="train-display__card__ticket-touch__middle" />
-                    <div className="train-display__card__ticket-touch__bottom" />
-                  </div>
-                  <div className="train-display__card__price">
-                    <span>{content.train.price} &#3647;</span>
-                    {info.ticketPrice}
-                  </div>
-                </label>
-              </>
-            ))}
+                    <div className="train-display__card__ticket-touch">
+                      <div className="train-display__card__ticket-touch__top" />
+                      <div className="train-display__card__ticket-touch__middle" />
+                      <div className="train-display__card__ticket-touch__bottom" />
+                    </div>
+                    <div className="train-display__card__price">
+                      <span>{content.train.price} &#3647;</span>
+                      {info.ticketPrice}
+                    </div>
+                  </label>
+                </>
+              ))}
+            </div>
           </div>
         ) : (
           <section>

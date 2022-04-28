@@ -9,7 +9,8 @@ import Register from "../pages/auth/register";
 import Booking from "../pages/booking";
 import Home from "../pages/home";
 import Profile from "../pages/profile";
-import Staff from "../pages/staff";
+import StaffRefund from "../pages/staff/refund";
+import StaffSearch from "../pages/staff/search";
 import DisplayTicket from "../pages/ticket/display";
 import Refund from "../pages/ticket/refund";
 import actions from "../services/actions";
@@ -67,7 +68,9 @@ const Router = () => {
     <Routes>
       <Route index element={<Home />} />
       <Route path="about" element={<About />} />
-      <Route path="staff" element={<Staff />} />
+      <Route path="staff" element={<Home />} />
+      <Route path="staff/search" element={<StaffSearch />} />
+      <Route path="staff/refund" element={<StaffRefund />} />
       <Route path="login" element={<Login type={"user"} />} />
       <Route path="login/staff" element={<Login type={"staff"} />} />
       <Route path="register" element={<Register type={"user"} />} />
@@ -75,6 +78,7 @@ const Router = () => {
       <Route path="forgot" element={<Forgot />} />
       <Route path="forgot/:token" element={<ChangePassword />} />
       <Route path="profile" element={<Profile />} />
+      <Route path="profile/staff" element={<Profile />} />
       <Route path="profile/:id" element={<DisplayTicket />} />
       <Route path="profile/:id/refund" element={<Refund />} />
       <Route path="booking" element={<Booking />} />
