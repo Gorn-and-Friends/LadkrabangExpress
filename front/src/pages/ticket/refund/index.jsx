@@ -42,7 +42,7 @@ const Refund = () => {
       });
       if (res == 200) {
         dispatch(actions.setLoading(false));
-        navigate("/profile/" + params.id);
+        navigate("/profile");
       }
     } catch (er) {
       dispatch(actions.setLoading(false));

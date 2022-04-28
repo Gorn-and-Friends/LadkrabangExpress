@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import Loading from "../loading";
 import "./style.scss";
 
 const ConfirmPassword = ({
@@ -11,7 +9,6 @@ const ConfirmPassword = ({
   handleOnBack,
 }) => {
   const lang = useSelector((state) => state.lang);
-  const loading = useSelector((state) => state.loading);
   const content =
     lang === "th"
       ? require("../../assets/jsons/auth/th.json")
@@ -50,7 +47,6 @@ const ConfirmPassword = ({
                 {content.confirmPword.pword} <span>*</span>
               </label>
             </div>
-            {/* <Link to="/forgot">{content.confirmPword.forgot}</Link> */}
           </div>
           <div className="confirm-pword__btn">
             <button onClick={handleOnBack}>{content.confirmPword.back}</button>

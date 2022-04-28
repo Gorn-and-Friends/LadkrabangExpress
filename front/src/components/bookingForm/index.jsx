@@ -9,6 +9,7 @@ import {
 import "./style.scss";
 import actions from "../../services/actions";
 import bookingServices from "../../services/utils/booking";
+import logServices from "../../services/utils/log";
 
 const BookingForm = () => {
   const navigate = useNavigate();
@@ -158,16 +159,29 @@ const BookingForm = () => {
         dispatch(actions.setLoading(true));
         const res = await bookingServices.findTrains(info);
         if (res === 200) {
-          navigate({
-            pathname: "1",
-            search: createSearchParams({
-              from: originTH,
-              to: destTH,
-              date: curDate.value,
-              time: curTime.value,
-              pax: pax,
-            }).toString(),
-          });
+          if (logServices.isLogged()) {
+            navigate({
+              pathname: "1",
+              search: createSearchParams({
+                from: originTH,
+                to: destTH,
+                date: curDate.value,
+                time: curTime.value,
+                pax: pax,
+              }).toString(),
+            });
+          } else {
+            navigate({
+              pathname: "/login",
+              search: createSearchParams({
+                from: originTH,
+                to: destTH,
+                date: curDate.value,
+                time: curTime.value,
+                pax: pax,
+              }).toString(),
+            });
+          }
         } else {
           setErr(true);
           sessionStorage.setItem("routeError", 1);

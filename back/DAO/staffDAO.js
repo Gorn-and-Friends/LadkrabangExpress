@@ -222,9 +222,16 @@ class Staff {
   static async acceptRefun(req, res) {
     try {
       const { token, refundID } = req.body;
-      console.log(req.body);
-      // await refundModel.findByIdAndDelete(mongoose.Types.ObjectId(refundID));
-      await refundModel.findByIdAndDelete(refundID);
+      // console.log(req.body);
+      const foundRefund = await refundModel.findById(
+        mongoose.Types.ObjectId(refundID)
+      );
+      await ticketModel.findByIdAndDelete(foundRefund.ticketID);
+
+      await refundModel.findByIdAndDelete(mongoose.Types.ObjectId(refundID));
+
+      // await refundModel.findByIdAndDelete(refundID);
+
       const updateDB = await refundModel.find({});
       console.log(updateDB);
       res.send(updateDB).status(200);

@@ -76,7 +76,11 @@ const Register = ({ type }) => {
           type === "user"
             ? await user.register(reg)
             : await staff.register(reg);
-        if (res != 409) navigate("/login");
+        if (res != 409)
+          navigate({
+            pathname: type === "user" ? "/login" : "/login/staff",
+            search: searchParams.toString(),
+          });
       } catch (er) {
         dispatch(actions.setLoading(false));
         setInvalidAcc(true);
@@ -203,19 +207,10 @@ const Register = ({ type }) => {
           </div>
           <div className="register__form__last-row">
             <Link
-              to={
-                type === "user"
-                  ? `/login?q=${
-                      searchParams.get("q")
-                        ? searchParams.get("q").replace("/", "%2F")
-                        : "/"
-                    }`
-                  : `/login/staff?q=${
-                      searchParams.get("q")
-                        ? searchParams.get("q").replace("/", "%2F")
-                        : "/"
-                    }`
-              }
+              to={{
+                pathname: type === "user" ? "/login" : "/login/staff",
+                search: searchParams.toString(),
+              }}
               className="register__form__last-row__back"
             >
               {content.register.buttons.back}

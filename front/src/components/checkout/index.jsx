@@ -60,7 +60,7 @@ const Checkout = () => {
         newTickets[i] = {
           ...common,
           eaTicketPrice:
-            seats[i].coach === "-"
+            seats[i].coach === 0
               ? Number(tickets.tp)
               : Number(tickets.tp) + 10,
           seat_reservation: {
@@ -105,29 +105,21 @@ const Checkout = () => {
 
   const handleOnNext = async (e) => {
     e.preventDefault();
-    if (logServices.isLogged()) {
-      const info = {
-        ...tickets,
-        token: JSON.parse(localStorage.getItem("user")).token,
-        user_id: JSON.parse(localStorage.getItem("user")).id,
-        train_id: tickets.t_id,
-      };
-      console.log(info);
-      try {
-        dispatch(actions.setLoading(true));
-        await bookingServices.submitTicket(info);
-        navigate("/profile");
-      } catch (er) {
-        dispatch(actions.setLoading(false));
-        console.log(er);
-      }
-    } else
-      navigate({
-        pathname: "/login",
-        search: createSearchParams({
-          q: location.pathname + "?q=" + searchParams.toString(),
-        }).toString(),
-      });
+    const info = {
+      ...tickets,
+      token: JSON.parse(localStorage.getItem("user")).token,
+      user_id: JSON.parse(localStorage.getItem("user")).id,
+      train_id: tickets.t_id,
+    };
+    console.log(info);
+    try {
+      dispatch(actions.setLoading(true));
+      await bookingServices.submitTicket(info);
+      navigate("/profile");
+    } catch (er) {
+      dispatch(actions.setLoading(false));
+      console.log(er);
+    }
   };
 
   return (

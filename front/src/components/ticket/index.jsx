@@ -27,6 +27,7 @@ const Ticket = ({ ticket }) => {
 
   useEffect(() => {
     try {
+      console.log(ticket);
       setDisplayTicket(ticket);
     } catch {}
   }, [ticket]);

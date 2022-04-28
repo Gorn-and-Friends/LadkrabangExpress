@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  createSearchParams,
   Link,
   useLocation,
   useNavigate,
@@ -34,9 +35,7 @@ const NavBar = () => {
     dispatch(actions.setLoading(true));
     log.logOut();
     dispatch(actions.setLoading(false));
-    location.pathname === "/profile" || location.pathname === "/profile/staff"
-      ? navigate("/")
-      : navigate(0);
+    navigate("/");
   };
 
   return (
@@ -146,14 +145,18 @@ const NavBar = () => {
           ) : (
             <div className="navbar__auth">
               <Link
-                to={`/login${
-                  location.pathname !== "/"
-                    ? "?q=" +
-                      location.pathname.replace("/", "%2F") +
-                      "?" +
-                      searchParams.toString()
-                    : ""
-                }`}
+                to={{
+                  pathname: "/login",
+                  search: searchParams.get("date")
+                    ? createSearchParams({
+                        from: searchParams.get("from"),
+                        to: searchParams.get("to"),
+                        date: searchParams.get("date"),
+                        time: searchParams.get("time"),
+                        pax: searchParams.get("pax"),
+                      }).toString()
+                    : "",
+                }}
               >
                 {content.right.notLogged.logIn}
               </Link>

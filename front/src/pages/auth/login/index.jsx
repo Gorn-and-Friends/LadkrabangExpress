@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  createSearchParams,
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./style.scss";
 import icon from "../../../assets/icons/icon.png";
@@ -12,6 +18,7 @@ import staff from "../../../services/utils/staff";
 const Login = ({ type }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
   const theme = useSelector((state) => state.theme);
   const lang = useSelector((state) => state.lang);
   const loading = useSelector((state) => state.loading);
@@ -48,7 +55,9 @@ const Login = ({ type }) => {
         const res =
           type === "user" ? await user.logIn(login) : await staff.logIn(login);
         if (res != 400)
-          navigate(searchParams.get("q") ? searchParams.get("q") : "/");
+          if (searchParams.get("from"))
+            navigate("/booking/1?" + searchParams.toString());
+          else navigate("/");
       } catch (er) {
         dispatch(actions.setLoading(false));
         setInvalidLogin(true);
@@ -133,19 +142,18 @@ const Login = ({ type }) => {
                     : content.login.staff.forgot}
                 </Link> */}
                 <Link
-                  to={
-                    type === "user"
-                      ? `/register?q=${
-                          searchParams.get("q")
-                            ? searchParams.get("q").replace("/", "%2F")
-                            : "/"
-                        }`
-                      : `/register/staff?q=${
-                          searchParams.get("q")
-                            ? searchParams.get("q").replace("/", "%2F")
-                            : "/"
-                        }`
-                  }
+                  to={{
+                    pathname: type === "user" ? "/register" : "/register/staff",
+                    search: searchParams.get("date")
+                      ? createSearchParams({
+                          from: searchParams.get("from"),
+                          to: searchParams.get("to"),
+                          date: searchParams.get("date"),
+                          time: searchParams.get("time"),
+                          pax: searchParams.get("pax"),
+                        }).toString()
+                      : "",
+                  }}
                 >
                   {content.login.register} {">"}
                 </Link>
