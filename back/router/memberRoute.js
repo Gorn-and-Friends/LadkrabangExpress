@@ -14,6 +14,9 @@ router.route('/getAllFood').get(foodDAO.showAllFood)
 router.route('/updateFoodPrice').post(foodDAO.updatePrice)
 router.route('/addTrain').post(trainDAO.add)
 
+
+
+
 //User
 router.route('/register').post(userDAO.register)
 router.route('/login').post(userDAO.login)
@@ -22,6 +25,9 @@ router.route('/user/showUserProfile').post(userDAO.showUserProfile)
 router.route('/user/edit').post(userDAO.editProfile)
 router.route('/user/confirmPassword').post(userDAO.confirmOldPassword)
 router.route('/user/changePassword').post(userDAO.changePassword)
+router.route('/user/forgot').post(userDAO.forgot)
+router.route('/user/forgotChangePassword').post(userDAO.forgotChangePassword)
+
 
 router.route('/booking').post(trainDAO.customerFindTrain)
 router.route('/makeSeatLayout').post(ticketDAO.makeSeatLayout)

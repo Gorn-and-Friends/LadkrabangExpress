@@ -272,18 +272,51 @@ class User {
     }
   }
 
-  static async forgot(req, res) {
-    try {
-      const { userID, password } = req.body;
-      const foundUser = await userModel.findById(
-        mongoose.Types.ObjectId(userID)
+  static async forgot(req,res){
+    try{
+      const { email } = req.body
+      const foundEmail = await userModel.findOne({"email": email})
+      const foundUsername = await userModel.findOne({"username": email})
+
+      let userID = null
+      if(foundEmail || foundUsername){
+        if(foundEmail){
+          userID = foundEmail._id
+          // console.log(foundEmail._id)
+        }
+        else if(foundUsername){
+          userID = foundUsername._id
+          // console.log(oundUsername._id)
+        }
+      }
+      // console.log("cat" + userID)
+      const token = jsonwebtoken.sign(
+        { user_id: userID},
+        process.env.TOKEN_KEY,
+        {
+          expiresIn: "1h",
+        }
       );
+      const result = {"token": token}
+      res.status(200).send(result)
+      
+    }catch(err){
+      console.log(err)
+      res.status(500).send("Error in back")
+    }
+  }
+
+  static async forgotChangePassword(req, res) {
+    try {
+      const { token , password } = req.body
+      const decoded = jsonwebtoken.verify(token, process.env.TOKEN_KEY);
+      const foundUser = await userModel.findById(mongoose.Types.ObjectId(decoded.user_id));
+
       if (!foundUser) {
         return res.send("User not found").status(400);
       }
       foundUser.password = await bcrypt.hash(password, 10);
       foundUser.save();
-
       res.send("Change password complet, Please login");
     } catch (err) {
       console.log(err);
