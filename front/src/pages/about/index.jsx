@@ -19,12 +19,12 @@ const About = () => {
           <h1>{content.title}</h1>
           <h3>{content.subsubtitle}</h3>
         </header>
-        {/* <main>
+        <main>
           {content.members && content.members.length > 0
             ? content.members.map((member) => (
                 <section>
                   <img src={member.pic} alt="" />
-                  <div> 
+                  <div>
                     <h1>{member.name}</h1>
                     <h2>{member.position}</h2>
                   </div>
@@ -39,7 +39,7 @@ const About = () => {
             <div>{content.email}</div>
             <div>{content.location}</div>
           </section>
-        </footer> */}
+        </footer>
       </div>
     </>
   );

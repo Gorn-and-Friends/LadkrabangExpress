@@ -172,7 +172,7 @@ const StaffSearch = () => {
                           <ul>
                             {res.food.map((f) => (
                               <li style={{ listStyleType: "none" }}>
-                                {lang === "th" ? f.foodName : f.en}
+                                +{lang === "th" ? f.foodName : f.en}
                               </li>
                             ))}
                           </ul>

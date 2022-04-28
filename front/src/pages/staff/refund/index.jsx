@@ -80,13 +80,12 @@ const StaffRefund = () => {
                               try {
                                 let response =
                                   await staffServices.approveRefund(res._id);
-                                console.log(response);
-                                if (res && res.length <= 0) {
+                                setResList(response);
+                                if (response && response.length <= 0) {
                                   alert(
                                     "No refund request at the time | ไม่มีคำร้องขอยกเลิกการจอง ณ ตอนนี้"
                                   );
                                 }
-                                setResList(res);
                               } catch (er) {
                                 console.log(er);
                               }

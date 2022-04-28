@@ -205,15 +205,7 @@ const FoodCatalogue = () => {
           <div className="food-catalogue__catalogue__inner">
             {foodList && foodList.length > 0 ? (
               (category === 0 ? foodList : filteredFoodList).map((food, i) => (
-                <div
-                  className="food-catalogue__catalogue__card"
-                  data-price={
-                    optionPrice[i] ? food.price + optionPrice[i] : food.price
-                  }
-                  data-value={food.value + optionValues[i]}
-                  data-name-th={food.name["th"] + optionValues[i]}
-                  data-name-en={food.name["en"] + optionNames[i]}
-                >
+                <div className="food-catalogue__catalogue__card">
                   <section>
                     <img src={food.pic} alt="" />
                     <h3>{food.name[lang]}</h3>
@@ -230,7 +222,9 @@ const FoodCatalogue = () => {
                           ...foodCart,
                           {
                             th: food.name["th"] + optionValues[i],
-                            en: food.name["en"] + optionNames[i],
+                            en:
+                              food.name["en"] +
+                              (optionNames[i] ? optionNames[i] : ""),
                             price: food.price + optionPrice[i],
                           },
                         ]);
