@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import "./style.scss";
 
 const ConfirmPassword = ({
@@ -47,6 +48,7 @@ const ConfirmPassword = ({
                 {content.confirmPword.pword} <span>*</span>
               </label>
             </div>
+            <Link to="/forgot">{content.confirmPword.forgot}</Link>
           </div>
           <div className="confirm-pword__btn">
             <button onClick={handleOnBack}>{content.confirmPword.back}</button>

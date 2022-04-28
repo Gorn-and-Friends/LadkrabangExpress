@@ -30,4 +30,32 @@ body {
     -o-transition: $null-transition;
     transition: $null-transition;
   }
+
+  &::-webkit-scrollbar {
+    width: 10px;
+
+    &-track {
+      @include themify() {
+        background: t(main-bg-color);
+      }
+    }
+
+    &-thumb {
+      width: 90%;
+      border-radius: 10px;
+      @include themify() {
+        background: t(bg-color-2);
+      }
+
+      &:hover {
+        @include themify() {
+          background: t(bg-color-3);
+        }
+      }
+
+      & {
+        transform: scale(1.2);
+      }
+    }
+  }
 }

@@ -2,6 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import "./style.scss";
 import NavBar from "../../components/navbar";
+import { BsChevronDown } from "react-icons/bs";
 
 const About = () => {
   const lang = useSelector((state) => state.lang);
@@ -18,6 +19,7 @@ const About = () => {
           <h2>{content.subtitle}</h2>
           <h1>{content.title}</h1>
           <h3>{content.subsubtitle}</h3>
+          <BsChevronDown />
         </header>
         <main>
           {content.members && content.members.length > 0
