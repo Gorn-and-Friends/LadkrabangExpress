@@ -18,15 +18,11 @@
       }
     },
     "about": {
-      "title": "เกี่ยวกับ",
-      "items": {
-        "aboutUs": {
-          "title": "รู้จักเรา"
-        },
-        "contactUs": {
-          "title": "ติดต่อเรา"
-        }
-      }
+      "title": "เกี่ยวกับ"
+    },
+    "staff": {
+      "search": "ค้นหา",
+      "refund": "คำขอยกเลิก"
     }
   },
   "right": {

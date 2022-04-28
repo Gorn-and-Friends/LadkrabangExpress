@@ -1,9 +1,7 @@
 import ActionTypes from "../constants/actionTypes";
+import InitialStates from "../constants/initialStates";
 
-const userLang = navigator.language || navigator.userLanguage;
-const initialLanguage = userLang === "th" ? "th" : "en";
-
-const languageReducer = (state = initialLanguage, { type, payload }) => {
+const languageReducer = (state = InitialStates.LANG, { type, payload }) => {
   switch (type) {
     case ActionTypes.SET_LANGUAGE:
       return (state = payload);

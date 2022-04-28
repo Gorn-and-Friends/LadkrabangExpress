@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "../../assets/styles/ThemeToggler.scss";
+import "./style.scss";
 import sun from "../../assets/svgs/sun.svg";
 import moon from "../../assets/svgs/moon.svg";
 import actions from "../../services/actions";
-import classService from "../../services/utils/class";
+import classServices from "../../services/utils/class";
 
 const ThemeToggler = () => {
   const theme = useSelector((state) => state.theme);
@@ -14,11 +14,11 @@ const ThemeToggler = () => {
     const localTheme = localStorage.getItem("theme");
 
     if (localTheme === "light") {
-      classService.classToggle("id", "moon", "show");
-      classService.classToggle("id", "sun", "hide");
+      classServices.classToggle("id", "moon", "show");
+      classServices.classToggle("id", "sun", "hide");
     } else {
-      classService.classToggle("id", "moon", "hide");
-      classService.classToggle("id", "sun", "show");
+      classServices.classToggle("id", "moon", "hide");
+      classServices.classToggle("id", "sun", "show");
     }
   }, []);
 
@@ -28,16 +28,16 @@ const ThemeToggler = () => {
       onClick={() => {
         if (theme === "light") {
           dispatch(actions.setTheme("dark"));
-          classService.classToggle("id", "moon", "show");
-          classService.classToggle("id", "moon", "hide");
-          classService.classToggle("id", "sun", "hide");
-          classService.classToggle("id", "sun", "show");
+          classServices.classToggle("id", "moon", "show");
+          classServices.classToggle("id", "moon", "hide");
+          classServices.classToggle("id", "sun", "hide");
+          classServices.classToggle("id", "sun", "show");
         } else {
           dispatch(actions.setTheme("light"));
-          classService.classToggle("id", "moon", "hide");
-          classService.classToggle("id", "moon", "show");
-          classService.classToggle("id", "sun", "show");
-          classService.classToggle("id", "sun", "hide");
+          classServices.classToggle("id", "moon", "hide");
+          classServices.classToggle("id", "moon", "show");
+          classServices.classToggle("id", "sun", "show");
+          classServices.classToggle("id", "sun", "hide");
         }
       }}
     >

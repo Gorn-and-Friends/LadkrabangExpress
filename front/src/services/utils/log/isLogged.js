@@ -1,10 +1,5 @@
 const isLogged = () => {
-  try {
-    const token = localStorage.getItem("token");
-    return token;
-  } catch (err) {
-    return null;
-  }
+  return JSON.parse(localStorage.getItem("user"));
 };
 
 export default isLogged;

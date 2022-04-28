@@ -1,41 +1,87 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import "../../../assets/styles/Register.scss";
-import register from "../../../services/utils/register";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import "./style.scss";
+import user from "../../../services/utils/registry";
+import actions from "../../../services/actions";
 import Loading from "../../../components/loading";
+import staff from "../../../services/utils/staff";
 
-const Register = () => {
+const Register = ({ type }) => {
   useEffect(() => {
     document.title = "Sign up - LKBX";
   }, []);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const lang = useSelector((state) => state.lang);
+  const loading = useSelector((state) => state.loading);
   const content =
     lang === "th"
-      ? require("../../../assets/jsons/register/th.json")
-      : require("../../../assets/jsons/register/en.json");
+      ? require("../../../assets/jsons/auth/th.json")
+      : require("../../../assets/jsons/auth/en.json");
+  const [searchParams, _] = useSearchParams({});
+  const [err, setErr] = useState(false);
+  const [missingInput, setMissingInput] = useState(false);
+  const [invalidPword, setInvalidPword] = useState(false);
+  const [invalidRepwd, setInvalidRepwd] = useState(false);
+  const [invalidAcc, setInvalidAcc] = useState(false);
+  const [repwd, setRepwd] = useState("");
   const [reg, setReg] = useState({
     fname: "",
     lname: "",
     email: "",
     uname: "",
     pword: "",
-    bdate: "",
   });
-  const [loading, setLoading] = useState(false);
 
   const handleOnSubmit = async (e) => {
     e.preventDefault();
-    try {
-      setLoading(true);
-      await register(reg);
-      setLoading(false);
-      navigate("/login");
-    } catch (err) {
-      setLoading(false);
-      console.log(err);
+    let missing = false;
+    let invalidPwd = false;
+    for (const i of Object.values(reg)) if (i == "") missing = true;
+    if (reg.pword != "") {
+      let regEx = new RegExp("(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,32}");
+      if (regEx.test(reg.pword)) {
+        invalidPwd = false;
+      } else {
+        invalidPwd = true;
+      }
+    } else {
+      invalidPwd = true;
+    }
+
+    if (missing || invalidPwd || reg.pword != repwd) {
+      setErr(true);
+      if (missing) {
+        setMissingInput(true);
+      } else {
+        setMissingInput(false);
+      }
+      if (invalidPwd) {
+        setInvalidPword(true);
+      } else {
+        setInvalidPword(false);
+      }
+      if (reg.pword != repwd) {
+        setInvalidRepwd(true);
+      } else {
+        setInvalidRepwd(false);
+      }
+    } else {
+      setErr(false);
+      try {
+        dispatch(actions.setLoading(true));
+        const res =
+          type === "user"
+            ? await user.register(reg)
+            : await staff.register(reg);
+        if (res != 409) navigate("/login");
+      } catch (er) {
+        dispatch(actions.setLoading(false));
+        setInvalidAcc(true);
+        setErr(true);
+      }
     }
   };
 
@@ -43,16 +89,32 @@ const Register = () => {
     const temp = { ...reg };
     temp[input.id] = input.value;
     setReg(temp);
-    console.log(temp);
   };
 
   return loading ? (
-    <Loading />
+    <Loading reduceHeight={0} />
   ) : (
     <form className="register" onSubmit={handleOnSubmit}>
       <fieldset className="register__container">
-        <legend align="center">{content.header}</legend>
+        <legend align="center">
+          {type === "user"
+            ? content.register.header
+            : content.register.staff.header}
+        </legend>
         <div className="register__form">
+          {err && (
+            <div className="register__form__errors">
+              {missingInput
+                ? content.register.errors.missingInput
+                : invalidAcc
+                ? content.register.errors.invalidAcc
+                : invalidPword
+                ? content.register.errors.invalidPword
+                : invalidRepwd
+                ? content.register.errors.invalidRepwd
+                : ""}
+            </div>
+          )}
           <div className="register__form__first-row">
             <div className="register__form__name">
               <input
@@ -63,10 +125,9 @@ const Register = () => {
                 onChange={handleInputOnChange}
                 placeholder=" "
                 autoComplete="off"
-                required
               />
               <label htmlFor="fname">
-                {content.fields.fname} <span>*</span>
+                {content.register.fields.fname} <span>*</span>
               </label>
             </div>
             <div className="register__form__name">
@@ -78,10 +139,9 @@ const Register = () => {
                 onChange={handleInputOnChange}
                 placeholder=" "
                 autoComplete="off"
-                required
               />
               <label htmlFor="lname">
-                {content.fields.lname} <span>*</span>
+                {content.register.fields.lname} <span>*</span>
               </label>
             </div>
           </div>
@@ -94,10 +154,9 @@ const Register = () => {
               onChange={handleInputOnChange}
               placeholder=" "
               autoComplete="off"
-              required
             />
             <label htmlFor="email">
-              {content.fields.email} <span>*</span>
+              {content.register.fields.email} <span>*</span>
             </label>
           </div>
           <div className="register__form__others">
@@ -109,10 +168,9 @@ const Register = () => {
               onChange={handleInputOnChange}
               placeholder=" "
               autoComplete="off"
-              required
             />
             <label htmlFor="uname">
-              {content.fields.uname} <span>*</span>
+              {content.register.fields.uname} <span>*</span>
             </label>
           </div>
           <div className="register__form__others">
@@ -122,41 +180,50 @@ const Register = () => {
               name="pword"
               value={reg.pword}
               onChange={handleInputOnChange}
-              pattern="^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}"
-              title="Password requires at least 8 charactors, a capital letter and a special charactor (!@#$%^&*)"
               placeholder=" "
               autoComplete="off"
-              required
             />
             <label htmlFor="pword">
-              {content.fields.pword} <span>*</span>
+              {content.register.fields.pword} <span>*</span>
+            </label>
+          </div>
+          <div className="register__form__others">
+            <input
+              type="password"
+              id="repwd"
+              name="repwd"
+              value={repwd}
+              onChange={({ currentTarget: input }) => setRepwd(input.value)}
+              placeholder=" "
+              autoComplete="off"
+            />
+            <label htmlFor="repwd">
+              {content.register.fields.repwd} <span>*</span>
             </label>
           </div>
           <div className="register__form__last-row">
-            <a href="/login" className="register__form__last-row__back">
-              {content.buttons.back}
-            </a>
-            <div className="register__form__date">
-              <input
-                type="text"
-                id="bdate"
-                name="bdate"
-                value={reg.bdate}
-                onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => (e.target.type = "text")}
-                onChange={handleInputOnChange}
-                placeholder=" "
-                autoComplete="off"
-                required
-              />
-              <label htmlFor="bdate">
-                {content.fields.bdate} <span>*</span>
-              </label>
-            </div>
+            <Link
+              to={
+                type === "user"
+                  ? `/login?q=${
+                      searchParams.get("q")
+                        ? searchParams.get("q").replace("/", "%2F")
+                        : "/"
+                    }`
+                  : `/login/staff?q=${
+                      searchParams.get("q")
+                        ? searchParams.get("q").replace("/", "%2F")
+                        : "/"
+                    }`
+              }
+              className="register__form__last-row__back"
+            >
+              {content.register.buttons.back}
+            </Link>
             <input
               type="submit"
               className="register__form__last-row__submit"
-              value={content.buttons.submit}
+              value={content.register.buttons.submit}
             />
           </div>
         </div>

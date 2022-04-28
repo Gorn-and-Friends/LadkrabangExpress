@@ -1,6 +1,6 @@
 import classRemove from "./classRemove";
 import classToggle from "./classToggle";
 
-const classService = { classRemove, classToggle };
+const classServices = { classRemove, classToggle };
 
-export default classService;
+export default classServices;

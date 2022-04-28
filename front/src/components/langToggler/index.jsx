@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "../../assets/styles/LangToggler.scss";
+import "./style.scss";
 import actions from "../../services/actions";
-import classService from "../../services/utils/class";
+import classServices from "../../services/utils/class";
 
 const LangToggler = () => {
   const lang = useSelector((state) => state.lang);
@@ -12,9 +12,9 @@ const LangToggler = () => {
     const localLang = localStorage.getItem("lang");
 
     if (localLang === "en") {
-      classService.classToggle("id", "en", "hide");
+      classServices.classToggle("id", "en", "hide");
     } else {
-      classService.classToggle("id", "th", "hide");
+      classServices.classToggle("id", "th", "hide");
     }
   }, []);
 
@@ -24,12 +24,12 @@ const LangToggler = () => {
       onClick={() => {
         if (lang === "en") {
           dispatch(actions.setLanguage("th"));
-          classService.classToggle("id", "th", "hide");
-          classService.classToggle("id", "en", "hide");
+          classServices.classToggle("id", "th", "hide");
+          classServices.classToggle("id", "en", "hide");
         } else {
           dispatch(actions.setLanguage("en"));
-          classService.classToggle("id", "th", "hide");
-          classService.classToggle("id", "en", "hide");
+          classServices.classToggle("id", "th", "hide");
+          classServices.classToggle("id", "en", "hide");
         }
       }}
     >

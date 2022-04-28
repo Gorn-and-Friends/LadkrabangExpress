@@ -18,15 +18,11 @@
       }
     },
     "about": {
-      "title": "About",
-      "items": {
-        "aboutUs": {
-          "title": "About Us"
-        },
-        "contactUs": {
-          "title": "Contact Us"
-        }
-      }
+      "title": "About"
+    },
+    "staff": {
+      "search": "Search",
+      "refund": "Refund"
     }
   },
   "right": {

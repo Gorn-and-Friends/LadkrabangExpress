@@ -1,9 +1,9 @@
 import React from "react";
-import "../../assets/styles/Loading.scss";
+import "./style.scss";
 
-const Loading = () => {
+const Loading = ({ reduceHeight }) => {
   return (
-    <div className="loading">
+    <div className="loading" data-height={reduceHeight ? reduceHeight : 0}>
       <div className="loading__container">
         <div className="loading__content">
           <div className="loading__track" />
@@ -24,7 +24,7 @@ const Loading = () => {
             <div className="loading__windows" />
             <div id="up" className="loading__steam" />
             <div id="up" className="loading__steam-2" />
-            <div id="up" className="loading__steam-3"/>
+            <div id="up" className="loading__steam-3" />
           </div>
         </div>
       </div>
