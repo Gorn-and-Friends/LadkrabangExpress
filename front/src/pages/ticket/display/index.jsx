@@ -19,6 +19,7 @@ const DisplayBookingTicket = () => {
   const [displayTickets, setDisplayTickets] = useState([]);
 
   useEffect(() => {
+    document.title = "Ticket - LKBX";
     QRCode.toDataURL(serverDomainName + "/api/staff/showTicket/" + params.id, {
       errorCorrectionLevel: "H",
       type: "image/jpeg",
@@ -66,7 +67,10 @@ const DisplayBookingTicket = () => {
           },
         };
       });
-      newTickets[0] = { ...newTickets[0], food_reservation: tickets.food_reservation };
+      newTickets[0] = {
+        ...newTickets[0],
+        food_reservation: tickets.food_reservation,
+      };
       setDisplayTickets(newTickets);
     } catch {}
   }, [tickets]);
@@ -81,7 +85,11 @@ const DisplayBookingTicket = () => {
       <div className="display-ticket">
         <div className="display-ticket__container">
           <div className="display-ticket__header">
-            <div><Link to="refund">{lang === "th" ? "ยกเลิกการจอง" : "Request refund"}</Link></div>
+            <div>
+              <Link to="refund">
+                {lang === "th" ? "ยกเลิกการจอง" : "Request refund"}
+              </Link>
+            </div>
             <Link to="/profile">
               <h1>
                 {lang === "th" ? "ขอให้เดินทางโดยสวัสดิภาพ!" : "Bon Voyage!"}

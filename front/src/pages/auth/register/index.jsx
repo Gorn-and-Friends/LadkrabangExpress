@@ -8,9 +8,7 @@ import Loading from "../../../components/loading";
 import staff from "../../../services/utils/staff";
 
 const Register = ({ type }) => {
-  useEffect(() => {
-    document.title = "Sign up - LKBX";
-  }, []);
+  useEffect(() => (document.title = "Sign Up - LKBX"), []);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();

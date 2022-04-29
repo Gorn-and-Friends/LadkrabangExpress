@@ -22,6 +22,8 @@ const Forgot = () => {
     token: "",
   });
 
+  useEffect(() => (document.title = "Forgot Password - LKBX"), []);
+
   useEffect(
     () => (params.email !== "" && params.token !== "" ? sendEmail() : null),
     [params]

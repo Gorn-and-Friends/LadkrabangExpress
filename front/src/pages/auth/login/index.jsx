@@ -23,9 +23,7 @@ const Login = ({ type }) => {
   const lang = useSelector((state) => state.lang);
   const loading = useSelector((state) => state.loading);
 
-  useEffect(() => {
-    document.title = "Log in - LKBX";
-  }, []);
+  useEffect(() => (document.title = "Log In - LKBX"), []);
 
   const content =
     lang === "th"

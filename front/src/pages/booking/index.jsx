@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import NavBar from "../../components/navbar";
@@ -14,6 +14,8 @@ import Loading from "../../components/loading";
 const Booking = () => {
   const loading = useSelector((state) => state.loading);
   const step = Number(useParams().step);
+
+  useEffect(() => (document.title = "Booking - LKBX"), []);
 
   return (
     <>

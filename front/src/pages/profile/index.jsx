@@ -50,6 +50,7 @@ const Profile = () => {
   };
 
   useEffect(() => {
+    document.title = "Profile - LKBX";
     try {
       fetchProfile();
       setDisplayTickets(

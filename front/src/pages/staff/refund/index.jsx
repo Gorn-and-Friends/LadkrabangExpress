@@ -23,7 +23,10 @@ const StaffRefund = () => {
     setResList(res);
   };
 
-  useEffect(() => findRefund(), []);
+  useEffect(() => {
+    document.title = "Staff - LKBX";
+    findRefund();
+  }, []);
 
   useEffect(() => {
     console.log(resList);

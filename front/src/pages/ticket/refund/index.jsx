@@ -22,7 +22,7 @@ const Refund = () => {
     reason: "",
   });
 
-  useEffect(() => console.log(params.id), []);
+  useEffect(() => (document.title = "Refund - LKBX"), []);
 
   const handleInputOnChange = ({ currentTarget: e }) => {
     const temp = { ...info };

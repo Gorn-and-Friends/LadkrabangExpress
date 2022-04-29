@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import emailjs from "@emailjs/browser";
@@ -29,6 +29,8 @@ const About = () => {
     email: "",
     content: "",
   });
+
+  useEffect(() => (document.title = "About Us - LKBX"), []);
 
   const handleInputOnChange = ({ currentTarget: e }) => {
     const temp = { ...params };
@@ -92,11 +94,11 @@ const About = () => {
                       <li>{member.fname}</li>
                       <li>{member.lname}</li>
                       <li>
-                        <a href="">
+                        <a href={member.instagram}>
                           <BsInstagram />
                         </a>
                         &ensp;&ensp;
-                        <a href="">
+                        <a href={member.github}>
                           <BsGithub />
                         </a>
                       </li>

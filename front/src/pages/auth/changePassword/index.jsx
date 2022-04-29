@@ -27,6 +27,7 @@ const ChangePassword = () => {
   });
 
   useEffect(() => {
+    document.title = "Change Password - LKBX";
     setToken(params.token);
   }, []);
 

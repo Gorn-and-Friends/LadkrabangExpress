@@ -19,6 +19,8 @@ const StaffSearch = () => {
     date: "",
   });
 
+  useEffect(() => (document.title = "Staff - LKBX"), []);
+
   useEffect(() => {
     filtered
       ? setFilteredResList(resList.filter((rl) => rl.coach))
