@@ -10,6 +10,7 @@ const BookingButtons = ({ onNext, price, disabled, page, pastUrlParams }) => {
   return (
     <div className={`booking-btns${page === 4 ? " food" : ""}`}>
       <button
+        type="button"
         onClick={() =>
           navigate(
             `/booking${
@@ -29,7 +30,11 @@ const BookingButtons = ({ onNext, price, disabled, page, pastUrlParams }) => {
           )}
         </span>
       ) : null}
-      <button onClick={onNext} disabled={disabled ? "disabled" : ""}>
+      <button
+        type="submit"
+        onClick={onNext}
+        disabled={disabled ? "disabled" : ""}
+      >
         {lang === "th" ? "ต่อไป" : "Next"}
       </button>
     </div>

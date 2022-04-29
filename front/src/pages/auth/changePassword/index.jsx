@@ -28,11 +28,9 @@ const ChangePassword = () => {
 
   useEffect(() => {
     setToken(params.token);
-    console.log(params.token);
   }, []);
 
   useEffect(() => {
-    console.log(missingInput, invalid, unmatched);
     setErr(invalid || missingInput || unmatched);
   }, [invalid, missingInput, unmatched]);
 
@@ -81,7 +79,7 @@ const ChangePassword = () => {
           pword: pword.new,
         });
         if (res == 200) {
-          alert("Password modified | เปลี่ยนรหัสผ่านแล้ว")
+          alert("Password modified | เปลี่ยนรหัสผ่านแล้ว");
           navigate("/profile");
         }
       } catch (er) {
@@ -139,7 +137,9 @@ const ChangePassword = () => {
           </div>
         </div>
         <div className="change-pword__btn">
-          <Link to="/profile">{content.changePword.cancel}</Link>
+          <Link type="button" to="/profile">
+            {content.changePword.cancel}
+          </Link>
           <input type="submit" value={content.changePword.submit} />
         </div>
       </fieldset>

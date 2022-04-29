@@ -1,40 +1,54 @@
 {
   "title": "ลาดกระบังเอ็กซ์เพรส",
   "subtitle": "โครงงานจองตั๋วรถไฟ",
-  "subsubtitle": "กลุ่มของเรามาจากสถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบังชั้นปีที่ 2 คณะวิศวกรรมศาสตร์ ภาควิชาคอมพิวเตอร์ หลักสูตรปกติ โปรเจคนี้เป็นเพียงส่วนหนึ่งของวิชา 01076008 Software Development Processes ซึ่งมุ่งเน้นการออกแบบและวางแผนโครงงานเพื่อศึกษาการทำงานที่มีประสิทธิภาพ ทางเราไม่ได้มีเจตนาในการซื้อขายเชิงพาณิชย์ใด ๆ ทั้งสิ้น หากมีข้อสงสัยหรือปัญหา โปรดติดต่อข้อมูลการติดต่อด้านล่าง ทางเราขอขอบพระคุณเป็นอย่างสูง",
-  "copyright": "© 2022 ทีมงานลาดกระบังเอ็กซ์เพรส • สงวนลิขสิทธิ์",
-  "email": "6301XXXX@kmitl.ac.th",
+  "subsubtitle": "กลุ่มของเรามาจากสถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบังชั้นปีที่ 2 คณะวิศวกรรมศาสตร์ ภาควิชาคอมพิวเตอร์ หลักสูตรปกติ โปรเจคนี้เป็นเพียงส่วนหนึ่งของวิชา 01076008 Software Development Processes ซึ่งมุ่งเน้นการออกแบบและวางแผนโครงงานเพื่อการทำงานที่มีประสิทธิภาพ ทางเราไม่ได้มีเจตนาในการซื้อขายเชิงพาณิชย์ใด ๆ ทั้งสิ้น หากมีข้อสงสัยหรือปัญหาโปรดติดต่อข้อมูลการติดต่อด้านล่าง ทางเราขอขอบพระคุณเป็นอย่างสูง",
+  "copyright": "© 2022 ทีมงานลาดกระบังเอ็กซ์เพรส",
+  "email": "63010183@kmitl.ac.th",
   "location": "ลาดกระบัง, กรุงเทพฯ, ประเทศไทย",
+  "about": "รู้จักพวกเรา",
   "members": [
     {
-      "name": "ชนน กุลกัตติมาส",
-      "position": "หัวหน้าฝั่งผู้พัฒนา front-end",
-      "pic": "https://cdn.discordapp.com/attachments/968258919199813636/969008937900867584/chanon.jpg"
+      "fname": "จิรกานต์",
+      "lname": "กุลสิงห์",
+      "position": "ผู้พัฒนา Back-end",
+      "pic": "https://cdn.discordapp.com/attachments/791628263822196737/969148000758792192/copter.jpg"
     },
     {
-      "name": "กิตติภณ สิงห์ชม",
-      "position": "ผู้พัฒนา front-end",
-      "pic": "https://cdn.discordapp.com/attachments/913281704351924247/968880879902539796/8E571D5F-8E17-46C6-885F-7F0B560A3443.jpg"
+      "fname": "ณภัทร",
+      "lname": "มูลพินิจ",
+      "position": "ผู้พัฒนา Back-end",
+      "pic": "https://cdn.discordapp.com/attachments/791628263822196737/969148001752862730/napat.jpg"
     },
     {
-      "name": "ณพงศ์ เคหะ",
-      "position": "ผู้พัฒนา front-end",
-      "pic": "https://cdn.discordapp.com/attachments/750022851150479520/969062349661147187/IMG_20210706_124113.jpg"
+      "fname": "ชินกฤต",
+      "lname": "ปิ่นคล้าย",
+      "position": "ผู้พัฒนา Back-end",
+      "pic": "https://cdn.discordapp.com/attachments/791628263822196737/969148257190158376/glock.jpg"
     },
     {
-      "name": "ชินกฤต ปิ่นคล้าย",
-      "position": "หัวหน้าฝั่งผู้พัฒนา back-end",
-      "pic": "https://cdn.discordapp.com/attachments/727177779401195670/969055877472612412/unknown.png"
+      "fname": "ชนน",
+      "lname": "กุลกัตติมาส",
+      "position": "ผู้พัฒนา Front-end",
+      "pic": "https://cdn.discordapp.com/attachments/791628263822196737/969149000647335936/chanon.jpg"
     },
     {
-      "name": "ณภัทร มูลพินิจ",
-      "position": "ผู้พัฒนา back-end",
-      "pic": "https://cdn.discordapp.com/attachments/768362612622098454/969081790289551380/unknown.png"
+      "fname": "กิตติภณ",
+      "lname": "สิงห์ชม",
+      "position": "ผู้พัฒนา Front-end",
+      "pic": "https://cdn.discordapp.com/attachments/791628263822196737/969148000289046558/boss.jpg"
     },
     {
-      "name": "จิรกานต์ กุลสิงห์",
-      "position": "ผู้พัฒนา back-end",
-      "pic": "https://cdn.discordapp.com/attachments/913281704351924247/968881244500820058/7CB7A5C0-B3E1-4AE0-9FD3-7C8AE5918938.jpg"
+      "fname": "ณพงศ์",
+      "lname": "เคหะ",
+      "position": "ผู้พัฒนา Front-end",
+      "pic": "https://cdn.discordapp.com/attachments/791628263822196737/969148001547337778/gorn.jpg"
     }
-  ]
+  ],
+  "contact": {
+    "title": "ติดต่อเรา",
+    "name": "ชื่อของคุณ",
+    "email": "อีเมลของคุณ",
+    "content": "คุยกับพวกเรา",
+    "submit": "ส่ง"
+  }
 }

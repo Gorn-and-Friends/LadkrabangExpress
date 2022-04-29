@@ -32,6 +32,8 @@ body {
   }
 
   &::-webkit-scrollbar {
+    display: none;
+    transition: all $transition-time ease-in-out;
     width: 10px;
 
     &-track {

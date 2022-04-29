@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emailjs/browser": "^3.6.2",
     "@react-pdf/renderer": "^2.1.1",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
@@ -11,7 +12,6 @@
     "axios": "^0.26.1",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
-    "emailjs-com": "^3.2.0",
     "font-awesome": "^4.7.0",
     "jwt-decode": "^3.1.2",
     "process": "^0.11.10",

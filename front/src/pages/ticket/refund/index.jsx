@@ -28,7 +28,6 @@ const Refund = () => {
     const temp = { ...info };
     temp[e.id] = e.value;
     setInfo(temp);
-    console.log(temp);
   };
 
   const handleOnSubmit = async (e) => {
@@ -106,7 +105,7 @@ const Refund = () => {
           </div>
         </div>
         <div className="refund__btn">
-          <button onClick={() => navigate("/profile")}>
+          <button type="button" onClick={() => navigate("/profile")}>
             {content.refund.cancel}
           </button>
           <input type="submit" value={content.refund.submit} />

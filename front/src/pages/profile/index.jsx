@@ -226,7 +226,7 @@ const Profile = () => {
                   <>
                     <form onSubmit={handleOnSaveProfile}>
                       {logServices.isLogged().isStaff ? null : edit ? null : (
-                        <button onClick={() => setEdit(true)}>
+                        <button type="button" onClick={() => setEdit(true)}>
                           {profileContent.info.edit}
                         </button>
                       )}
@@ -292,10 +292,11 @@ const Profile = () => {
                       </div>
                       {edit ? (
                         <div className="profile__info__btns">
-                          <button onClick={handleOnCancelProfile}>
+                          <button type="button" onClick={handleOnCancelProfile}>
                             {profileContent.info.cancel}
                           </button>
                           <button
+                            type="button"
                             onClick={(e) => {
                               e.preventDefault();
                               setConfirmPwordShown(true);

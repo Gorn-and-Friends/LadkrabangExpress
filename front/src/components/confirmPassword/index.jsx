@@ -51,7 +51,9 @@ const ConfirmPassword = ({
             <Link to="/forgot">{content.confirmPword.forgot}</Link>
           </div>
           <div className="confirm-pword__btn">
-            <button onClick={handleOnBack}>{content.confirmPword.back}</button>
+            <button type="button" onClick={handleOnBack}>
+              {content.confirmPword.back}
+            </button>
             <input type="submit" value={content.confirmPword.submit} />
           </div>
         </div>
